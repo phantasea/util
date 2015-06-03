@@ -1,0 +1,36 @@
+#! /bin/bash
+
+SESSION=0
+temp=$1
+relpath=${temp// /\\\ }
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    if [ -z $relpath ]; then
+        TERM=jfbterm w3m .
+    else
+        TERM=jfbterm w3m $relpath
+    fi
+
+    exit 0
+fi
+
+tmux select-window -t w3m
+if [ $? -ne 0 ]; then
+    if [ -z $relpath ]; then
+        tmux new-window -c ~ -n w3m -t $SESSION:8 "TERM=jfbterm w3m ." 
+    else
+        tmux new-window -c ~ -n w3m -t $SESSION:8 "TERM=jfbterm w3m $relpath"
+    fi
+    tmux select-window -t w3m
+else
+    if [ -z $relpath ]; then
+        tmux send-keys "T ." C-m
+    else
+        tmux set-buffer "T $relpath"
+        tmux paste-buffer
+        tmux send-keys C-m
+    fi
+fi
+
+exit 0

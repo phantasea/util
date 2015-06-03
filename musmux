@@ -1,0 +1,26 @@
+#!/bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    mocp
+    exit 0
+fi
+
+tmux select-window -t mus
+if [ $? -ne 0 ]; then
+    tmux new-window -n mus -t $SESSION:6 'mocp'
+    #sleep 1s
+    #tmux split-window -v
+    #tmux send-keys "ccal -u" C-m
+    #tmux select-pane -l
+    tmux send-keys "Gl"
+    #tmux split-window -h "tty-clock -c -C 3"
+    #tmux resize-pane -R 16
+    #tmux select-pane -L
+    #tmux swap-pane -D
+    #tmux kill-window -t $SESSION:1
+fi
+
+exit 0

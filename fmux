@@ -1,0 +1,19 @@
+#! /bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    #vifm -c "windo set viewcolumns=-{name}"
+    vifm
+    exit 0
+fi
+
+tmux select-window -t vifm
+if [ $? -ne 0 ]; then
+    #tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm -c "windo set viewcolumns=-{name}"'
+    tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm'
+    tmux select-window -t vifm
+fi
+
+exit 0

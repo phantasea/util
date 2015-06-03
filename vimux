@@ -1,0 +1,46 @@
+#! /bin/bash
+
+SESSION=0
+
+cwd=$PWD
+strdir=${cwd// /\\\ }
+strcmd=$1
+arg=$2
+strfile=${arg// /\\\ }
+
+if [ $1 != "edit" ] && [ $1 != "view" ]; then
+    echo "vim cmd $1 invalid!"
+    exit 1
+fi
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    if [ $1 = "edit" ]; then
+        strcmd="vim"
+    else
+        strcmd="view"
+    fi
+
+    $strcmd $strfile
+
+    exit 0
+fi
+
+tmux select-window -t vim
+if [ $? -ne 0 ]; then
+    tmux new-window -n vim -t $SESSION:7 'vim'
+    tmux select-window -t vim
+fi
+
+if [ ! -z $2 ]; then
+    tmux send-keys escape
+    tmux set-buffer ":cd $strdir"
+    tmux paste-buffer
+    tmux send-keys C-m
+
+    tmux set-buffer ":$strcmd $strfile"
+    tmux paste-buffer
+    tmux send-keys C-m
+fi
+
+exit 0

@@ -1,0 +1,17 @@
+#! /bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    ranger --confdir=~/.ranger
+    exit 0
+fi
+
+tmux select-window -t ranger
+if [ $? -ne 0 ]; then
+    tmux new-window -n ranger -t $SESSION:0 'ranger --confdir=~/.ranger'
+    tmux select-window -t ranger
+fi
+
+exit 0

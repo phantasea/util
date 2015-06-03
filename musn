@@ -1,0 +1,11 @@
+#!/bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    exit 0
+fi
+
+mocp --next
+exit 0

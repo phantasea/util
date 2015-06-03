@@ -1,0 +1,20 @@
+#! /bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    man $1
+    exit 0
+fi
+
+
+tmux select-window -t vim
+if [ $? -ne 0 ]; then
+    tmux new-window -n vim -t $SESSION:7 'vim'
+    tmux select-window -t vim
+fi
+
+tmux send-keys escape ":ViewDocMan $1" C-m
+tmux send-keys so
+exit 0
