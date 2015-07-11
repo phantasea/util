@@ -1,0 +1,5 @@
+#! /bin/bash
+
+find . -maxdepth 1 -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.bmp' -o -iname '*.gif' | fim -
+#find . -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.bmp' -o -iname '*.gif' | fim -c 'endless_slideshow' -
+#find . -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.bmp' -o -iname '*.gif' -exec fim -c 'endless_slideshow' {} +
