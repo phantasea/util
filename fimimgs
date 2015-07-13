@@ -6,31 +6,50 @@ shopt -s nocaseglob
 
 flag=$1
 show=$2
-path=$3
+file=$3
+path=$4
 
-if [ "$flag" != "current" ] && [ "$flag" != "recursive" ]; then
-    echo 'Arg1 should be "current" or "recursive"'
+if [ "$flag" != "-n" ] && [ "$flag" != "-r" ]; then
+    echo 'Arg1 should be "-n" or "-r"'
     exit 1
 fi
 
-if [ "$show" != "normal" ] && [ "$show" != "slideshow" ]; then
-    echo 'Arg2 should be "noraml" or "slideshow"'
+if [ "$show" != "-n" ] && [ "$show" != "-s" ]; then
+    echo 'Arg2 should be "-n" or "-s"'
     exit 1
 fi
 
-if [ -n "$path" ]; then
+if [ "$file" != "-n" ] && [ ! -f "$file" ]; then
+    echo 'Arg3 should be a file or -n'
+    exit 1
+fi
+
+if [ "$path" != "-n" ] && [ ! -d "$path" ]; then
+    echo 'Arg4 should be a path or -n'
+    exit 1
+fi
+
+if [ -d "$path" ]; then
     cd "$path"
 fi
 
-if [ "$flag" = "current" ]; then
-    if [ "$show" = "normal" ]; then
-        fim *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+if [ "$flag" = "-n" ]; then
+    if [ "$show" = "-n" ]; then
+        if [ -f "$file" ]; then
+            fim "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        else
+            fim *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        fi
     else
         fim -c 'endless_slideshow' *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
     fi
 else
-    if [ "$show" = "normal" ]; then
-        fim {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+    if [ "$show" = "-n" ]; then
+        if [ -f "$file" ]; then
+            fim "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        else
+            fim {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        fi
     else
         fim -c 'endless_slideshow' {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
     fi
