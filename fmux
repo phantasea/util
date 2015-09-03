@@ -2,6 +2,11 @@
 
 SESSION=0
 
+if [ ! -z "$DISPLAY" ]; then
+    vifm
+    exit 0
+fi
+
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
     #vifm -c "windo set viewcolumns=-{name}"

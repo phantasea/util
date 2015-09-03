@@ -9,6 +9,11 @@ mode=$2
 file=$3
 path=$4
 
+if [ -z "$DISPLAY" ]; then
+    echo 'Not in X envirenment'
+    exit 1
+fi
+
 if [ "$flag" != "-n" ] && [ "$flag" != "-r" ]; then
     echo 'Arg1 should be "-n" or "-r"'
     exit 1

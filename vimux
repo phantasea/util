@@ -13,6 +13,18 @@ if [ $1 != "edit" ] && [ $1 != "view" ]; then
     exit 1
 fi
 
+if [ ! -z "$DISPLAY" ]; then
+    if [ $1 = "edit" ]; then
+        strcmd="vim"
+    else
+        strcmd="view"
+    fi
+
+    $strcmd $strfile
+
+    exit 0
+fi
+
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
     if [ $1 = "edit" ]; then

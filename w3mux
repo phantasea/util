@@ -4,6 +4,16 @@ SESSION=0
 temp=$1
 relpath=${temp// /\\\ }
 
+if [ ! -z "$DISPLAY" ]; then
+    if [ -z $relpath ]; then
+        TERM=jfbterm w3m .
+    else
+        TERM=jfbterm w3m $relpath
+    fi
+
+    exit 0
+fi
+
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
     if [ -z $relpath ]; then

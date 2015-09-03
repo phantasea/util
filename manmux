@@ -2,12 +2,16 @@
 
 SESSION=0
 
+if [ ! -z "$DISPLAY" ]; then
+    man $1
+    exit 0
+fi
+
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
     man $1
     exit 0
 fi
-
 
 tmux select-window -t vim
 if [ $? -ne 0 ]; then
