@@ -1,0 +1,86 @@
+#! /bin/bash
+
+shopt -s nullglob
+shopt -s globstar
+shopt -s nocaseglob
+
+flag=$1
+mode=$2
+file=$3
+path=$4
+
+if [ "$flag" != "-n" ] && [ "$flag" != "-r" ]; then
+    echo 'Arg1 should be "-n" or "-r"'
+    exit 1
+fi
+
+if [ "$mode" != "-n" ] && [ "$mode" != "-s" ]; then
+    echo 'Arg2 should be "-n" or "-s"'
+    exit 1
+fi
+
+if [ "$file" != "-n" ] && [ ! -f "$file" ]; then
+    echo 'Arg3 should be a file or -n'
+    exit 1
+fi
+
+if [ "$path" != "-n" ] && [ ! -d "$path" ]; then
+    echo 'Arg4 should be a path or -n'
+    exit 1
+fi
+
+if [ -d "$path" ]; then
+    cd "$path"
+fi
+
+# vifm中传入的是相对路径,glob后该文件只有一条
+# ranger中传入的是绝对路径，需要剥离相对路径, or该文件会在fim的列表中有2条
+file=${file##*/}
+
+if [ -z "$DISPLAY" ]; then
+    if [ "$flag" = "-n" ]; then
+        if [ "$mode" = "-n" ]; then
+            if [ -f "$file" ]; then
+                fim "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            else
+                fim *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            fi
+        else
+            fim -c 'endless_slideshow' *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        fi
+    else
+        if [ "$mode" = "-n" ]; then
+            if [ -f "$file" ]; then
+                fim "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            else
+                fim {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            fi
+        else
+            fim -c 'endless_slideshow' {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+        fi
+    fi
+else
+    if [ "$flag" = "-n" ]; then
+        if [ "$mode" = "-n" ]; then
+            if [ -f "$file" ]; then
+                pho -p "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            else
+                pho -p *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            fi
+        else
+            pho -p -s1 *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+        fi
+    else
+        if [ "$mode" = "-n" ]; then
+            if [ -f "$file" ]; then
+                pho -p "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            else
+                pho -p {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            fi
+        else
+            pho -p -s1 {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+        fi
+    fi
+fi
+
+exit 0
