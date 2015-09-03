@@ -12,7 +12,8 @@ fi
 tmux select-window -t vifm
 if [ $? -ne 0 ]; then
     #tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm -c "windo set viewcolumns=-{name}"'
-    tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm'
+    #tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm'
+    tmux new-window -n vifm -t $SESSION:9 'vifm'
     tmux select-window -t vifm
 fi
 
