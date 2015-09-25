@@ -17,7 +17,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t vim
+tmux select-window -t vim > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n vim -t $SESSION:7 'vim'
     tmux select-window -t vim

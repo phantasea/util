@@ -13,7 +13,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t ranger
+tmux select-window -t ranger > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n ranger -t $SESSION:0 'ranger --confdir=~/.ranger'
     tmux select-window -t ranger

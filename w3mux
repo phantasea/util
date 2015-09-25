@@ -25,7 +25,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t w3m
+tmux select-window -t w3m > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     if [ -z $relpath ]; then
         tmux new-window -c ~ -n w3m -t $SESSION:8 "TERM=jfbterm w3m ." 

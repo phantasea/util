@@ -13,7 +13,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t mus
+tmux select-window -t mus > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n mus -t $SESSION:6 'mocp'
     #sleep 1s
