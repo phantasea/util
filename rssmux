@@ -3,13 +3,13 @@
 SESSION=0
 
 if [ ! -z "$DISPLAY" ]; then
-    newsbeuer -q
+    newsbeuter -q
     exit 0
 fi
 
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
-    newsbeuer -q
+    newsbeuter -q
     exit 0
 fi
 
