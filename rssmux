@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SESSION=0
+
+if [ ! -z "$DISPLAY" ]; then
+    newsbeuer -q
+    exit 0
+fi
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    newsbeuer -q
+    exit 0
+fi
+
+tmux select-window -t newsbeuter > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n newsbeuter -t $SESSION:4 'newsbeuter -q'
+fi
+
+exit 0
