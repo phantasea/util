@@ -1,19 +1,30 @@
 #! /bin/bash
 
 SESSION=0
-arg=$1
-strfile=${arg// /\\\ }
-cwd=$PWD
-strcwd=${cwd// /\\\ }
+file=$1
+file=${file// /\\\ }
 
-if [ -z $strfile ]; then
+# fmvimux src/vim.c '+call cursor(116,16)'
+cmd=$2
+if [ "${cmd:0:1}" = '+' ]; then
+    cmd=${cmd/#\+/}
+    #echo "OKKK"
+else
+    cmd=""
+    #echo "NOOO"
+fi
+
+cwd=$PWD
+cwd=${cwd// /\\\ }
+
+if [ -z $file ]; then
     echo "No file designated!"
     exit 1
 fi
 
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
-    vim $strfile
+    vim $file
     exit 0
 fi
 
@@ -24,11 +35,19 @@ if [ $? -ne 0 ]; then
 fi
 
 tmux send-keys escape
-tmux set-buffer ":cd $strcwd"
+tmux set-buffer ":cd $cwd"
 tmux paste-buffer
 tmux send-keys C-m
 
-tmux set-buffer ":e $strfile"
+tmux set-buffer ":e $file"
+tmux paste-buffer
+tmux send-keys C-m
+
+if [ -z "$cmd" ]; then
+    exit 0
+fi
+
+tmux set-buffer ":$cmd"
 tmux paste-buffer
 tmux send-keys C-m
 
