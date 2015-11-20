@@ -4,81 +4,81 @@ shopt -s nullglob
 shopt -s globstar
 shopt -s nocaseglob
 
-flag=$1
-mode=$2
-file=$3
-path=$4
+recursive="FALSE"
+slideshow="FALSE"
 
-if [ "$flag" != "-n" ] && [ "$flag" != "-r" ]; then
-    echo 'Arg1 should be "-n" or "-r"'
+#If an option should be followed by an argument, it should be followed by a ":".
+#The leading ":" suppresses error messages from getopts.
+#while getopts ":rsd:" opt; do
+while getopts "rsd:" opt; do
+    case $opt in
+        r) recursive="TRUE";;
+        s) slideshow="TRUE";;
+        d) 
+           if [ -d "$OPTARG" ]; then
+               cd "$OPTARG"
+           else
+               echo 'option -d must followed by directory'
+               exit 1
+           fi
+           ;;
+        ?) echo 'Usage: imgview [-r] [-s] [-d dir] [file]'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $# -gt 1 ]; then
+    echo "Only one file supported!"
     exit 1
 fi
 
-if [ "$mode" != "-n" ] && [ "$mode" != "-s" ]; then
-    echo 'Arg2 should be "-n" or "-s"'
+file=$1
+if [ ! -z "$file" -a ! -f "$file" ]; then
+    echo "$file is not a file!"
     exit 1
 fi
 
-if [ "$file" != "-n" ] && [ ! -f "$file" ]; then
-    echo 'Arg3 should be a file or -n'
-    exit 1
-fi
-
-if [ "$path" != "-n" ] && [ ! -d "$path" ]; then
-    echo 'Arg4 should be a path or -n'
-    exit 1
-fi
-
-if [ -d "$path" ]; then
-    cd "$path"
-fi
-
-# vifm中传入的是相对路径,glob后该文件只有一条
-# ranger中传入的是绝对路径，需要剥离相对路径, or该文件会在fim的列表中有2条
-file=${file##*/}
+#while [ $# -ne 0 ]; do
+#    file=$1
+#    file=${file// /\\\ }
+#    file=${file##*/}  
+#    #file=`basename "$file"`  #This is another way to get the base file name.
+#    #file_BASE=`echo "${file%.*}"`  #file without extension
+#    #file_EXT="${file##*.}"  #file extension
+#
+#    echo "$file"
+#    shift  #Move on to next input file.
+#done
+#exit 0
 
 if [ -z "$DISPLAY" ]; then
-    if [ "$flag" = "-n" ]; then
-        if [ "$mode" = "-n" ]; then
-            if [ -f "$file" ]; then
-                fim "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
-            else
-                fim *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
-            fi
+    if [ "$recursive" = "FALSE" ]; then
+        if [ "$slideshow" = "FALSE" ]; then
+            fim "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
         else
             fim -c 'endless_slideshow' *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
         fi
     else
-        if [ "$mode" = "-n" ]; then
-            if [ -f "$file" ]; then
-                fim "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
-            else
-                fim {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
-            fi
+        if test "$slideshow" = "FALSE"; then
+            fim "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
         else
             fim -c 'endless_slideshow' {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
         fi
     fi
 else
-    if [ "$flag" = "-n" ]; then
-        if [ "$mode" = "-n" ]; then
-            if [ -f "$file" ]; then
-                pho -p "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
-            else
-                pho -p *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
-            fi
+    if [ "$recursive" = "FALSE" ]; then
+        if [ "$slideshow" = "FALSE" ]; then
+            pho -p "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
         else
             pho -p -s1 *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
         fi
     else
-        if [ "$mode" = "-n" ]; then
-            if [ -f "$file" ]; then
-                pho -p "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
-            else
-                pho -p {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
-            fi
+        if test "$slideshow" = "FALSE"; then
+            pho -p "$file" **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
         else
-            pho -p -s1 {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            pho -p -s1 **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
         fi
     fi
 fi

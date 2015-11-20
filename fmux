@@ -2,22 +2,48 @@
 
 SESSION=0
 
+ranger="FALSE"
+
+while getopts "e" opt; do
+    case $opt in
+        e) ranger="TRUE";;
+        ?) echo 'Usage0: fmux [-e]'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $# -ne 0 ]; then
+    echo 'Usage1: fmux [-e]'
+    exit 1
+fi
+
+CMD='vifm'
+WID='vifm'
+SID=9
+if [ "$ranger" = "TRUE" ]; then
+    CMD='ranger --confdir=~/.ranger'
+    WID='ranger'
+    SID=0
+fi
+
 if [ ! -z "$DISPLAY" ]; then
-    vifm
+    $CMD
     exit 0
 fi
 
 tmux has-session -t $SESSION
 if [ $? -ne 0 ]; then
-    vifm
+    $CMD
     exit 0
 fi
 
-tmux select-window -t vifm > /dev/null 2>&1
+tmux select-window -t $WID > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     #tmux new-window -n vifm -t $SESSION:9 'DISPLAY=:0.0 vifm'
-    tmux new-window -n vifm -t $SESSION:9 'vifm'
-    tmux select-window -t vifm
+    tmux new-window -n $WID -t $SESSION:$SID "$CMD"
+    tmux select-window -t $WID
 fi
 
 exit 0

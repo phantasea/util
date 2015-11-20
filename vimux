@@ -2,57 +2,67 @@
 
 SESSION=0
 
-cwd=$PWD
-strdir=${cwd// /\\\ }
-strcmd=$1
-arg=$2
-strfile=${arg// /\\\ }
+prog="vim"
+exe="edit"
 
-if [ $1 != "edit" ] && [ $1 != "view" ]; then
-    echo "vim cmd $1 invalid!"
+while getopts "vc:" opt; do
+    case $opt in
+        v) 
+           prog="view"
+           exe="view"
+           ;;
+        c) cmd="$OPTARG";;
+        ?) echo 'Usage0: vimux [-v] [-c cmd] file'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $# -eq 0 -o $# -gt 1 ]; then
+    echo 'Usage1: vimux [-v] [-c cmd] file'
     exit 1
 fi
 
-if [ ! -z "$DISPLAY" ]; then
-    if [ $1 = "edit" ]; then
-        strcmd="vim"
-    else
-        strcmd="view"
-    fi
-
-    $strcmd $strfile
-
-    exit 0
+if [ ! -f "$1" ]; then
+    echo 'Usage2: vimux [-v] [-c cmd] file'
+    exit 1
 fi
+
+file=$1
+file=${file// /\\\ }
 
 tmux has-session -t $SESSION
-if [ $? -ne 0 ]; then
-    if [ $1 = "edit" ]; then
-        strcmd="vim"
-    else
-        strcmd="view"
-    fi
-
-    $strcmd $strfile
-
+if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
+    $prog $file
     exit 0
 fi
+
+cwd=$PWD
+cwd=${cwd// /\\\ }
 
 tmux select-window -t vim > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n vim -t $SESSION:7 'vim'
+    tmux new-window -n vim -t $SESSION:7 "$prog $file"
     tmux select-window -t vim
+    exit
 fi
 
-if [ ! -z $2 ]; then
-    tmux send-keys escape
-    tmux set-buffer ":cd $strdir"
-    tmux paste-buffer
-    tmux send-keys C-m
+tmux send-keys escape
+tmux set-buffer ":cd $cwd"
+tmux paste-buffer
+tmux send-keys C-m
 
-    tmux set-buffer ":$strcmd $strfile"
-    tmux paste-buffer
-    tmux send-keys C-m
+tmux set-buffer ":$exe $file"
+tmux paste-buffer
+tmux send-keys C-m
+
+if [ -z "$cmd" ]; then
+    exit 0
 fi
+
+tmux set-buffer ":$cmd"
+tmux paste-buffer
+tmux send-keys C-m
 
 exit 0

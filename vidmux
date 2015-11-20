@@ -1,0 +1,54 @@
+#!/bin/bash
+
+SESSION=0
+
+if [ ! -z "$DISPLAY" ]; then
+    if [ ! -f "$1" ]; then
+        echo "$1 is not a file"
+        exit 1
+    fi
+
+    vlc --quiet "$1" &
+    exit 0
+fi
+
+fullscreen=0
+
+while getopts "f" opt; do
+    case $opt in
+        f) fullscreen=1;;
+        ?) echo 'Usage0: vidmux [-f] file'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [ $# -gt 1 ] || [ $# -eq 0 ]; then
+    echo 'Usage1: vidmux [-f] file'
+    exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    echo 'Usage2: vidmux [-f] file'
+    exit 1
+fi
+
+if [ $fullscreen -eq 0 ]; then
+    prog="mplayer -really-quiet -vo fbdev2 \"$1\""
+else 
+    prog="mplayer -really-quiet -vo fbdev2 -xy 1024 -fs -zoom \"$1\""
+fi
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    $prog
+    exit 0
+fi
+
+tmux select-window -t vid > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n vid -t $SESSION:3 "$prog"
+fi
+
+exit 0
