@@ -1,0 +1,66 @@
+#! /bin/bash
+
+SESSION=0
+
+prog="TERM=jfbterm w3m"
+env="vifm"
+
+while getopts "ex" opt; do
+    case $opt in
+        e) env="ranger";;
+        x) prog="elinks";;
+        ?) echo 'Usage0: wemux [-e] [-x] target'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $# -gt 1 ]; then
+    echo 'Usage1: wemux [-e] [-x] target'
+    exit 1
+fi
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
+    if [ -z "$1" ]; then
+        $prog .
+    else
+        $prog "$1"
+    fi
+
+    exit 0
+fi
+
+target="."
+if [ ! -z "$1" ]; then
+    if [ -f "$1" ]; then
+        if [ "$env" = "vifm" ]; then
+            target="file://$PWD/$1"
+        else
+            target="file://$1"
+        fi
+    else
+        target="$1"
+        if [ "${target:0:3}" = "www" ]; then
+            target="http://"${target}
+        fi
+    fi
+fi
+
+#echo "$target"
+
+tmux select-window -t web > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n web -t $SESSION:8 "$prog \"$target\""
+else
+    tmux send-keys T
+    if [ "$prog" = "elinks" ]; then
+        tmux send-keys o
+    fi
+    tmux set-buffer "$target"
+    tmux paste-buffer
+    tmux send-keys C-m
+fi
+
+exit 0
