@@ -2,11 +2,11 @@
 
 SESSION=0
 
-execbyranger="FALSE"
+ranger="FALSE"
 
 while getopts "e" opt; do
     case $opt in
-        e) execbyranger="TRUE";;
+        e) ranger="TRUE";;
         ?) echo 'Usage0: w3mux [-e] file'
            exit 1;;
     esac
@@ -16,11 +16,6 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ]; then
     echo 'Usage1: w3mux [-e] file'
-    exit 1
-fi
-
-if [ $# -ne 0 ] && [ ! -f "$1" ]; then
-    echo 'Usage2: w3mux [-e] file'
     exit 1
 fi
 
@@ -35,18 +30,28 @@ if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
     exit 0
 fi
 
-if [ "$execbyranger" = "FALSE" ]; then
-    file="file://$PWD/$1"
-else
-    file="file://$1"
+target="."
+if [ ! -z "$1" ]; then
+    if [ -f "$1" ]; then
+        if [ "$ranger" = "FALSE" ]; then
+            target="file://$PWD/$1"
+        else
+            target="file://$1"
+        fi
+    else
+        target="$1"
+        if [ "${target:0:4}" = "www." ]; then
+            target="http://"${target}
+        fi
+    fi
 fi
 
 tmux select-window -t w3m > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -c ~ -n w3m -t $SESSION:8 "TERM=jfbterm w3m \"$file\""
+    tmux new-window -n w3m -t $SESSION:8 "TERM=jfbterm w3m \"$target\""
     tmux select-window -t w3m
 else
-    tmux set-buffer "T $file"
+    tmux set-buffer "T $target"
     tmux paste-buffer
     tmux send-keys C-m
 fi
