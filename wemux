@@ -3,13 +3,11 @@
 SESSION=0
 
 prog="TERM=jfbterm w3m"
-env="vifm"
 
-while getopts "ex" opt; do
+while getopts "e" opt; do
     case $opt in
-        e) env="ranger";;
-        x) prog="elinks";;
-        ?) echo 'Usage0: wemux [-e] [-x] target'
+        e) prog="elinks";;
+        ?) echo 'Usage0: wemux [-e] target'
            exit 1;;
     esac
 done
@@ -17,7 +15,7 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ]; then
-    echo 'Usage1: wemux [-e] [-x] target'
+    echo 'Usage1: wemux [-e] target'
     exit 1
 fi
 
@@ -35,16 +33,13 @@ fi
 target="."
 if [ ! -z "$1" ]; then
     if [ -f "$1" ]; then
-        if [ "$env" = "vifm" ]; then
-            target="file://$PWD/$1"
-        else
-            target="file://$1"
-        fi
+        target=$(realpath -s "$1")
+        target="file://${target}"
     else
-        target="$1"
-        if [ "${target:0:3}" = "www" ]; then
-            target="http://"${target}
-        fi
+        #if [ "${1:0:3}" = "www" ]; then
+        #    target="http://"${1}
+        #fi
+        target="http://"${1}
     fi
 fi
 
