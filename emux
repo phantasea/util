@@ -15,7 +15,7 @@ fi
 
 tmux select-window -t mutt > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n mutt -t $SESSION:3 mutt
+    tmux new-window -n mutt -t $SESSION:5 mutt
 fi
 
 exit 0
