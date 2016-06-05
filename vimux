@@ -19,11 +19,22 @@ done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
-if [ $# -eq 0 -o $# -gt 1 ]; then
-    echo $*
-    echo 'Usage1: vimux [-v] [-c cmd] file/dir'
-    exit 1
-fi
+#echo $#
+#echo $*
+#echo $@
+#echo $3
+#while [ $# -ne 0 ]; do
+#    echo $1
+#    shift
+#done
+##vim $*
+#exit 0
+
+#if [ $# -eq 0 -o $# -gt 1 ]; then
+#    echo $*
+#    echo 'Usage1: vimux [-v] [-c cmd] file/dir'
+#    exit 1
+#fi
 
 if [ ! -f "$1" ] && [ ! -d "$1" ]; then
     echo $1
