@@ -2,7 +2,7 @@
 
 SESSION=0
 
-prog="TERM=jfbterm w3m"
+prog="cd ~; TERM=jfbterm w3m -s"
 
 while getopts "e" opt; do
     case $opt in
