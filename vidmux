@@ -48,7 +48,7 @@ fi
 
 tmux select-window -t vid > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n vid -t $SESSION:3 "$prog"
+    tmux new-window -n vid -t $SESSION:4 "$prog"
 fi
 
 exit 0

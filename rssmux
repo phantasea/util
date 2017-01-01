@@ -15,7 +15,7 @@ fi
 
 tmux select-window -t newsbeuter > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n newsbeuter -t $SESSION:4 'newsbeuter -q'
+    tmux new-window -n newsbeuter -t $SESSION:2 'newsbeuter -q'
 fi
 
 exit 0
