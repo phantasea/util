@@ -19,6 +19,6 @@ if [ $? -ne 0 ]; then
     tmux select-window -t vim
 fi
 
-tmux send-keys escape ":ViewDocMan $1" C-m
-tmux send-keys so
+tmux send-keys -t $SESSION:7 escape ":ViewDocMan $1" C-m
+tmux send-keys -t $SESSION:7 so
 exit 0

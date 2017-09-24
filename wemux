@@ -2,7 +2,8 @@
 
 SESSION=0
 
-prog="cd ~; TERM=jfbterm w3m -s"
+#prog="cd ~; TERM=jfbterm w3m -s"
+prog="cd ~; w3m -s"
 
 while getopts "e" opt; do
     case $opt in
@@ -49,13 +50,13 @@ tmux select-window -t web > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n web -t $SESSION:8 "$prog \"$target\""
 else
-    tmux send-keys T
+    tmux send-keys -t $SESSION:8 T
     if [ "$prog" = "elinks" ]; then
-        tmux send-keys o
+        tmux send-keys -t $SESSION:8 o
     fi
     tmux set-buffer "$target"
-    tmux paste-buffer
-    tmux send-keys C-m
+    tmux paste-buffer -t $SESSION:8
+    tmux send-keys -t $SESSION:8 C-m
 fi
 
 exit 0
