@@ -14,6 +14,7 @@ ln -sf /opt/.priv/fetchmailrc ~/.fetchmailrc
 ln -sf /opt/.priv/msmtprc     ~/.msmtprc
 ln -sf /opt/.mail ~/.mail
 ln -sf /opt/util ~/.util
+ln -sf /opt/etc/mailcap ~/.mailcap
 ln -sf /opt/etc/vimrc ~/.vimrc
 ln -sf /opt/etc/alias ~/.alias
 ln -sf /opt/etc/bashrc ~/.bashrc 
