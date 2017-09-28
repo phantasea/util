@@ -1,0 +1,50 @@
+#!/bin/bash
+
+ln -sf /opt/apps/adbfs/adbfs /opt/util/adbfs
+ln -sf /usr/local/libexec/w3m/w3mimgdisplay /opt/util/w3mimgdisplay
+ln -sf /opt/.priv/porn /opt/util/porn
+ln -sf /opt/.priv/priv /opt/util/priv
+ln -sf /opt/.priv/startx /opt/util/startx
+ln -sf /opt/.priv/sandisk_u /opt/util/sandisk_u
+ln -sf /opt/.priv/sandisk_v /opt/util/sandisk_v
+ln -sf /opt/.priv/sandisk_w /opt/util/sandisk_w
+ln -sf /opt/.priv/autoboot  /opt/util/autoboot
+ln -sf /opt/.priv/autoshut  /opt/util/autoshut
+ln -sf /opt/.priv/fetchmailrc ~/.fetchmailrc
+ln -sf /opt/.priv/msmtprc     ~/.msmtprc
+ln -sf /opt/.mail ~/.mail
+ln -sf /opt/util ~/.util
+ln -sf /opt/etc/vimrc ~/.vimrc
+ln -sf /opt/etc/alias ~/.alias
+ln -sf /opt/etc/bashrc ~/.bashrc 
+ln -sf /opt/etc/fbtermrc ~/.fbtermrc
+ln -sf /opt/etc/tmux.conf ~/.tmux.conf
+ln -sf /opt/etc/fimrc ~/.fimrc
+ln -sf /opt/etc/dircolors ~/.dircolors
+ln -sf /opt/etc/moc ~/.moc
+ln -sf /opt/etc/mplayer/ ~/.mplayer
+ln -sf /opt/etc/vifm/ ~/.vifm
+ln -sf /opt/etc/w3m/ ~/.w3m
+ln -sf /opt/etc/gitconfig ~/.gitconfig
+ln -sf /opt/etc/abookrc ~/.abookrc
+ln -sf /opt/etc/elinks.conf ~/.elinks/elinks.conf
+ln -sf /opt/etc/newsbeuter/color  ~/.newsbeuter/color
+ln -sf /opt/etc/newsbeuter/config ~/.newsbeuter/config
+ln -sf /opt/etc/newsbeuter/keymap ~/.newsbeuter/keymap
+ln -sf /opt/etc/newsbeuter/urls   ~/.newsbeuter/urls
+ln -sf /opt/etc/yong.ini ~/.yong/yong.ini
+ln -sf /opt/etc/mutt ~/.mutt
+ln -sf /opt/etc/muttrc ~/.muttrc
+ln -sf /opt/etc/procmailrc ~/.procmailrc
+ln -sf /opt/etc/signature ~/.signature
+ln -sf /opt/etc/tigrc ~/.tigrc
+ln -sf /opt/etc/task ~/.task
+ln -sf /opt/etc/taskrc ~/.taskrc
+ln -sf /opt/etc/urlview ~/.urlview
+ln -sf /opt/etc/wgetrc ~/.wgetrc
+
+sudo ln -sf /opt/etc/updatedb.conf /etc/updatedb.conf
+sudo ln -sf /opt/etc/51-android.rules /etc/udev/rules.d/51-android.rules
+sudo ln -sf /opt/etc/rc.local /etc/rc.local
+
+exit 0
