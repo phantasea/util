@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#ffmpeg -i inputfile -ss starttime -t duration -codec copy outputfile
+
+#vidcut starttime stoptime input output
+
+start=$(date --utc --date "$1" +%s)
+ stop=$(date --utc --date "$2" +%s)
+  dur=$(date --utc --date "1970-01-01 $[$stop-$start] sec" "+%T")
+  #ss=$(date --utc --date "1970-01-01 $[$start] sec" "+%T")
+
+echo timedur=$dur
+ffmpeg -i "$3" -ss "$1" -t "$dur" -codec copy -loglevel quiet "$4"
