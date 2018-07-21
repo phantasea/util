@@ -1,17 +1,6 @@
 #!/bin/bash
 
 SESSION=0
-
-if [ ! -z "$DISPLAY" ]; then
-    if [ ! -f "$1" ]; then
-        echo "$1 is not a file"
-        exit 1
-    fi
-
-    vlc --quiet "$1" &
-    exit 0
-fi
-
 fullscreen=0
 
 while getopts "f" opt; do
@@ -23,6 +12,16 @@ while getopts "f" opt; do
 done
 
 shift $((OPTIND-1))
+
+if [ ! -z "$DISPLAY" ]; then
+    if [ ! -f "$1" ]; then
+        echo "$1 is not a file"
+        exit 1
+    fi
+
+    totem "$1" &
+    exit 0
+fi
 
 if [ $# -gt 1 ] || [ $# -eq 0 ]; then
     echo 'Usage1: vidmux [-f] file'

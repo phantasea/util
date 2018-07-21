@@ -9,7 +9,7 @@ SID=9
 while getopts "e" opt; do
     case $opt in
         e) 
-           CMD='ranger --confdir=~/.ranger'
+           CMD='ranger --confdir=/home/simone/.ranger'
            WID='ranger'
            SID=0
            ;;
