@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#ffmpeg -i inputfile -vn outputfile
+
+#audcut input output
+
+ffmpeg -i "$1" -vn -loglevel quiet "$2"
