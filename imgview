@@ -53,19 +53,34 @@ fi
 #done
 #exit 0
 
+SESSION=0
+WID='fim'
+SID=0
+
 if [ -z "$DISPLAY" ]; then
     if [ "$recursive" = "FALSE" ]; then
         if [ "$slideshow" = "FALSE" ]; then
-            fim "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            CMD="fim \"$file\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         else
-            fim -c 'endless_slideshow' *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            CMD="fim -c \"endless_slideshow\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         fi
     else
         if test "$slideshow" = "FALSE"; then
-            fim "$file" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            CMD="fim \"$file\" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         else
-            fim -c 'endless_slideshow' {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1
+            CMD="fim -c \"endless_slideshow\" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         fi
+    fi
+
+    tmux has-session -t $SESSION
+    if [ $? -ne 0 ]; then
+        fim "$file"
+        exit 0
+    fi
+
+    tmux select-window -t $WID > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        tmux new-window -n $WID -t $SESSION:$SID "$CMD"
     fi
 else
     if [ "$recursive" = "FALSE" ]; then
