@@ -11,7 +11,7 @@ while getopts "e" opt; do
         e) 
            CMD='ranger --confdir=/home/simone/.ranger'
            WID='ranger'
-           SID=0
+           SID=3
            ;;
         ?) echo 'Usage0: fmux [-e]'
            exit 1;;
