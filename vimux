@@ -4,15 +4,17 @@ SESSION=0
 
 prog="vim"
 exe="edit"
+diff=0
 
-while getopts "vc:" opt; do
+while getopts "vc:d" opt; do
     case $opt in
         v) 
            prog="view"
            exe="view"
            ;;
         c) cmd="$OPTARG";;
-        ?) echo 'Usage0: vimux [-v] [-c cmd] file/dir'
+        d) diff=1;;
+        ?) echo 'Usage0: vimux [-v]/[-d]/[-c cmd] file/dir'
            exit 1;;
     esac
 done
@@ -22,7 +24,6 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 #echo $#
 #echo $*
 #echo $@
-#echo $3
 #while [ $# -ne 0 ]; do
 #    echo $1
 #    shift
@@ -58,6 +59,16 @@ tmux select-window -t vim > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n vim -t $SESSION:7 "$prog $file"
     tmux select-window -t vim
+
+    if [ $diff -eq 1 ] && [ -f "$2" ]; then
+        second=$2
+        second=${second// /\\\ }
+
+        tmux set-buffer ":vertical diffsplit $second"
+        tmux paste-buffer -t $SESSION:7
+        tmux send-keys -t $SESSION:7 C-m
+    fi
+
     exit
 fi
 
@@ -69,6 +80,17 @@ tmux send-keys -t $SESSION:7 C-m
 tmux set-buffer ":$exe $file"
 tmux paste-buffer -t $SESSION:7
 tmux send-keys -t $SESSION:7 C-m
+
+if [ $diff -eq 1 ] && [ -f "$2" ]; then
+    second=$2
+    second=${second// /\\\ }
+
+    tmux set-buffer ":vertical diffsplit $second"
+    tmux paste-buffer -t $SESSION:7
+    tmux send-keys -t $SESSION:7 C-m
+
+    exit 0
+fi
 
 if [ -z "$cmd" ]; then
     exit 0
