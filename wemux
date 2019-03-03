@@ -3,11 +3,15 @@
 SESSION=0
 
 #prog="cd ~; TERM=jfbterm w3m -s"
+cmd="w3m -s"
 prog="cd ~; w3m -s"
 
 while getopts "e" opt; do
     case $opt in
-        e) prog="elinks";;
+        e) 
+           prog="elinks"
+           cmd="elinks"
+           ;;
         ?) echo 'Usage0: wemux [-e] target'
            exit 1;;
     esac
@@ -22,10 +26,12 @@ fi
 
 tmux has-session -t $SESSION
 if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
+    cd ~
+
     if [ -z "$1" ]; then
-        $prog .
+        $cmd .
     else
-        $prog "$1"
+        $cmd "$1"
     fi
 
     exit 0
