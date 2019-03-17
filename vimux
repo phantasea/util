@@ -6,6 +6,7 @@ prog="vim"
 exe="edit"
 diff=0
 
+WIN="vim"
 SID=7
 
 while getopts "vc:d" opt; do
@@ -18,6 +19,7 @@ while getopts "vc:d" opt; do
         d) 
            diff=1
            prog="vimdiff"
+           WIN="diff"
            SID=0
            ;;
         ?) echo 'Usage0: vimux [-v]/[-d]/[-c cmd] file/dir'
@@ -61,15 +63,16 @@ fi
 cwd=$PWD
 cwd=${cwd// /\\\ }
 
+file2=""
 if [ -f "$2" ]; then
     file2=$2
     file2=${file2// /\\\ }
 fi
 
-tmux select-window -t $prog > /dev/null 2>&1
+tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $prog -t $SESSION:$SID "$prog $file $file2"
-    tmux select-window -t $prog
+    tmux new-window -n $WIN -t $SESSION:$SID "$prog $file $file2"
+    tmux select-window -t $WIN
 fi
 
 if [ $diff -eq 1 ]; then
