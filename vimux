@@ -6,6 +6,8 @@ prog="vim"
 exe="edit"
 diff=0
 
+SID=7
+
 while getopts "vc:d" opt; do
     case $opt in
         v) 
@@ -13,7 +15,11 @@ while getopts "vc:d" opt; do
            exe="view"
            ;;
         c) cmd="$OPTARG";;
-        d) diff=1;;
+        d) 
+           diff=1
+           prog="vimdiff"
+           SID=0
+           ;;
         ?) echo 'Usage0: vimux [-v]/[-d]/[-c cmd] file/dir'
            exit 1;;
     esac
@@ -55,49 +61,35 @@ fi
 cwd=$PWD
 cwd=${cwd// /\\\ }
 
-tmux select-window -t vim > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    tmux new-window -n vim -t $SESSION:7 "$prog $file"
-    tmux select-window -t vim
-
-    if [ $diff -eq 1 ] && [ -f "$2" ]; then
-        second=$2
-        second=${second// /\\\ }
-
-        tmux set-buffer ":vertical diffsplit $second"
-        tmux paste-buffer -t $SESSION:7
-        tmux send-keys -t $SESSION:7 C-m
-    fi
-
-    exit
+if [ -f "$2" ]; then
+    file2=$2
+    file2=${file2// /\\\ }
 fi
 
-tmux send-keys -t $SESSION:7 escape
+tmux select-window -t $prog > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n $prog -t $SESSION:$SID "$prog $file $file2"
+    tmux select-window -t $prog
+fi
+
+if [ $diff -eq 1 ]; then
+    echo 'tmux window:vimdiff already exists'
+    exit 0
+fi
+
+tmux send-keys -t $SESSION:$SID escape
 tmux set-buffer ":cd $cwd"
-tmux paste-buffer -t $SESSION:7
-tmux send-keys -t $SESSION:7 C-m
+tmux paste-buffer -t $SESSION:$SID
+tmux send-keys -t $SESSION:$SID C-m
 
 tmux set-buffer ":$exe $file"
-tmux paste-buffer -t $SESSION:7
-tmux send-keys -t $SESSION:7 C-m
+tmux paste-buffer -t $SESSION:$SID
+tmux send-keys -t $SESSION:$SID C-m
 
-if [ $diff -eq 1 ] && [ -f "$2" ]; then
-    second=$2
-    second=${second// /\\\ }
-
-    tmux set-buffer ":vertical diffsplit $second"
-    tmux paste-buffer -t $SESSION:7
-    tmux send-keys -t $SESSION:7 C-m
-
-    exit 0
+if [ ! -z "$cmd" ]; then
+    tmux set-buffer ":$cmd"
+    tmux paste-buffer -t $SESSION:$SID
+    tmux send-keys -t $SESSION:$SID C-m
 fi
-
-if [ -z "$cmd" ]; then
-    exit 0
-fi
-
-tmux set-buffer ":$cmd"
-tmux paste-buffer -t $SESSION:7
-tmux send-keys -t $SESSION:7 C-m
 
 exit 0
