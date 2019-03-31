@@ -53,6 +53,8 @@ fi
 
 file=$1
 file=${file// /\\\ }
+file=${file//(/\\\(}
+file=${file//)/\\\)}
 
 tmux has-session -t $SESSION
 if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
@@ -67,6 +69,8 @@ file2=""
 if [ -f "$2" ]; then
     file2=$2
     file2=${file2// /\\\ }
+    file2=${file2//(/\\\(}
+    file2=${file2//)/\\\)}
 fi
 
 tmux select-window -t $WIN > /dev/null 2>&1
@@ -76,7 +80,7 @@ if [ $? -ne 0 ]; then
 fi
 
 if [ $diff -eq 1 ]; then
-    echo 'tmux window:vimdiff already exists'
+    #echo $prog $file $file2
     exit 0
 fi
 
