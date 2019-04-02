@@ -1,0 +1,12 @@
+#!/bin/bash
+# fbtmux: a wrapper script to enable background image with fbterm in tmux
+
+# hide the cursor
+# echo -ne "\e[?25l"
+
+fbv -ciuker "/home/simone/pics/bgi.jpg" << EOF
+q
+EOF
+
+export FBTERM_BACKGROUND_IMAGE=1
+exec fbterm -- tmux > /dev/null 2>&1
