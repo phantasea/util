@@ -28,6 +28,7 @@ ln -sf /opt/etc/vifm/ ~/.vifm
 ln -sf /opt/etc/w3m/ ~/.w3m
 ln -sf /opt/etc/gitconfig ~/.gitconfig
 ln -sf /opt/etc/abookrc ~/.abookrc
+ln -sf /opt/etc/dictrc  ~/.dictrc
 ln -sf /opt/etc/elinks.conf ~/.elinks/elinks.conf
 ln -sf /opt/etc/newsbeuter/color  ~/.newsbeuter/color
 ln -sf /opt/etc/newsbeuter/config ~/.newsbeuter/config
