@@ -1,6 +1,8 @@
 #! /bin/bash
 
-SESSION=0
+SID=0
+WID=8
+WIN="web"
 
 #prog="cd ~; TERM=jfbterm w3m -s"
 cmd="w3m -s"
@@ -12,7 +14,7 @@ while getopts "e" opt; do
            prog="elinks"
            cmd="elinks"
            ;;
-        ?) echo 'Usage0: wemux [-e] target'
+        ?) echo 'Usage0: wemux [-e] URI'
            exit 1;;
     esac
 done
@@ -20,11 +22,11 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ]; then
-    echo 'Usage1: wemux [-e] target'
+    echo 'Usage1: wemux [-e] URI'
     exit 1
 fi
 
-tmux has-session -t $SESSION
+tmux has-session -t $SID
 if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
     cd ~
 
@@ -37,32 +39,30 @@ if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
     exit 0
 fi
 
-target="."
+URI="."
 if [ ! -z "$1" ]; then
     if [ -f "$1" ] || [ -d "$1" ]; then
-        target=$(realpath -s "$1")
-        target="file://${target}"
+        URI=$(realpath -s "$1")
+        URI="file://${URI}"
     else
         #if [ "${1:0:3}" = "www" ]; then
-        #    target="http://"${1}
+        #    URI="http://"${1}
         #fi
-        target="http://"${1}
+        URI="http://"${1}
     fi
 fi
 
-#echo "$target"
-
-tmux select-window -t web > /dev/null 2>&1
+tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n web -t $SESSION:8 "$prog \"$target\""
+    tmux new-window -n $WIN -t $SID:$WID "$prog \"$URI\""
 else
-    tmux send-keys -t $SESSION:8 T
+    tmux send-keys -t $SID:$WID T
     if [ "$prog" = "elinks" ]; then
-        tmux send-keys -t $SESSION:8 o
+        tmux send-keys -t $SID:$WID o
     fi
-    tmux set-buffer "$target"
-    tmux paste-buffer -t $SESSION:8
-    tmux send-keys -t $SESSION:8 C-m
+    tmux set-buffer "$URI"
+    tmux paste-buffer -t $SID:$WID
+    tmux send-keys -t $SID:$WID C-m
 fi
 
 exit 0

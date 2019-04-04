@@ -1,24 +1,27 @@
 #! /bin/bash
 
-SESSION=0
+SID=0
+WID=7
+WIN="vim"
+CMD="vim"
 
 if [ ! -z "$DISPLAY" ]; then
     man $1
     exit 0
 fi
 
-tmux has-session -t $SESSION
+tmux has-session -t $SID
 if [ $? -ne 0 ]; then
     man $1
     exit 0
 fi
 
-tmux select-window -t vim > /dev/null 2>&1
+tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n vim -t $SESSION:7 'vim'
-    tmux select-window -t vim
+    tmux new-window -n $WIN -t $SID:$WID $CMD
+    tmux select-window -t $WIN
 fi
 
-tmux send-keys -t $SESSION:7 escape ":ViewDocMan $1" C-m
-tmux send-keys -t $SESSION:7 so
+tmux send-keys -t $SID:$WID escape ":ViewDocMan $1" C-m
+tmux send-keys -t $SID:$WID so
 exit 0

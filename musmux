@@ -1,31 +1,33 @@
 #!/bin/bash
 
-SESSION=0
+SID=0
+WID=5
+WIN="music"
+CMD="mocp"
 
 if [ ! -z "$DISPLAY" ]; then
-    mocp
+    $CMD
     exit 0
 fi
 
-tmux has-session -t $SESSION
+tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    mocp
+    $CMD
     exit 0
 fi
 
-tmux select-window -t mus > /dev/null 2>&1
+tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n mus -t $SESSION:6 'mocp'
-    tmux send-keys -t $SESSION:6 "G"
+    tmux new-window -n $WIN -t $SID:$WID $CMD
+    tmux send-keys -t $SID:$WID "G"
     #sleep 1s
     #tmux split-window -v
-    #tmux send-keys -t $SESSION:6 "ccal -u" C-m
+    #tmux send-keys -t $SID:$WID "ccal -u" C-m
     #tmux select-pane -l
     #tmux split-window -h "tty-clock -c -C 3"
     #tmux resize-pane -R 16
     #tmux select-pane -L
     #tmux swap-pane -D
-    #tmux kill-window -t $SESSION:1
 fi
 
 exit 0

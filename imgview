@@ -7,6 +7,11 @@ shopt -s nocaseglob
 recursive="FALSE"
 slideshow="FALSE"
 
+SID=0
+WID=12
+WIN="fim"
+CMD="fim"
+
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
 #while getopts ":rsd:" opt; do
@@ -18,7 +23,7 @@ while getopts "rsd:" opt; do
            if [ -d "$OPTARG" ]; then
                cd "$OPTARG"
            else
-               echo 'option -d must followed by directory'
+               echo 'option -d must be followed by directory'
                exit 1
            fi
            ;;
@@ -53,10 +58,7 @@ fi
 #done
 #exit 0
 
-SESSION=0
-WID='fim'
-SID=0
-
+#console
 if [ -z "$DISPLAY" ]; then
     if [ "$recursive" = "FALSE" ]; then
         if [ "$slideshow" = "FALSE" ]; then
@@ -72,16 +74,17 @@ if [ -z "$DISPLAY" ]; then
         fi
     fi
 
-    tmux has-session -t $SESSION
+    tmux has-session -t $SID
     if [ $? -ne 0 ]; then
-        fim "$file"
+        setterm -cursor off; $CMD
         exit 0
     fi
 
-    tmux select-window -t $WID > /dev/null 2>&1
+    tmux select-window -t $WIN > /dev/null 2>&1
     if [ $? -ne 0 ]; then
-        tmux new-window -n $WID -t $SESSION:$SID "$CMD"
+        tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD"
     fi
+#xwindow
 else
     if [ "$recursive" = "FALSE" ]; then
         if [ "$slideshow" = "FALSE" ]; then

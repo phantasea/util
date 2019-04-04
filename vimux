@@ -1,13 +1,12 @@
 #! /bin/bash
 
-SESSION=0
+SID=0
+WID=7
+WIN="vim"
 
 prog="vim"
 exe="edit"
 diff=0
-
-WIN="vim"
-SID=7
 
 while getopts "vc:d" opt; do
     case $opt in
@@ -20,34 +19,18 @@ while getopts "vc:d" opt; do
            diff=1
            prog="vimdiff"
            WIN="diff"
-           SID=0
+           WID=0
            ;;
-        ?) echo 'Usage0: vimux [-v]/[-d]/[-c cmd] file/dir'
+        ?) echo 'Usage: vimux [-v]/[-d]/[-c cmd] file/dir'
            exit 1;;
     esac
 done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
-#echo $#
-#echo $*
-#echo $@
-#while [ $# -ne 0 ]; do
-#    echo $1
-#    shift
-#done
-##vim $*
-#exit 0
-
-#if [ $# -eq 0 -o $# -gt 1 ]; then
-#    echo $*
-#    echo 'Usage1: vimux [-v] [-c cmd] file/dir'
-#    exit 1
-#fi
-
 if [ ! -f "$1" ] && [ ! -d "$1" ]; then
     echo $1
-    echo 'Usage2: vimux [-v] [-c cmd] file/dir'
+    echo 'is neither a file nor directory'
     exit 1
 fi
 
@@ -56,7 +39,7 @@ file=${file// /\\\ }
 file=${file//(/\\\(}
 file=${file//)/\\\)}
 
-tmux has-session -t $SESSION
+tmux has-session -t $SID
 if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
     $prog $file
     exit 0
@@ -75,7 +58,7 @@ fi
 
 tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SESSION:$SID "$prog $file $file2"
+    tmux new-window -n $WIN -t $SID:$WID "$prog $file $file2"
     tmux select-window -t $WIN
 fi
 
@@ -84,19 +67,19 @@ if [ $diff -eq 1 ]; then
     exit 0
 fi
 
-tmux send-keys -t $SESSION:$SID escape
+tmux send-keys -t $SID:$WID escape
 tmux set-buffer ":cd $cwd"
-tmux paste-buffer -t $SESSION:$SID
-tmux send-keys -t $SESSION:$SID C-m
+tmux paste-buffer -t $SID:$WID
+tmux send-keys -t $SID:$WID C-m
 
 tmux set-buffer ":$exe $file"
-tmux paste-buffer -t $SESSION:$SID
-tmux send-keys -t $SESSION:$SID C-m
+tmux paste-buffer -t $SID:$WID
+tmux send-keys -t $SID:$WID C-m
 
 if [ ! -z "$cmd" ]; then
     tmux set-buffer ":$cmd"
-    tmux paste-buffer -t $SESSION:$SID
-    tmux send-keys -t $SESSION:$SID C-m
+    tmux paste-buffer -t $SID:$WID
+    tmux send-keys -t $SID:$WID C-m
 fi
 
 exit 0

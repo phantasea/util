@@ -1,21 +1,24 @@
 #! /bin/bash
 
-SESSION=0
+SID=0
+WID=4
+WIN="mutt"
+CMD="mutt"
 
 if [ ! -z "$DISPLAY" ]; then
-    mutt
+    $CMD
     exit 0
 fi
 
-tmux has-session -t $SESSION
+tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    mutt
+    $CMD
     exit 0
 fi
 
-tmux select-window -t mutt > /dev/null 2>&1
+tmux select-window -t $WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n mutt -t $SESSION:5 mutt
+    tmux new-window -n $WIN -t $SID:$WID $CMD
 fi
 
 exit 0
