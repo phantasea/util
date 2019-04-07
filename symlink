@@ -43,7 +43,9 @@ ln -sf /opt/etc/tigrc ~/.tigrc
 ln -sf /opt/etc/task ~/.task
 ln -sf /opt/etc/taskrc ~/.taskrc
 ln -sf /opt/etc/urlview ~/.urlview
+ln -sf /opt/etc/vnstatrc ~/.vnstatrc
 ln -sf /opt/etc/wgetrc ~/.wgetrc
+ln -sf /opt/etc/zathura ~/.zathura
 
 sudo ln -sf /opt/etc/updatedb.conf /etc/updatedb.conf
 sudo ln -sf /opt/etc/51-android.rules /etc/udev/rules.d/51-android.rules

@@ -3,8 +3,9 @@
 
 # hide the cursor
 # echo -ne "\e[?25l"
+# setterm curson off
 
-fbv -ciuker "/home/simone/pics/bgi.jpg" << EOF
+fbv -ciuker "/home/simone/pics/wallpaper/desktop.jpg" << EOF
 q
 EOF
 
