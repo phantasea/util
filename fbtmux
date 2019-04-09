@@ -3,11 +3,19 @@
 
 # hide the cursor
 # echo -ne "\e[?25l"
-# setterm curson off
+# setterm -cursor off
 
-fbv -ciuker "/home/simone/pics/wallpaper/desktop.jpg" << EOF
+fbv -ciuker "/home/simone/pics/wallpaper/desktop-$(date +%d).jpg" << EOF
 q
 EOF
 
 export FBTERM_BACKGROUND_IMAGE=1
 exec fbterm -- tmux > /dev/null 2>&1
+
+#fbv -ciuker "$1" << EOF
+#q
+#EOF
+#
+#shift
+#export FBTERM_BACKGROUND_IMAGE=1
+#exec fbterm "$@"
