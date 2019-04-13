@@ -5,7 +5,7 @@
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
-fbv -ciuker "/home/simone/pics/wallpaper/desktop-$(date +%d).jpg" << EOF
+fbv -ciuker "/home/simone/.wallpaper/desktop-$(date +%d).jpg" << EOF
 q
 EOF
 
