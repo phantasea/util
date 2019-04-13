@@ -54,5 +54,6 @@ sudo ln -sf /opt/etc/updatedb.conf /etc/updatedb.conf
 sudo ln -sf /opt/etc/51-android.rules /etc/udev/rules.d/51-android.rules
 sudo ln -sf /opt/etc/rc.local /etc/rc.local
 sudo ln -sf /opt/etc/locale.nopurge /etc/locale.nopurge
+sudo ln -sf /opt/etc/sources.list /etc/apt/sources.list
 
 exit 0
