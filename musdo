@@ -1,0 +1,23 @@
+#!/bin/bash
+
+SESSION=0
+
+tmux has-session -t $SESSION
+if [ $? -ne 0 ]; then
+    exit 0
+fi
+
+while getopts "pnsPu" opt; do
+    case $opt in
+        p) action="previous";;
+        n) action="next";;
+        s) action="stop";;
+        P) action="pause";;
+        u) action="unpause";;
+        ?) echo 'Usage: musdo [-pnsPu]'
+           exit 1;;
+    esac
+done
+
+mocp --$action
+exit 0
