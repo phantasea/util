@@ -22,6 +22,6 @@ if [ $? -ne 0 ]; then
     tmux select-window -t $WIN
 fi
 
-tmux send-keys -t $SID:$WID escape ":ViewDocMan $1" C-m
-tmux send-keys -t $SID:$WID so
+tmux send-keys -t $SID:$WID escape ":Man $1" C-m
+#tmux send-keys -t $SID:$WID so
 exit 0
