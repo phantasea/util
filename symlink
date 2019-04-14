@@ -13,11 +13,13 @@ ln -sf /opt/.priv/autoshut  /opt/util/autoshut
 ln -sf /opt/.priv/fetchmailrc ~/.fetchmailrc
 ln -sf /opt/.priv/msmtprc     ~/.msmtprc
 ln -sf /opt/.mail ~/.mail
+ln -sf /opt/.logs ~/.logs
 ln -sf /opt/util ~/.util
 ln -sf /opt/etc/wallpaper ~/.wallpaper
 ln -sf /opt/etc/user-dirs.dirs ~/.config/user-dirs.dirs
 ln -sf /opt/etc/user-dirs.locale ~/.config/user-dirs.locale
 ln -sf /opt/etc/mailcap ~/.mailcap
+ln -sf /opt/etc/inputrc ~/.inputrc
 ln -sf /opt/etc/vimrc ~/.vimrc
 ln -sf /opt/etc/alias ~/.alias
 ln -sf /opt/etc/bashrc ~/.bashrc 
@@ -28,6 +30,8 @@ ln -sf /opt/etc/dircolors ~/.dircolors
 ln -sf /opt/etc/moc ~/.moc
 ln -sf /opt/etc/mplayer/ ~/.mplayer
 ln -sf /opt/etc/vifm/ ~/.vifm
+ln -sf /opt/etc/ranger/ ~/.ranger
+ln -sf /opt/etc/ranger/ ~/.config/ranger
 ln -sf /opt/etc/w3m/ ~/.w3m
 ln -sf /opt/etc/gitconfig ~/.gitconfig
 ln -sf /opt/etc/abookrc ~/.abookrc
@@ -48,6 +52,7 @@ ln -sf /opt/etc/taskrc ~/.taskrc
 ln -sf /opt/etc/urlview ~/.urlview
 ln -sf /opt/etc/vnstatrc ~/.vnstatrc
 ln -sf /opt/etc/wgetrc ~/.wgetrc
+ln -sf /opt/etc/apvlvrc ~/.apvlvrc
 ln -sf /opt/etc/zathura ~/.zathura
 
 sudo ln -sf /opt/etc/updatedb.conf /etc/updatedb.conf
