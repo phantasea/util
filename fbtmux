@@ -5,6 +5,11 @@
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
+tmux select-window -t vifm > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    exit 0
+fi
+
 fbv -ciuker "/home/simone/.wallpaper/desktop-$(date +%d).jpg" << EOF
 q
 EOF

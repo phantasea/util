@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ln -sf /opt/apps/adbfs/adbfs /opt/util/adbfs
-ln -sf /usr/local/libexec/w3m/w3mimgdisplay /opt/util/w3mimgdisplay
+ln -sf /opt/.mail ~/.mail
+ln -sf /opt/.logs ~/.logs
 ln -sf /opt/.priv/porn /opt/util/porn
 ln -sf /opt/.priv/priv /opt/util/priv
 ln -sf /opt/.priv/startx /opt/util/startx
@@ -10,55 +10,52 @@ ln -sf /opt/.priv/sandisk_v /opt/util/sandisk_v
 ln -sf /opt/.priv/sandisk_w /opt/util/sandisk_w
 ln -sf /opt/.priv/autoboot  /opt/util/autoboot
 ln -sf /opt/.priv/autoshut  /opt/util/autoshut
-ln -sf /opt/.priv/fetchmailrc ~/.fetchmailrc
+ln -sf /opt/.priv/fconfhmailrc ~/.fconfhmailrc
 ln -sf /opt/.priv/msmtprc     ~/.msmtprc
-ln -sf /opt/.mail ~/.mail
-ln -sf /opt/.logs ~/.logs
+ln -sf /opt/apps/adbfs/adbfs /opt/util/adbfs
 ln -sf /opt/util ~/.util
-ln -sf /opt/etc/wallpaper ~/.wallpaper
-ln -sf /opt/etc/user-dirs.dirs ~/.config/user-dirs.dirs
-ln -sf /opt/etc/user-dirs.locale ~/.config/user-dirs.locale
-ln -sf /opt/etc/mailcap ~/.mailcap
-ln -sf /opt/etc/inputrc ~/.inputrc
-ln -sf /opt/etc/vimrc ~/.vimrc
-ln -sf /opt/etc/alias ~/.alias
-ln -sf /opt/etc/bashrc ~/.bashrc 
-ln -sf /opt/etc/fbtermrc ~/.fbtermrc
-ln -sf /opt/etc/tmux.conf ~/.tmux.conf
-ln -sf /opt/etc/fimrc ~/.fimrc
-ln -sf /opt/etc/dircolors ~/.dircolors
-ln -sf /opt/etc/moc ~/.moc
-ln -sf /opt/etc/mplayer/ ~/.mplayer
-ln -sf /opt/etc/vifm/ ~/.vifm
-ln -sf /opt/etc/ranger/ ~/.ranger
-ln -sf /opt/etc/ranger/ ~/.config/ranger
-ln -sf /opt/etc/w3m/ ~/.w3m
-ln -sf /opt/etc/gitconfig ~/.gitconfig
-ln -sf /opt/etc/abookrc ~/.abookrc
-ln -sf /opt/etc/dictrc  ~/.dictrc
-ln -sf /opt/etc/elinks.conf ~/.elinks/elinks.conf
-ln -sf /opt/etc/newsbeuter/color  ~/.newsbeuter/color
-ln -sf /opt/etc/newsbeuter/config ~/.newsbeuter/config
-ln -sf /opt/etc/newsbeuter/keymap ~/.newsbeuter/keymap
-ln -sf /opt/etc/newsbeuter/urls   ~/.newsbeuter/urls
-ln -sf /opt/etc/yong.ini ~/.yong/yong.ini
-ln -sf /opt/etc/mutt ~/.mutt
-ln -sf /opt/etc/muttrc ~/.muttrc
-ln -sf /opt/etc/procmailrc ~/.procmailrc
-ln -sf /opt/etc/signature ~/.signature
-ln -sf /opt/etc/tigrc ~/.tigrc
-ln -sf /opt/etc/task ~/.task
-ln -sf /opt/etc/taskrc ~/.taskrc
-ln -sf /opt/etc/urlview ~/.urlview
-ln -sf /opt/etc/vnstatrc ~/.vnstatrc
-ln -sf /opt/etc/wgetrc ~/.wgetrc
-ln -sf /opt/etc/apvlvrc ~/.apvlvrc
-ln -sf /opt/etc/zathura ~/.zathura
+ln -sf /opt/conf/wallpaper ~/.wallpaper
+ln -sf /opt/conf/user-dirs.dirs ~/.config/user-dirs.dirs
+ln -sf /opt/conf/user-dirs.locale ~/.config/user-dirs.locale
+ln -sf /opt/conf/mailcap ~/.mailcap
+ln -sf /opt/conf/inputrc ~/.inputrc
+ln -sf /opt/conf/vimrc ~/.vimrc
+ln -sf /opt/conf/alias ~/.alias
+ln -sf /opt/conf/bashrc ~/.bashrc
+ln -sf /opt/conf/fbtermrc ~/.fbtermrc
+ln -sf /opt/conf/tmux.conf ~/.tmux.conf
+ln -sf /opt/conf/fimrc ~/.fimrc
+ln -sf /opt/conf/dircolors ~/.dircolors
+ln -sf /opt/conf/moc ~/.moc
+ln -sf /opt/conf/mplayer/ ~/.mplayer
+ln -sf /opt/conf/vifm/ ~/.vifm
+ln -sf /opt/conf/ranger/ ~/.ranger
+ln -sf /opt/conf/ranger/ ~/.config/ranger
+ln -sf /opt/conf/w3m/ ~/.w3m
+ln -sf /opt/conf/gitconfig ~/.gitconfig
+ln -sf /opt/conf/abookrc ~/.abookrc
+ln -sf /opt/conf/dictrc  ~/.dictrc
+ln -sf /opt/conf/elinks.conf ~/.elinks/elinks.conf
+ln -sf /opt/conf/newsbeuter/  ~/.newsbeuter
+ln -sf /opt/conf/yong.ini ~/.yong/yong.ini
+ln -sf /opt/conf/mutt ~/.mutt
+ln -sf /opt/conf/muttrc ~/.muttrc
+ln -sf /opt/conf/procmailrc ~/.procmailrc
+ln -sf /opt/conf/signature ~/.signature
+ln -sf /opt/conf/tigrc ~/.tigrc
+ln -sf /opt/conf/task ~/.task
+ln -sf /opt/conf/taskrc ~/.taskrc
+ln -sf /opt/conf/urlview ~/.urlview
+ln -sf /opt/conf/vnstatrc ~/.vnstatrc
+ln -sf /opt/conf/wgetrc ~/.wgetrc
+ln -sf /opt/conf/apvlvrc ~/.apvlvrc
+ln -sf /opt/conf/zathura ~/.zathura
+ln -sf /usr/local/libexec/w3m/w3mimgdisplay /opt/util/w3mimgdisplay
 
-sudo ln -sf /opt/etc/updatedb.conf /etc/updatedb.conf
-sudo ln -sf /opt/etc/51-android.rules /etc/udev/rules.d/51-android.rules
-sudo ln -sf /opt/etc/rc.local /etc/rc.local
-sudo ln -sf /opt/etc/locale.nopurge /etc/locale.nopurge
-sudo ln -sf /opt/etc/sources.list /etc/apt/sources.list
+sudo ln -sf /opt/conf/updatedb.conf /conf/updatedb.conf
+sudo ln -sf /opt/conf/51-android.rules /conf/udev/rules.d/51-android.rules
+sudo ln -sf /opt/conf/rc.local /conf/rc.local
+sudo ln -sf /opt/conf/locale.nopurge /conf/locale.nopurge
+sudo ln -sf /opt/conf/sources.list /conf/apt/sources.list
 
 exit 0

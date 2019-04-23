@@ -3,5 +3,5 @@
 bat=` acpi | awk -F, '/,.*%/ {print $2}' | awk '{print $1}' | awk -F% '{print $1}'`
 
 if [ $bat -lt 20 ]; then
-    /opt/util/mywall /opt/etc/batwarn
+    /opt/util/mywall /opt/conf/batwarn
 fi

@@ -5,12 +5,6 @@ WID=2
 WIN="tig"
 CMD="tig"
 
-if [ ! -f "$1" ] && [ ! -d "$1" ]; then
-    echo $1
-    echo 'is neither a file nor directory'
-    exit 1
-fi
-
 file=$1
 file=${file// /\\\ }
 
