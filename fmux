@@ -8,7 +8,7 @@ CMD='vifm'
 while getopts "e" opt; do
     case $opt in
         e) 
-           CMD='ranger --confdir=/home/simone/.ranger'
+           CMD='ranger'
            WIN='ranger'
            WID=11
            ;;
