@@ -5,6 +5,10 @@ WID=9
 WIN='vifm'
 CMD='vifm'
 
+if [ ! -z "$DISPLAY" ]; then
+    CMD='vifmrun'
+fi
+
 while getopts "e" opt; do
     case $opt in
         e) 
