@@ -1,0 +1,34 @@
+#! /bin/bash
+
+tmpfile="/tmp/thumbnails/$5"
+
+# Create temporary directory if it doesn't exist
+if [[ ! -d "/tmp/thumbnails/" ]]; then
+    mkdir -p "/tmp/thumbnails/"
+fi
+
+function previewvideo() {
+    if [[ ! -f "$tmpfile" ]]; then
+        ffmpegthumbnailer -i "$5" -o "$tmpfile.png" -s 0 -q 10
+    fi
+
+    w3mimg $1 $2 $3 $4 "$tmpfile.png"
+}
+
+function previewpdf() {
+    if [[ ! -f "$tmpfile" ]]; then
+        pdftoppm -png -f 1 -singlefile "$5" "$tmpfile"
+    fi
+
+    w3mimg $1 $2 $3 $4 "$tmpfile.png"
+}
+
+function main() {
+    case "${5##*.}" in
+        "avi"|"mp4"|"wmv"|"dat"|"mkv"|"mpg"|"mpeg"|"flv"|"mov"|"webm"|"rm") previewvideo "$@" ;;
+        "pdf") previewpdf "$@" ;;
+        # "*") echo "Unknown command: '$@'" ;;
+    esac
+}
+
+main "$@"
