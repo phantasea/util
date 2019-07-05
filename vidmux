@@ -6,10 +6,12 @@ WIN="mplayer"
 CMD=""
 
 fullscreen=0
+usemplayer=0
 
-while getopts "f" opt; do
+while getopts "fv" opt; do
     case $opt in
         f) fullscreen=1;;
+        v) usemplayer=0;;
         ?) echo 'Usage0: vidmux [-f] file'
            exit 1;;
     esac
@@ -24,7 +26,12 @@ if [ ! -z "$DISPLAY" ]; then
     fi
 
     #totem "$1" &
-    mplayer -really-quiet -fs "$1"
+    if [ $usemplayer -eq 1 ]; then
+        mplayer -really-quiet -fs "$1"
+    else
+        mpv --really-quiet --vo=drm "$1"
+    fi
+
     exit 0
 fi
 
@@ -42,6 +49,10 @@ if [ $fullscreen -eq 0 ]; then
     CMD="mplayer -really-quiet -vo fbdev2 \"$1\""
 else 
     CMD="mplayer -really-quiet -vo fbdev2 -xy 1024 -fs -zoom \"$1\""
+fi
+
+if [ $usemplayer -eq 0 ]; then
+   CMD="mpv --really-quiet --vo=drm \"$1\""
 fi
 
 tmux has-session -t $SID
