@@ -1,20 +1,16 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 SID=0
 WID=9
 WIN='vifm'
 CMD='vifm'
 
-if [ ! -z "$DISPLAY" ]; then
-    CMD='vifmrun'
-fi
-
 while getopts "e" opt; do
     case $opt in
         e) 
            CMD='ranger'
            WIN='ranger'
-           WID=11
+           WID=0
            ;;
         ?) echo 'Usage0: fmux [-e]'
            exit 1;;
