@@ -5,23 +5,13 @@ WID=6
 WIN="video"
 CMD="mplayer"
 
-while getopts "v" opt; do
-    case $opt in
-        v) CMD="mpv";;
-        ?) echo 'Usage0: vidmux [-v] file'
-           exit 1;;
-    esac
-done
-
-shift $((OPTIND-1))
-
 if [ ! -z "$DISPLAY" ]; then
     if [ ! -f "$1" ]; then
         echo "$1 is not a file"
         exit 1
     fi
 
-    $CMD "$1"
+    mpv "$1"
     exit 0
 fi
 
