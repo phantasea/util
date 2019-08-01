@@ -6,7 +6,7 @@ WIN="web"
 
 #prog="cd ~; TERM=jfbterm w3m -s"
 cmd="w3m -s"
-prog="cd ~; w3m -s"
+prog="cd ~/temp; w3m -s"
 
 while getopts "e" opt; do
     case $opt in
@@ -28,7 +28,7 @@ fi
 
 tmux has-session -t $SID
 if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
-    cd ~
+    cd ~/temp
 
     if [ -z "$1" ]; then
         $cmd .
