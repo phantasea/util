@@ -5,11 +5,11 @@ case "$MIMETYPE" in
     audio/*)
         exiftool "$1" |grep ^Duration |cut -d':' -f 2-4 |cut -d' ' -f 2
         exit 0;;
-    video/*)
-        exiftool "$1" |grep ^Duration |cut -d':' -f 2-4 |sed -e 's/^[ \t]*//'
-        exit 0;;
     image/*)
         exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//'
+        exit 0;;
+    video/*)
+        (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
         exit 0;;
 esac
 
