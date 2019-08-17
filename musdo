@@ -1,8 +1,13 @@
 #!/bin/bash
 
-SESSION=0
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
 
-tmux has-session -t $SESSION
+
+tmux has-session -t $SID
 if [ $? -ne 0 ]; then
     exit 0
 fi

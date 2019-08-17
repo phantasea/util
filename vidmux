@@ -1,27 +1,23 @@
 #!/bin/bash
 
-SID=0
-WID=6
-WIN="video"
-CMD="mplayer"
-
-if [ ! -z "$DISPLAY" ]; then
-    if [ ! -f "$1" ]; then
-        echo "$1 is not a file"
-        exit 1
-    fi
-
-    mpv "$1"
-    exit 0
+if [ -z "$DISPLAY" ]; then
+    SID=0
+    CMD="mplayer"
+else
+    SID=1
+    CMD="mpv"
 fi
 
+WID=6
+WIN="video"
+
 if [ $# -gt 1 ] || [ $# -eq 0 ]; then
-    echo 'Usage1: vidmux [-v] file'
+    echo 'Usage1: vidmux file'
     exit 1
 fi
 
 if [ ! -f "$1" ]; then
-    echo 'Usage2: vidmux [-v] file'
+    echo 'Usage2: vidmux file'
     exit 1
 fi
 
@@ -31,7 +27,7 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t $WIN > /dev/null 2>&1
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\""
 fi

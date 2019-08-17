@@ -1,14 +1,14 @@
 #! /bin/bash
 
-SID=0
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
+
 WID=7
 WIN="vim"
 CMD="vim"
-
-if [ ! -z "$DISPLAY" ]; then
-    man $1
-    exit 0
-fi
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
@@ -16,10 +16,10 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-tmux select-window -t $WIN > /dev/null 2>&1
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID $CMD
-    tmux select-window -t $WIN
+    tmux select-window -t $SID:$WIN
 fi
 
 tmux send-keys -t $SID:$WID escape ":Man $1" C-m

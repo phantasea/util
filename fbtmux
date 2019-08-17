@@ -1,11 +1,11 @@
 #!/bin/bash
-# fbtmux: a wrapper script to enable background image with fbterm in tmux
+# fbtmux: a wrapper script to enable background image with fbterm in tmux (invoked in .bashrc)
 
 # hide the cursor
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
-tmux select-window -t vifm > /dev/null 2>&1
+tmux has-session -t 0
 if [ $? -eq 0 ]; then
     exit 0
 fi

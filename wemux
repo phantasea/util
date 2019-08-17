@@ -1,18 +1,21 @@
 #! /bin/bash
 
-SID=0
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
+
 WID=8
 WIN="web"
 
-#prog="cd ~; TERM=jfbterm w3m -s"
-cmd="w3m -s"
-prog="cd ~/temp; w3m -s"
+#CMD="cd ~; TERM=jfbterm w3m -s"
+CMD="cd ~/temp; w3m -s"
 
 while getopts "e" opt; do
     case $opt in
         e) 
-           prog="elinks"
-           cmd="elinks"
+           CMD="elinks"
            ;;
         ?) echo 'Usage0: wemux [-e] URI'
            exit 1;;
@@ -27,13 +30,11 @@ if [ $# -gt 1 ]; then
 fi
 
 tmux has-session -t $SID
-if [ $? -ne 0 ] || [ ! -z "$DISPLAY" ]; then
-    cd ~/temp
-
+if [ $? -ne 0 ]; then
     if [ -z "$1" ]; then
-        $cmd .
+        $CMD .
     else
-        $cmd "$1"
+        $CMD "$1"
     fi
 
     exit 0
@@ -52,12 +53,12 @@ if [ ! -z "$1" ]; then
     fi
 fi
 
-tmux select-window -t $WIN > /dev/null 2>&1
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "$prog \"$URI\""
+    tmux new-window -n $WIN -t $SID:$WID "$CMD \"$URI\""
 else
     tmux send-keys -t $SID:$WID T
-    if [ "$prog" = "elinks" ]; then
+    if [ "$CMD" = "elinks" ]; then
         tmux send-keys -t $SID:$WID o
     fi
     tmux set-buffer "$URI"

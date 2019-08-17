@@ -7,7 +7,12 @@ shopt -s nocaseglob
 recursive="FALSE"
 slideshow="FALSE"
 
-SID=0
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
+
 WID=12
 WIN="fim"
 CMD="fim"
@@ -73,32 +78,33 @@ if [ -z "$DISPLAY" ]; then
             CMD="fim -c \"endless_slideshow\" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         fi
     fi
-
-    tmux has-session -t $SID
-    if [ $? -ne 0 ]; then
-        setterm -cursor off; $CMD
-        exit 0
-    fi
-
-    tmux select-window -t $WIN > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD"
-    fi
 #xwindow
 else
     if [ "$recursive" = "FALSE" ]; then
         if [ "$slideshow" = "FALSE" ]; then
-            pho -p "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            CMD="pho -p \"$file\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         else
-            pho -p -s1 *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            CMD="pho -p -s1 *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         fi
     else
         if test "$slideshow" = "FALSE"; then
-            pho -p "$file" **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            CMD="pho -p \"$file\" **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         else
-            pho -p -s1 **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1 &
+            CMD="pho -p -s1 **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
         fi
     fi
+fi
+
+tmux has-session -t $SID
+if [ $? -ne 0 ]; then
+    setterm -cursor off; $CMD
+    exit 0
+fi
+
+echo $SID:$WIN=$CMD
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD"
 fi
 
 exit 0
