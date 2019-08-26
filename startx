@@ -1,0 +1,13 @@
+#!/bin/bash
+
+password="$(< /opt/.priv/password)"
+
+#/usr/bin/expect <(cat << EOD
+/usr/bin/expect << EOD
+    set timeout 30
+    spawn sudo systemctl start lightdm.service
+    expect "password"
+    send "$password\r"
+    expect eof
+EOD
+#)

@@ -1,1 +1,16 @@
-/opt/.priv/pornx
+#!/bin/bash
+
+password="$(< /opt/.priv/password)"
+passphrase="$(< /opt/.priv/passphrase-2)"
+
+#/usr/bin/expect <(cat << EOD
+/usr/bin/expect << EOD
+    set timeout 3
+    spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    expect "password"
+    send "$password\r"
+    expect "Passphrase"
+    send "$passphrase\r"
+    expect eof
+EOD
+#)

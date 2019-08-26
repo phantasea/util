@@ -1,0 +1,13 @@
+#!/bin/bash
+
+password="$(< /opt/.priv/password)"
+
+#/usr/bin/expect <(cat << EOD
+/usr/bin/expect << EOD
+    set timeout 30
+    spawn sudo mount -t vfat -o rw,nosuid,nodev,uid=1000,gid=1003,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks /dev/disk/by-uuid/udisk_hama /media/simone/sandisk_w
+    expect "password"
+    send "$password\r"
+    expect eof
+EOD
+#)
