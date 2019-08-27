@@ -1,0 +1,12 @@
+#! /bin/bash
+
+tmpfile="/tmp/thumbnails/weather.png"
+
+# Create temporary directory if it doesn't exist
+if [[ ! -d "/tmp/thumbnails/" ]]; then
+    mkdir -p "/tmp/thumbnails/"
+fi
+
+curl -s wttr.in/wugang_pt.png > $tmpfile
+
+jfbview $tmpfile
