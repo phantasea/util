@@ -1,60 +1,58 @@
 #!/bin/bash
 
-ln -sf /opt/.mail ~/.mail
-ln -sf /opt/.logs ~/.logs
-ln -sf /opt/.priv/porn /opt/util/porn
-ln -sf /opt/.priv/priv /opt/util/priv
-ln -sf /opt/.priv/startx /opt/util/startx
-ln -sf /opt/.priv/sandisk_u /opt/util/sandisk_u
-ln -sf /opt/.priv/sandisk_v /opt/util/sandisk_v
-ln -sf /opt/.priv/sandisk_w /opt/util/sandisk_w
-ln -sf /opt/.priv/autoboot  /opt/util/autoboot
-ln -sf /opt/.priv/autoshut  /opt/util/autoshut
-ln -sf /opt/.priv/fconfhmailrc ~/.fconfhmailrc
-ln -sf /opt/.priv/msmtprc     ~/.msmtprc
-ln -sf /opt/apps/adbfs/adbfs /opt/util/adbfs
-ln -sf /opt/util ~/.util
-ln -sf /opt/conf/wallpaper ~/.wallpaper
-ln -sf /opt/conf/user-dirs.dirs ~/.config/user-dirs.dirs
-ln -sf /opt/conf/user-dirs.locale ~/.config/user-dirs.locale
-ln -sf /opt/conf/mailcap ~/.mailcap
-ln -sf /opt/conf/inputrc ~/.inputrc
-ln -sf /opt/conf/vimrc ~/.vimrc
-ln -sf /opt/conf/alias ~/.alias
-ln -sf /opt/conf/bashrc ~/.bashrc
-ln -sf /opt/conf/fbtermrc ~/.fbtermrc
-ln -sf /opt/conf/tmux.conf ~/.tmux.conf
-ln -sf /opt/conf/fimrc ~/.fimrc
-ln -sf /opt/conf/dircolors ~/.dircolors
-ln -sf /opt/conf/moc ~/.moc
-ln -sf /opt/conf/mplayer/ ~/.mplayer
-ln -sf /opt/conf/vifm/ ~/.vifm
-ln -sf /opt/conf/ranger/ ~/.ranger
-ln -sf /opt/conf/ranger/ ~/.config/ranger
-ln -sf /opt/conf/w3m/ ~/.w3m
-ln -sf /opt/conf/gitconfig ~/.gitconfig
-ln -sf /opt/conf/abookrc ~/.abookrc
-ln -sf /opt/conf/dictrc  ~/.dictrc
-ln -sf /opt/conf/elinks.conf ~/.elinks/elinks.conf
-ln -sf /opt/conf/newsbeuter/  ~/.newsbeuter
-ln -sf /opt/conf/yong.ini ~/.yong/yong.ini
-ln -sf /opt/conf/mutt ~/.mutt
-ln -sf /opt/conf/muttrc ~/.muttrc
-ln -sf /opt/conf/procmailrc ~/.procmailrc
-ln -sf /opt/conf/signature ~/.signature
-ln -sf /opt/conf/tigrc ~/.tigrc
-ln -sf /opt/conf/task ~/.task
-ln -sf /opt/conf/taskrc ~/.taskrc
-ln -sf /opt/conf/urlview ~/.urlview
-ln -sf /opt/conf/vnstatrc ~/.vnstatrc
-ln -sf /opt/conf/wgetrc ~/.wgetrc
-ln -sf /opt/conf/apvlvrc ~/.apvlvrc
-ln -sf /opt/conf/zathura ~/.zathura
-ln -sf /usr/local/libexec/w3m/w3mimgdisplay /opt/util/w3mimgdisplay
+ln -sf /opt/.mail                        ~/.mail
+ln -sf /opt/.logs                        ~/.logs
+ln -sf /opt/.priv/fetchmailrc            ~/.fetchmailrc
+ln -sf /opt/.priv/msmtprc                ~/.msmtprc
+ln -sf /opt/util                         ~/.util
+ln -sf /opt/conf/wallpaper               ~/.wallpaper
+ln -sf /opt/conf/mailcap                 ~/.mailcap
+ln -sf /opt/conf/inputrc                 ~/.inputrc
+ln -sf /opt/conf/vimrc                   ~/.vimrc
+ln -sf /opt/conf/alias                   ~/.alias
+ln -sf /opt/conf/bashrc                  ~/.bashrc
+ln -sf /opt/conf/fbtermrc                ~/.fbtermrc
+ln -sf /opt/conf/tmux.conf               ~/.tmux.conf
+ln -sf /opt/conf/fimrc                   ~/.fimrc
+ln -sf /opt/conf/dircolors               ~/.dircolors
+ln -sf /opt/conf/moc                     ~/.moc
+ln -sf /opt/conf/mplayer/                ~/.mplayer
+ln -sf /opt/conf/vifm/                   ~/.vifm
+ln -sf /opt/conf/w3m/                    ~/.w3m
+ln -sf /opt/conf/gitconfig               ~/.gitconfig
+ln -sf /opt/conf/abookrc                 ~/.abookrc
+ln -sf /opt/conf/dictrc                  ~/.dictrc
+ln -sf /opt/conf/elinks.conf             ~/.elinks/elinks.conf
+ln -sf /opt/conf/newsbeuter/             ~/.newsbeuter
+ln -sf /opt/conf/yong.ini                ~/.yong/yong.ini
+ln -sf /opt/conf/mutt                    ~/.mutt
+ln -sf /opt/conf/muttrc                  ~/.muttrc
+ln -sf /opt/conf/procmailrc              ~/.procmailrc
+ln -sf /opt/conf/signature               ~/.signature
+ln -sf /opt/conf/tigrc                   ~/.tigrc
+ln -sf /opt/conf/task                    ~/.task
+ln -sf /opt/conf/taskrc                  ~/.taskrc
+ln -sf /opt/conf/urlview                 ~/.urlview
+ln -sf /opt/conf/vnstatrc                ~/.vnstatrc
+ln -sf /opt/conf/wgetrc                  ~/.wgetrc
+ln -sf /opt/conf/apvlvrc                 ~/.apvlvrc
+ln -sf /opt/conf/user-dirs.dirs          ~/.config/user-dirs.dirs
+ln -sf /opt/conf/user-dirs.locale        ~/.config/user-dirs.locale
+ln -sf /opt/conf/feh                     ~/.config/feh
+ln -sf /opt/conf/mpv                     ~/.config/mpv
+ln -sf /opt/conf/ranger/                 ~/.config/ranger
+ln -sf /opt/conf/zathura                 ~/.config/zathura
+ln -sf /opt/conf/compton.conf            ~/.config/compton.conf
+ln -sf /opt/conf/vimb/config             ~/.config/vimb/config
+ln -sf /opt/conf/vimb/style.css          ~/.config/vimb/style.css
+ln -sf /opt/conf/i3/config               ~/.config/i3wm/i3.config
+ln -sf /opt/conf/i3status/config         ~/.config/i3wm/i3status.config
 
-sudo ln -sf /opt/conf/updatedb.conf /conf/updatedb.conf
-sudo ln -sf /opt/conf/51-android.rules /conf/udev/rules.d/51-android.rules
-sudo ln -sf /opt/conf/locale.nopurge /conf/locale.nopurge
-sudo ln -sf /opt/conf/sources.list /conf/apt/sources.list
+ln -sf /opt/apps/adbfs/adbfs             /opt/util/adbfs
+
+sudo ln -sf /opt/conf/updatedb.conf      /etc/updatedb.conf
+sudo ln -sf /opt/conf/51-android.rules   /etc/udev/rules.d/51-android.rules
+sudo ln -sf /opt/conf/locale.nopurge     /etc/locale.nopurge
+sudo ln -sf /opt/conf/sources.list       /etc/apt/sources.list
 
 exit 0
