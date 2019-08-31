@@ -1,7 +1,7 @@
 #!/bin/bash
 
 password="$(< /opt/.priv/password)"
-passphrase="$(< /opt/.priv/passphrase-2)"
+passphrase="$(< /opt/.priv/passphrase)"
 
 #/usr/bin/expect <(cat << EOD
 /usr/bin/expect << EOD
