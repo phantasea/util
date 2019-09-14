@@ -65,6 +65,7 @@ tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "$prog $file $file2"
     tmux select-window -t $SID:$WIN
+    exit 0
 fi
 
 if [ $diff -eq 1 ]; then
