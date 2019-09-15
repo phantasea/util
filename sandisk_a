@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ ! -f /opt/.priv/password ] && exit 1
+
 password="$(< /opt/.priv/password)"
 passphrase="$(< /opt/.priv/passphrase)"
 
@@ -35,6 +37,11 @@ passphrase="$(< /opt/.priv/passphrase)"
 
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_exp
+    expect "password"
+    send "$password\r"
+
+    sleep 0.5
+    spawn sudo umount /opt/.priv
     expect "password"
     send "$password\r"
 
