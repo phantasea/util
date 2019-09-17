@@ -6,7 +6,7 @@ password="$(< /opt/.priv/password)"
 passphrase="$(< /opt/.priv/passphrase)"
 
 /usr/bin/expect << EOD
-    set timeout 5
+    set timeout 3
 
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
@@ -26,17 +26,17 @@ passphrase="$(< /opt/.priv/passphrase)"
     send "$password\r"
 
     sleep 0.5
-    spawn sudo mount -t vfat -o rw,nosuid,nodev,uid=1000,gid=1003,shortname=mixed,dmask=0077,utf8=1,showexec,flush,uhelper=udisks /dev/disk/by-uuid/udisk_hama /media/simone/sandisk_w
+    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
     expect "password"
     send "$password\r"
 
     sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_ext
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
     expect "password"
     send "$password\r"
 
     sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_exp
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
     expect "password"
     send "$password\r"
 
