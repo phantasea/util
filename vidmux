@@ -10,6 +10,20 @@ fi
 
 WID=6
 WIN="video"
+NOFS=""
+
+while getopts "n" opt; do
+    case $opt in
+        n)
+           NOFS="-nofs -xy 768"
+           ;;
+        ?)
+           echo 'Usage0: vidmux [-n] file'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ] || [ $# -eq 0 ]; then
     echo 'Usage1: vidmux file'
@@ -23,13 +37,13 @@ fi
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    setterm -cursor off; $CMD "$1"
+    setterm -cursor off; $CMD $NOFS "$1"
     exit 0
 fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\""
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD $NOFS \"$1\""
 fi
 
 exit 0
