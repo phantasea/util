@@ -2,6 +2,19 @@
 
 [ ! -f /opt/.priv/password ] && exit 1
 
+PRIV=1
+
+while getopts "p" opt; do
+    case $opt in
+        p)
+           PRIV=0
+           ;;
+        ?)
+           echo 'sandisk -[p]'
+           exit 1;;
+    esac
+done
+
 password="$(< /opt/.priv/password)"
 passphrase="$(< /opt/.priv/passphrase)"
 
@@ -39,6 +52,14 @@ passphrase="$(< /opt/.priv/passphrase)"
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
     expect "password"
     send "$password\r"
+
+    expect eof
+EOD
+
+[ $PRIV -eq 0 ] && exit 0
+
+/usr/bin/expect << EOD
+    set timeout 3
 
     sleep 0.5
     spawn sudo umount /opt/.priv
