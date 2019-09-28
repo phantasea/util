@@ -2,11 +2,29 @@
 
 tmpfile="/tmp/thumbnails/weather.png"
 
+while getopts "cwx" opt; do
+    case $opt in
+        c)
+           LOC="changsha"
+           ;;
+        w)
+           LOC="wugang"
+           ;;
+        x)
+           LOC="xian"
+           ;;
+        ?) echo 'Usage: weather -[cwx]'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
 # Create temporary directory if it doesn't exist
 if [[ ! -d "/tmp/thumbnails/" ]]; then
     mkdir -p "/tmp/thumbnails/"
 fi
 
-curl -s wttr.in/wugang_pt.png > $tmpfile
+curl -s wttr.in/"$LOC"_pt.png > $tmpfile
 
 jfbview $tmpfile
