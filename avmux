@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#ffmpeg -i 111.aac -i 111.mp4 -acodec copy -vcodec copy ./vids/111.mp4
+#avmux audio.aac video.mp4 output.mp4
+
+ffmpeg -loglevel quiet -i "$1" -i "$2" -acodec copy -vcodec copy "$3"
