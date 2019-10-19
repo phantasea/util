@@ -24,6 +24,7 @@ if [ $? -ne 0 ]; then
     tmux send-keys -t $SID:$WID C-i
     tmux send-keys -t $SID:$WID "/misc" C-m
     tmux send-keys -t $SID:$WID G
+    tmux send-keys -t $SID:$WID C-i
     #sleep 1s
     #tmux split-window -v
     #tmux send-keys -t $SID:$WID "ccal -u" C-m
