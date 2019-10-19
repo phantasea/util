@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ ! -f /opt/.priv/password ] && exit 1
+
 password="$(< /opt/.priv/password)"
 
 #/usr/bin/expect <(cat << EOD
