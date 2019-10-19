@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #abspath=$(realpath "$1")
+#abspath=$(readlink -f "$1")
 #find "$abspath" -name '*.mp3' > "$2"
 
 find /opt/auds -name '*.mp3' > ~/auds/myfav.m3u
