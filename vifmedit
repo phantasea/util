@@ -1,0 +1,10 @@
+#!/bin/bash
+
+file=$*
+file=${file// /\\\ }
+
+[ ! -f $file ] && exit 1
+
+vifm --remote -c "edit $file"
+
+exit 0
