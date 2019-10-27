@@ -4,5 +4,5 @@
 #abspath=$(readlink -f "$1")
 #find "$abspath" -name '*.mp3' > "$2"
 
-find /opt/auds -name '*.mp3' > ~/auds/myfav.m3u
+find /opt/auds -name '*.mp3' | sort -f > ~/auds/myfav.m3u
 #find /opt/auds/*.mp3 > ~/auds/myfav.m3u
