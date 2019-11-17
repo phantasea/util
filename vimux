@@ -39,6 +39,15 @@ if [ ! -f "$1" ] && [ ! -d "$1" ]; then
     exit 1
 fi
 
+maxsize=3000000
+#size=$(wc -c < "$1")
+#size=$(stat --printf="%s" "$1")
+size=$(stat -c %s -- "$1")
+if [ $size -gt $maxsize ]; then
+    echo "file size $size is too large!"
+    exit 1
+fi
+
 file=$1
 file=${file// /\\\ }
 file=${file//(/\\\(}
