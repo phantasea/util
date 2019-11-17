@@ -5,6 +5,8 @@ ln -sf /opt/.logs                        ~/.logs
 ln -sf /opt/.priv/fetchmailrc            ~/.fetchmailrc
 ln -sf /opt/.priv/msmtprc                ~/.msmtprc
 ln -sf /opt/util                         ~/.util
+ln -sf /opt/misc/apps/fzf                ~/.fzf
+ln -sf /opt/misc/fonts                   ~/.fonts
 ln -sf /opt/conf/wallpaper               ~/.wallpaper
 ln -sf /opt/conf/mailcap                 ~/.mailcap
 ln -sf /opt/conf/inputrc                 ~/.inputrc
@@ -48,13 +50,15 @@ ln -sf /opt/conf/vimb/style.css          ~/.config/vimb/style.css
 ln -sf /opt/conf/i3/config               ~/.config/i3wm/i3.config
 ln -sf /opt/conf/i3status/config         ~/.config/i3wm/i3status.config
 
-ln -sf /opt/apps/adbfs/adbfs             /opt/util/adbfs
-
 sudo ln -sf /opt/conf/updatedb.conf      /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules   /etc/udev/rules.d/51-android.rules
 sudo ln -sf /opt/conf/locale.nopurge     /etc/locale.nopurge
 sudo ln -sf /opt/conf/sources.list       /etc/apt/sources.list
 
 sudo cp -f  /opt/conf/rc.local           /etc/rc.local
+
+ln -sf /opt/auds                             ~/auds/auds
+ln -sf /opt/apps/adbfs/adbfs                 /opt/util/adbfs
+ln -sf /usr/local/libexec/w3m/w3mimgdisplay  /opt/util/w3mimgdisplay
 
 exit 0
