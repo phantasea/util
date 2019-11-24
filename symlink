@@ -5,7 +5,7 @@ ln -sf /opt/.logs                        ~/.logs
 ln -sf /opt/.priv/fetchmailrc            ~/.fetchmailrc
 ln -sf /opt/.priv/msmtprc                ~/.msmtprc
 ln -sf /opt/util                         ~/.util
-ln -sf /opt/misc/apps/fzf                ~/.fzf
+ln -sf /opt/apps/fzf                     ~/.fzf
 ln -sf /opt/misc/fonts                   ~/.fonts
 ln -sf /opt/conf/wallpaper               ~/.wallpaper
 ln -sf /opt/conf/mailcap                 ~/.mailcap
