@@ -10,12 +10,19 @@ if [ $? -eq 0 ]; then
     exit 0
 fi
 
+if [ ! -z "$DISPLAY" ]; then
+    tmux
+    exit 0
+fi
+
 fbv -ciuker "/home/simone/.wallpaper/desktop-$(date +%d).jpg" << EOF
 q
 EOF
 
 export FBTERM_BACKGROUND_IMAGE=1
 exec fbterm -- tmux > /dev/null 2>&1
+
+exit 0
 
 #fbv -ciuker "$1" << EOF
 #q
