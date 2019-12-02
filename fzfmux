@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
+
+WID=12
+WIN="fzf"
+
+tmux has-session -t $SID
+if [ $? -ne 0 ]; then
+    send-keys $@
+    exit 0
+fi
+
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n $WIN -t $SID:$WID -c $HOME/temp
+fi
+
+tmux send-keys "$*" 'Enter'
+exit 0
