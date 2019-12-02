@@ -56,7 +56,7 @@ fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "$CMD \"$URI\""
+    tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD \"$URI\""
 else
     tmux send-keys -t $SID:$WID T
     if [ "$CMD" = "elinks" ]; then
