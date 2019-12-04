@@ -5,7 +5,7 @@
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
-tmux has-session -t 0
+tmux has-session
 if [ $? -eq 0 ]; then
     exit 0
 fi

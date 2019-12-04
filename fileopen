@@ -8,7 +8,7 @@ if [ -z "$DISPLAY" ]; then
         *.mp4|*.avi) setterm -cursor off; mplayer -nofs -xy 768 "$1" ;;
 
         *.jpg|*.png) jfbview "$1" ;; 
-       #*.jpg|*.png) setterm -cursor off; fbv "$1" *.{jpg,png} > /dev/null 2>&1 ;; 
+       #*.jpg|*.png) setterm -cursor off; fbv "$1" *.{jpg,png} > /dev/null 2>&1 ;;
     esac
 else  #xwindow
     case "$1" in
