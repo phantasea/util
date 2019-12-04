@@ -1,0 +1,21 @@
+#!/bin/bash
+
+[ ! -f "$1" ] && exit 1
+
+#console
+if [ -z "$DISPLAY" ]; then
+    case "$1" in
+        *.mp4|*.avi) setterm -cursor off; mplayer -nofs -xy 768 "$1" ;;
+
+        *.jpg|*.png) jfbview "$1" ;; 
+       #*.jpg|*.png) setterm -cursor off; fbv "$1" *.{jpg,png} > /dev/null 2>&1 ;; 
+    esac
+else  #xwindow
+    case "$1" in
+        *.mp4|*.avi) mplayer -vo x11 "$1" ;;
+
+        *.jpg|*.png) feh "$1" *.{jpg,png} > /dev/null 2>&1 ;; 
+    esac
+fi
+
+exit 0
