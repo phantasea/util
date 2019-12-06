@@ -1,0 +1,58 @@
+#! /bin/bash
+
+if [ -z "$DISPLAY" ]; then
+    SID=0
+else
+    SID=1
+fi
+
+WID=11
+WIN="pdfview"
+
+if [ -z "$DISPLAY" ]; then
+    CMD="fimgs"
+else
+    CMD="zathura"
+fi
+
+#If an option should be followed by an argument, it should be followed by a ":".
+#The leading ":" suppresses error messages from getopts.
+while getopts "b" opt; do
+    case $opt in
+        b)
+            if [ -z "$DISPLAY" ]; then
+                CMD="jfbview --cache_size=5"
+            else
+                CMD="mupdf"
+            fi
+            ;;
+        ?) echo 'Usage: pdfview [-bB] <file>'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
+
+if [ $# -gt 1 ]; then
+    echo "Only one file supported!"
+    exit 1
+fi
+
+file="$1"
+if [ ! -f "$file" ]; then
+    echo "$file is not a file!"
+    exit 1
+fi
+
+tmux has-session -t $SID
+if [ $? -ne 0 ]; then
+    setterm -cursor off; "$CMD" "$file"
+    exit 0
+fi
+
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$file\""
+fi
+
+exit 0
