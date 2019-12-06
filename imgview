@@ -4,6 +4,7 @@ shopt -s nullglob
 shopt -s globstar
 shopt -s nocaseglob
 
+ALT="FALSE"
 recursive="FALSE"
 slideshow="FALSE"
 
@@ -13,36 +14,33 @@ else
     SID=1
 fi
 
-WID=12
-WIN="fim"
-CMD="fim"
+WID=11
+WIN="imgview"
+CMD=""
+PROG=""
 
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
-#while getopts ":rsd:" opt; do
-while getopts "rsd:" opt; do
+#while getopts ":brsd:" opt; do
+while getopts "brsd:" opt; do
     case $opt in
+        b) ALT="TRUE";;
         r) recursive="TRUE";;
         s) slideshow="TRUE";;
         d) 
            if [ -d "$OPTARG" ]; then
                cd "$OPTARG"
            else
-               echo 'option -d must be followed by directory'
+               echo 'option -d must be followed by a directory!'
                exit 1
            fi
            ;;
-        ?) echo 'Usage: imgview [-r] [-s] [-d dir] [file]'
+        ?) echo 'Usage: imgview [-b] [-r] [-s] [-d dir] <file>'
            exit 1;;
     esac
 done
 
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
-
-if [ $# -gt 1 ]; then
-    echo "Only one file supported!"
-    exit 1
-fi
+shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 
 file=$1
 if [ ! -z "$file" -a ! -f "$file" ]; then
@@ -50,50 +48,44 @@ if [ ! -z "$file" -a ! -f "$file" ]; then
     exit 1
 fi
 
-#while [ $# -ne 0 ]; do
-#    file=$1
-#    file=${file// /\\\ }
-#    file=${file##*/}  
-#    #file=`basename "$file"`  #This is another way to get the base file name.
-#    #file_BASE=`echo "${file%.*}"`  #file without extension
-#    #file_EXT="${file##*.}"  #file extension
-#
-#    echo "$file"
-#    shift  #Move on to next input file.
-#done
-#exit 0
-
-#console
+# console
 if [ -z "$DISPLAY" ]; then
-    if [ "$recursive" = "FALSE" ]; then
-        if [ "$slideshow" = "FALSE" ]; then
-            CMD="fim \"$file\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
+    PROG="fim"
+    if [ "$ALT" = "TRUE" ]; then
+        PROG="fbv"
+    fi
+
+    if [ "$slideshow" = "TRUE" ]; then
+        if [ "$ALT" = "FALSE" ]; then
+            PROG+=" -c \"endless_slideshow\""
         else
-            CMD="fim -c \"endless_slideshow\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
-        fi
-    else
-        if test "$slideshow" = "FALSE"; then
-            CMD="fim \"$file\" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
-        else
-            CMD="fim -c \"endless_slideshow\" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
+            PROG+=" -s 10"
         fi
     fi
-#xwindow
+# xwindow
 else
-    if [ "$recursive" = "FALSE" ]; then
-        if [ "$slideshow" = "FALSE" ]; then
-            CMD="pho -p \"$file\" *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
+    PROG="pho -p"
+    if [ "$ALT" = "TRUE" ]; then
+        PROG="feh -F"
+    fi
+
+    if [ "$slideshow" = "TRUE" ]; then
+        if [ "$ALT" = "FALSE" ]; then
+            PROG+=" -s1"
         else
-            CMD="pho -p -s1 *.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
-        fi
-    else
-        if test "$slideshow" = "FALSE"; then
-            CMD="pho -p \"$file\" **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
-        else
-            CMD="pho -p -s1 **/*.{jpg,jpeg,png,bmp,gif,ppm,xpm} > /dev/null 2>&1"
+            PROG+=" -D 1"
         fi
     fi
 fi
+
+FILES="$file"
+if [ "$recursive" = "FALSE" ]; then
+    FILES+=" *.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
+else
+    FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
+fi
+
+CMD="$PROG $FILES > /dev/null 2>&1"
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
@@ -101,7 +93,6 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-echo $SID:$WIN=$CMD
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD"
