@@ -77,12 +77,16 @@ case "$ext" in
         fi
         ;;
 
-    pdf)
+    pdf|ps)
         if [ $ALT -eq 0 ]; then
             pdfview "$file"
         else
             pdfview -b "$file"
         fi
+        ;;
+
+    tpp)
+        tpp "$file"
         ;;
 
     *)
