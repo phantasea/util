@@ -7,25 +7,25 @@ else
 fi
 
 WID=9
-WIN='vifm'
 CMD='vifm'
+WIN='fm/fe'
 
-while getopts "e" opt; do
+while getopts "b" opt; do
     case $opt in
-        e) 
-           CMD='ranger'
-           WIN='ranger'
-           WID=0
-           ;;
-        ?) echo 'Usage0: fmux [-e]'
-           exit 1;;
+        b)
+            WID=0
+            CMD='ranger'
+            ;;
+
+        ?)  echo 'Usage: fmux [-b]'
+            exit 1;;
     esac
 done
 
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+shift $((OPTIND-1))
 
 if [ $# -ne 0 ]; then
-    echo 'Usage1: fmux [-e]'
+    echo 'Usage1: fmux [-b]'
     exit 1
 fi
 

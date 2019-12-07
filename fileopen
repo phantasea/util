@@ -1,21 +1,93 @@
 #!/bin/bash
 
-[ ! -f "$1" ] && exit 1
-
-#console
-if [ -z "$DISPLAY" ]; then
-    case "$1" in
-        *.mp4|*.avi) setterm -cursor off; mplayer -nofs -xy 768 "$1" ;;
-
-        *.jpg|*.png) jfbview "$1" ;; 
-       #*.jpg|*.png) setterm -cursor off; fbv "$1" *.{jpg,png} > /dev/null 2>&1 ;;
+ALT=0
+while getopts "bB" opt; do
+    case $opt in
+        b)
+            ((ALT+=1)) ;;
+        B)
+            ((ALT+=2)) ;;
+        ?)
+            echo 'Usage: fileopen [-bB] <file>'
+            exit 1;;
     esac
-else  #xwindow
-    case "$1" in
-        *.mp4|*.avi) mplayer -vo x11 "$1" ;;
+done
 
-        *.jpg|*.png) feh "$1" *.{jpg,png} > /dev/null 2>&1 ;; 
-    esac
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ ! -f "$1" ]; then
+    echo 'Usage1: fileopen [-bB] <file>'
+    exit 1
 fi
+
+file="$1"
+ext="${file##*.}"
+ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
+
+case "$ext" in
+    mp3|wav|flac|ogg|w4a|wma|ape|rm)
+        if [ $ALT = 0 ]
+        then
+            audplay "$file"
+        elif [ $ALT = 1 ]
+        then
+            audplay -b "$file"
+        elif [ $ALT = 2 ]
+        then
+            audplay -B "$file"
+        else
+            echo "ALT=$ALT incorrect!"
+            exit 1
+        fi
+        ;;
+
+    rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm)
+        if [ $ALT -eq 0 ]; then
+            vidmux "$file"
+        elif [ $ALT -eq 1 ]; then
+            vidmux -b "$file"
+        elif [ $ALT -eq 2 ]; then
+            vidmux -B "$file"
+        elif [ $ALT -eq 3 ]; then
+            vidmux -bB "$file"
+        else
+            echo "ALT=$ALT incorrect!"
+            exit 1
+        fi
+        ;;
+
+    bmp|jpg|jpeg|png|gif|xpm|ppm)
+        if [ $ALT -eq 0 ]; then
+            imgview "$file"
+        else
+            imgview -b "$file"
+        fi
+        ;;
+
+    htm|html|xhtml)
+        if [ $ALT -eq 0 ]; then
+            wemux "$file"
+        elif [ $ALT -eq 1 ]; then
+            wemux -b "$file"
+        elif [ $ALT -eq 2 ]; then
+            wemux -B "$file"
+        else
+            echo "ALT=$ALT incorrect!"
+            exit 1
+        fi
+        ;;
+
+    pdf)
+        if [ $ALT -eq 0 ]; then
+            pdfview "$file"
+        else
+            pdfview -b "$file"
+        fi
+        ;;
+
+    *)
+        echo "Unknown file ext($ext) to open!"
+        exit 1;;
+esac
 
 exit 0

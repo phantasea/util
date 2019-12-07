@@ -2,18 +2,14 @@
 
 if [ -z "$DISPLAY" ]; then
     SID=0
+    CMD="fimgs"
 else
     SID=1
+    CMD="zathura"
 fi
 
 WID=11
 WIN="pdfview"
-
-if [ -z "$DISPLAY" ]; then
-    CMD="fimgs"
-else
-    CMD="zathura"
-fi
 
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
@@ -26,7 +22,7 @@ while getopts "b" opt; do
                 CMD="mupdf"
             fi
             ;;
-        ?) echo 'Usage: pdfview [-bB] <file>'
+        ?) echo 'Usage: pdfview [-b] <file>'
            exit 1;;
     esac
 done

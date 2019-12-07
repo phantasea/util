@@ -1,5 +1,6 @@
 #! /bin/bash
 
+#CMD="cd ~; TERM=jfbterm w3m -s"
 if [ -z "$DISPLAY" ]; then
     SID=0
 else
@@ -7,38 +8,29 @@ else
 fi
 
 WID=8
-WIN="web"
-
-#CMD="cd ~; TERM=jfbterm w3m -s"
+WIN="webview"
 CMD="cd ~/temp; w3m -s"
 
-while getopts "e" opt; do
+while getopts "bB" opt; do
     case $opt in
-        e) 
-           CMD="elinks"
-           ;;
-        ?) echo 'Usage0: wemux [-e] URI'
-           exit 1;;
+        b)
+            CMD="cd ~/temp; elinks"
+            ;;
+        B)
+            if [ ! -z "$DISPLAY" ]; then
+                CMD="firefox"
+            fi
+            ;;
+
+        ?)  echo 'Usage: wemux [-bB] URI'
+            exit 1;;
     esac
 done
-
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+shift $((OPTIND-1))
 
 if [ $# -gt 1 ]; then
-    echo 'Usage1: wemux [-e] URI'
+    echo 'Usage1: wemux [-bB] URI'
     exit 1
-fi
-
-tmux has-session -t $SID
-if [ $? -ne 0 ]; then
-    if [ -z "$1" ]; then
-        $CMD .
-    else
-        $CMD "$1"
-        echo $1
-    fi
-
-    exit 0
 fi
 
 URI="."
@@ -54,17 +46,29 @@ if [ ! -z "$1" ]; then
     fi
 fi
 
+if [[ $CMD =~ "firefox" ]]; then
+    $CMD "$URI" > /dev/null 2>&1 &
+    exit 0
+fi
+
+tmux has-session -t $SID
+if [ $? -ne 0 ]; then
+    $CMD "$URI"
+    exit 0
+fi
+
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD \"$URI\""
-else
-    tmux send-keys -t $SID:$WID T
-    if [ "$CMD" = "elinks" ]; then
-        tmux send-keys -t $SID:$WID o
-    fi
-    tmux set-buffer "$URI"
-    tmux paste-buffer -t $SID:$WID
-    tmux send-keys -t $SID:$WID C-m
+    exit 0
 fi
+
+tmux send-keys -t $SID:$WID T
+if [[ "$CMD" =~ "elinks" ]]; then
+    tmux send-keys -t $SID:$WID o
+fi
+tmux set-buffer "$URI"
+tmux paste-buffer -t $SID:$WID
+tmux send-keys -t $SID:$WID C-m
 
 exit 0

@@ -5,45 +5,57 @@ if [ -z "$DISPLAY" ]; then
     CMD="mplayer"
 else
     SID=1
-    CMD="mpv"
+    CMD="mplayer -vo x11"
 fi
 
 WID=6
-WIN="video"
-NOFS=""
+WIN="vidplay"
 
-while getopts "n" opt; do
+while getopts "bB" opt; do
     case $opt in
-        n)
-           NOFS="-nofs -xy 768"
-           ;;
+        b)
+            if [ -z "$DISPLAY" ]; then
+                CMD="mpv --vo=drm"
+            else
+                CMD="mpv"
+            fi
+            ;;
+        B)
+            if [[ $CMD =~ "mplayer" ]]; then
+                CMD+=" -nofs -xy 768"
+            else
+                CMD+=" -no-fs"
+            fi
+            ;;
         ?)
-           echo 'Usage0: vidmux [-n] file'
-           exit 1;;
+            echo 'Usage: vidmux [-bB] <file>'
+            exit 1;;
     esac
 done
+
+echo $CMD
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ] || [ $# -eq 0 ]; then
-    echo 'Usage1: vidmux file'
+    echo 'Usage1: vidmux [-bB] <file>'
     exit 1
 fi
 
 if [ ! -f "$1" ]; then
-    echo 'Usage2: vidmux file'
+    echo 'Usage2: vidmux [-bB] <file>'
     exit 1
 fi
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    setterm -cursor off; $CMD $NOFS "$1"
+    setterm -cursor off; $CMD "$1"
     exit 0
 fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD $NOFS \"$1\""
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\""
 fi
 
 exit 0
