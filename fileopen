@@ -15,13 +15,20 @@ done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
-echo "$1"
-if [ ! -f "$1" ]; then
+file="$*"
+if [[ $* =~ '\' ]]; then
+    file=${file// /\\\ }
+    file=${file//(/\\\(}
+    file=${file//)/\\\)}
+fi
+
+#echo "$file"
+
+if [ ! -f "$file" ]; then
     echo 'Usage1: fileopen [-bB] <file>'
     exit 1
 fi
 
-file="$1"
 ext="${file##*.}"
 ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 
