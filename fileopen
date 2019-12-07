@@ -15,6 +15,8 @@ done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
+[ $# -eq 0 ] && exit 1
+
 file="$*"
 if [[ $* =~ '\' ]]; then
     file=${file// /\\\ }
