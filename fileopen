@@ -15,6 +15,7 @@ done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
+echo "$1"
 if [ ! -f "$1" ]; then
     echo 'Usage1: fileopen [-bB] <file>'
     exit 1
@@ -43,13 +44,13 @@ case "$ext" in
 
     rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm)
         if [ $ALT -eq 0 ]; then
-            vidmux "$file"
+            vidplay "$file"
         elif [ $ALT -eq 1 ]; then
-            vidmux -b "$file"
+            vidplay -b "$file"
         elif [ $ALT -eq 2 ]; then
-            vidmux -B "$file"
+            vidplay -B "$file"
         elif [ $ALT -eq 3 ]; then
-            vidmux -bB "$file"
+            vidplay -bB "$file"
         else
             echo "ALT=$ALT incorrect!"
             exit 1
