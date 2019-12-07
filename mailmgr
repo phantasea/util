@@ -7,7 +7,7 @@ else
 fi
 
 WID=4
-WIN="mutt"
+WIN="mailmgr"
 CMD="mutt"
 
 tmux has-session -t $SID
