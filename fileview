@@ -1,0 +1,115 @@
+#!/bin/bash
+
+ALT=0
+while getopts "b" opt; do
+    case $opt in
+        b)
+            ALT=1 ;;
+        ?)
+            echo 'Usage: fileview [-b] <file>'
+            exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+[ $# -eq 0 ] && exit 1
+
+file="$*"
+if [[ $* =~ '\' ]]; then
+    file=${file// /\\\ }
+    file=${file//(/\\\(}
+    file=${file//)/\\\)}
+fi
+
+#echo "$file"
+
+if [ ! -f "$file" ]; then
+    echo 'Usage1: fileview [-b] <file>'
+    exit 1
+fi
+
+ext="${file##*.}"
+ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
+
+case "$ext" in
+    mp3|wav|flac|ogg|w4a|wma|ape|rm|\
+    rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm|\
+    bmp|jpg|jpeg|png|gif|xpm|ppm)
+        if [ $ALT -eq 0 ]; then
+            exiftool "$file"
+        else
+            mediainfo "$file"
+        fi
+        ;;
+
+    htm|html|xhtml)
+        if [ $ALT -eq 0 ]; then
+            w3m -dump -T text/html "$file"
+        else
+            elinks -dump "$file"
+        fi
+        ;;
+
+    pdf)
+        pdftotext -l 3 -nopgbrk -q "$file"
+        ;;
+
+    ps)
+        ps2text "$file"
+        ;;
+
+    h|c|cpp|md|mkd|markdown|py|sh|log)
+        bat --color=always "$file"
+        ;;
+
+    doc)
+        if [ $ALT -eq 0 ]; then
+            antiword "$file"
+        else
+            catdoc "$file"
+        fi
+        ;;
+
+    docx)
+        docx2txt "$file"
+        ;;
+
+    ppt)
+        catppt "$file"
+        ;;
+
+    torrent)
+        transmission-show "$file"
+        ;;
+
+    a|deb|alz|xz|txz|tz|tzo|zip|jar|war|ear|tar|tgz|gz|tbz|tbz2|bz2|7z)
+        als "$file"
+        ;;
+
+    rar)
+        if [ $ALT -eq 0 ]; then
+            unrar v "$file"
+        else
+            als --option=use_rar_for_unpack=0 "$file"
+        fi
+        ;;
+
+    iso)
+        isoinfo -l -i "$file"
+        ;;
+
+    asc)
+        gpg --quiet --no-tty --no-use-agent --no-verbose -d "$file"
+        ;;
+
+    o)
+        nm "$file"
+        ;;
+
+    *)
+        vimux "$file"
+        ;;
+esac
+
+exit 0
