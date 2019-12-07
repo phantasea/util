@@ -74,11 +74,11 @@ case "$ext" in
 
     htm|html|xhtml)
         if [ $ALT -eq 0 ]; then
-            wemux "$file"
+            webview "$file"
         elif [ $ALT -eq 1 ]; then
-            wemux -b "$file"
+            webview -b "$file"
         elif [ $ALT -eq 2 ]; then
-            wemux -B "$file"
+            webview -B "$file"
         else
             echo "ALT=$ALT incorrect!"
             exit 1

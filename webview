@@ -22,14 +22,14 @@ while getopts "bB" opt; do
             fi
             ;;
 
-        ?)  echo 'Usage: wemux [-bB] URI'
+        ?)  echo 'Usage: webview [-bB] URI'
             exit 1;;
     esac
 done
 shift $((OPTIND-1))
 
 if [ $# -gt 1 ]; then
-    echo 'Usage1: wemux [-bB] URI'
+    echo 'Usage1: webview [-bB] URI'
     exit 1
 fi
 
