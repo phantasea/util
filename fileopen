@@ -86,8 +86,8 @@ case "$ext" in
         ;;
 
     *)
-        echo "Unknown file ext($ext) to open!"
-        exit 1;;
+        vimux "$file"
+        ;;
 esac
 
 exit 0

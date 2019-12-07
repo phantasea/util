@@ -7,11 +7,13 @@ else
 fi
 
 WID=12
-WIN="fzf"
+WIN="fzfmux"
+
+CMD="$*"' --height=0 --bind "enter:execute#fileopen {}#"'
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    send-keys $@
+    send-keys "$CMD"
     exit 0
 fi
 
@@ -22,5 +24,5 @@ fi
 
 tmux send-keys C-g  #quit pending fzf
 tmux send-keys C-u  #clear existing input
-tmux send-keys "$*" 'Enter'
+tmux send-keys "$CMD" 'Enter'
 exit 0
