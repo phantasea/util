@@ -8,13 +8,14 @@ fi
 
 WID=9
 CMD='vifm'
-WIN='filemgr'
+WIN='vifm'
 
 while getopts "b" opt; do
     case $opt in
         b)
             WID=0
             CMD='ranger'
+            WIN='ranger'
             ;;
 
         ?)  echo 'Usage: filemgr [-b]'
