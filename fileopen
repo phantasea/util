@@ -81,6 +81,8 @@ case "$ext" in
             webview -b "$file"
         elif [ $ALT -eq 2 ]; then
             webview -B "$file"
+        elif [ $ALT -eq 3 ]; then
+            webview -bB "$file"
         else
             echo "ALT=$ALT incorrect!"
             exit 1
