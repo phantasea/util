@@ -1,12 +1,12 @@
 #!/bin/bash
 
-ALT=0
+OPTS="-"
 while getopts "bB" opt; do
     case $opt in
         b)
-            ((ALT+=1)) ;;
+            OPTS+="b" ;;
         B)
-            ((ALT+=2)) ;;
+            OPTS+="B" ;;
         ?)
             echo 'Usage: fileopen [-bB] <file>'
             exit 1;;
@@ -24,8 +24,6 @@ if [[ $* =~ '\' ]]; then
     file=${file//)/\\\)}
 fi
 
-#echo "$file"
-
 if [ ! -f "$file" ]; then
     echo 'Usage1: fileopen [-bB] <file>'
     exit 1
@@ -36,73 +34,31 @@ ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 
 case "$ext" in
     mp3|wav|flac|ogg|w4a|wma|ape|rm)
-        if [ $ALT = 0 ]
-        then
-            audplay "$file"
-        elif [ $ALT = 1 ]
-        then
-            audplay -b "$file"
-        elif [ $ALT = 2 ]
-        then
-            audplay -B "$file"
-        else
-            echo "ALT=$ALT incorrect!"
-            exit 1
-        fi
+        audplay "$OPTS" "$file"
         ;;
 
     rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm)
-        if [ $ALT -eq 0 ]; then
-            vidplay "$file"
-        elif [ $ALT -eq 1 ]; then
-            vidplay -b "$file"
-        elif [ $ALT -eq 2 ]; then
-            vidplay -B "$file"
-        elif [ $ALT -eq 3 ]; then
-            vidplay -bB "$file"
-        else
-            echo "ALT=$ALT incorrect!"
-            exit 1
-        fi
+        vidplay "$OPTS" "$file"
         ;;
 
     bmp|jpg|jpeg|png|gif|xpm|ppm)
-        if [ $ALT -eq 0 ]; then
-            imgview "$file"
-        else
-            imgview -b "$file"
-        fi
+        imgview "$OPTS" "$file"
         ;;
 
     htm|html|xhtml)
-        if [ $ALT -eq 0 ]; then
-            webview "$file"
-        elif [ $ALT -eq 1 ]; then
-            webview -b "$file"
-        elif [ $ALT -eq 2 ]; then
-            webview -B "$file"
-        elif [ $ALT -eq 3 ]; then
-            webview -bB "$file"
-        else
-            echo "ALT=$ALT incorrect!"
-            exit 1
-        fi
+        webview "$OPTS" "$file"
         ;;
 
     pdf|ps)
-        if [ $ALT -eq 0 ]; then
-            pdfview "$file"
-        else
-            pdfview -b "$file"
-        fi
+        pdfview "$OPTS" "$file"
         ;;
 
     tpp)
-        tpp "$file"
+        tpp "$OPTS" "$file"
         ;;
 
     *)
-        vimux "$file"
+        vimux "$OPTS" "$file"
         ;;
 esac
 
