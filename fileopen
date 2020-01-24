@@ -12,8 +12,11 @@ while getopts "bB" opt; do
             exit 1;;
     esac
 done
-
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $OPTS = "-" ]; then
+    OPTS=""
+fi
 
 [ $# -eq 0 ] && exit 1
 
@@ -54,11 +57,11 @@ case "$ext" in
         ;;
 
     tpp)
-        tpp "$OPTS" "$file"
+        tpp "$file"
         ;;
 
     *)
-        vimux "$OPTS" "$file"
+        vimux "$file"
         ;;
 esac
 
