@@ -24,7 +24,7 @@ while getopts "bB" opt; do
             if [[ $CMD =~ "mplayer" ]]; then
                 CMD+=" -nofs -xy 768"
             else
-                CMD+=" -no-fs"
+                CMD+=" --no-fs"
             fi
             ;;
         ?)
