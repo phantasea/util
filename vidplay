@@ -14,17 +14,17 @@ WIN="vidplay"
 while getopts "bB" opt; do
     case $opt in
         b)
-            if [ -z "$DISPLAY" ]; then
-                CMD="mpv --vo=drm"
-            else
-                CMD="mpv"
-            fi
-            ;;
-        B)
             if [[ $CMD =~ "mplayer" ]]; then
                 CMD+=" -nofs -xy 768"
             else
                 CMD+=" --no-fs"
+            fi
+            ;;
+        B)
+            if [ -z "$DISPLAY" ]; then
+                CMD="mpv --vo=drm"
+            else
+                CMD="mpv"
             fi
             ;;
         ?)
@@ -33,7 +33,7 @@ while getopts "bB" opt; do
     esac
 done
 
-echo $CMD
+#echo $CMD
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
