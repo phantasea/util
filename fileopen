@@ -37,23 +37,23 @@ ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 
 case "$ext" in
     mp3|wav|flac|ogg|w4a|wma|ape|rm)
-        audplay "$OPTS" "$file"
+        audplay $OPTS "$file"
         ;;
 
     rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm)
-        vidplay "$OPTS" "$file"
+        vidplay $OPTS "$file"
         ;;
 
     bmp|jpg|jpeg|png|gif|xpm|ppm)
-        imgview "$OPTS" "$file"
+        imgview $OPTS "$file"
         ;;
 
     htm|html|xhtml)
-        webview "$OPTS" "$file"
+        webview $OPTS "$file"
         ;;
 
     pdf|ps)
-        pdfview "$OPTS" "$file"
+        pdfview $OPTS "$file"
         ;;
 
     tpp)
