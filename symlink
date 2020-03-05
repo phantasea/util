@@ -7,10 +7,12 @@ ln -sf /opt/.priv/msmtprc                    ~/.msmtprc
 ln -sf /opt/util                             ~/.util
 ln -sf /opt/apps/fzf                         ~/.fzf
 ln -sf /opt/misc/fonts                       ~/.fonts
+ln -sf /opt/misc/stardict                    ~/.stardict
 ln -sf /opt/conf/wallpaper                   ~/.wallpaper
 ln -sf /opt/conf/mailcap                     ~/.mailcap
 ln -sf /opt/conf/inputrc                     ~/.inputrc
-ln -sf /opt/conf/vimrc                       ~/.vimrc
+ln -sf /opt/conf/vim                         ~/.vim
+ln -sf /opt/conf/vim/vimrc                   ~/.vimrc
 ln -sf /opt/conf/alias                       ~/.alias
 ln -sf /opt/conf/bashrc                      ~/.bashrc
 ln -sf /opt/conf/fbtermrc                    ~/.fbtermrc
@@ -29,7 +31,7 @@ ln -sf /opt/conf/abookrc                     ~/.abookrc
 ln -sf /opt/conf/dictrc                      ~/.dictrc
 ln -sf /opt/conf/elinks.conf                 ~/.elinks/elinks.conf
 ln -sf /opt/conf/newsbeuter/                 ~/.newsbeuter
-ln -sf /opt/conf/yong.ini                    ~/.yong/yong.ini
+ln -sf /opt/conf/yong                        ~/.yong
 ln -sf /opt/conf/mutt                        ~/.mutt
 ln -sf /opt/conf/muttrc                      ~/.muttrc
 ln -sf /opt/conf/procmailrc                  ~/.procmailrc
