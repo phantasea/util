@@ -67,6 +67,7 @@ else
     PROG="pho -p"
     if [ "$ALT" = "TRUE" ]; then
         PROG="feh -F"
+        #PROG="pqiv"
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
