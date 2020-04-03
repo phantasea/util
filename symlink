@@ -7,7 +7,7 @@ ln -sf /opt/.priv/msmtprc                    ~/.msmtprc
 ln -sf /opt/util                             ~/.util
 ln -sf /opt/apps/fzf                         ~/.fzf
 ln -sf /opt/misc/fonts                       ~/.fonts
-ln -sf /opt/misc/stardict                    ~/.stardict
+ln -sf /opt/misc/dicts                       ~/.stardict/dic
 ln -sf /opt/conf/wallpaper                   ~/.wallpaper
 ln -sf /opt/conf/mailcap                     ~/.mailcap
 ln -sf /opt/conf/inputrc                     ~/.inputrc
@@ -56,8 +56,6 @@ ln -sf /opt/conf/i3/config                   ~/.config/i3wm/i3.config
 ln -sf /opt/conf/i3status/config             ~/.config/i3wm/i3status.config
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/auds                             ~/auds/auds
-ln -sf /opt/apps/adbfs/adbfs                 /opt/util/adbfs
-ln -sf /usr/local/libexec/w3m/w3mimgdisplay  /opt/util/w3mimgdisplay
 
 sudo ln -sf /opt/conf/updatedb.conf          /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules       /etc/udev/rules.d/51-android.rules
