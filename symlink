@@ -26,7 +26,7 @@ ln -sf /opt/conf/moc                         ~/.moc
 ln -sf /opt/conf/mplayer/                    ~/.mplayer
 ln -sf /opt/conf/vifm/                       ~/.vifm
 ln -sf /opt/conf/w3m/                        ~/.w3m
-ln -sf /opt/conf/gitconfig                   ~/.gitconfig
+ln -sf /opt/conf/git/gitconfig                   ~/.gitconfig
 ln -sf /opt/conf/abookrc                     ~/.abookrc
 ln -sf /opt/conf/dictrc                      ~/.dictrc
 ln -sf /opt/conf/elinks.conf                 ~/.elinks/elinks.conf
