@@ -1,5 +1,64 @@
 #!/bin/bash
 
+mkdir ~/auds
+mkdir ~/docs
+mkdir ~/misc
+mkdir ~/pics
+mkdir ~/temp
+mkdir ~/vids
+
+mkdir ~/docs/book
+mkdir ~/docs/misc
+mkdir ~/docs/note
+mkdir ~/docs/webs
+
+sudo chown -R simone:simone /opt
+mkdir /opt/apps
+mkdir /opt/auds
+mkdir /opt/conf
+mkdir /opt/misc
+mkdir /opt/util
+mkdir /opt/vids
+
+mkdir /opt/.certs
+mkdir /opt/.logs
+mkdir /opt/.mail
+mkdir /opt/.porn
+mkdir /opt/.priv
+
+mkdir /opt/misc/apps
+mkdir /opt/misc/docs
+mkdir /opt/misc/dicts
+mkdir /opt/misc/fonts
+
+mkdir /opt/.porn/te*********
+
+cd ~
+git clone https://github.com/phantasea/note note
+git clone https://github.com/phantasea/webs webs
+
+cd /opt
+git clone https://github.com/phantasea/priv .priv
+git clone https://github.com/phantasea/util util
+git clone https://github.com/phantasea/misc misc
+git clone https://github.com/phantasea/dotfiles conf
+
+cd /opt/apps
+git clone https://github.com/phantasea/adbfs
+git clone https://github.com/phantasea/autojump
+git clone https://github.com/phantasea/elinks
+git clone https://github.com/phantasea/fbv
+git clone https://github.com/phantasea/fim
+git clone https://github.com/phantasea/fzf
+git clone https://github.com/phantasea/htop
+git clone https://github.com/phantasea/jfbview
+git clone https://github.com/phantasea/moc
+git clone https://github.com/phantasea/myst
+git clone https://github.com/phantasea/pho
+git clone https://github.com/phantasea/ranger
+git clone https://github.com/phantasea/vifm
+git clone https://github.com/phantasea/w3m
+
 ln -sf /opt/.mail                            ~/.mail
 ln -sf /opt/.logs                            ~/.logs
 ln -sf /opt/.priv/fetchmailrc                ~/.fetchmailrc
@@ -26,7 +85,7 @@ ln -sf /opt/conf/moc                         ~/.moc
 ln -sf /opt/conf/mplayer/                    ~/.mplayer
 ln -sf /opt/conf/vifm/                       ~/.vifm
 ln -sf /opt/conf/w3m/                        ~/.w3m
-ln -sf /opt/conf/git/gitconfig                   ~/.gitconfig
+ln -sf /opt/conf/git/gitconfig               ~/.gitconfig
 ln -sf /opt/conf/abookrc                     ~/.abookrc
 ln -sf /opt/conf/dictrc                      ~/.dictrc
 ln -sf /opt/conf/elinks.conf                 ~/.elinks/elinks.conf
@@ -56,6 +115,8 @@ ln -sf /opt/conf/i3/config                   ~/.config/i3wm/i3.config
 ln -sf /opt/conf/i3status/config             ~/.config/i3wm/i3status.config
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/auds                             ~/auds/auds
+
+ln -sf /usr/local/porn                       /opt/.porn/porn
 
 sudo ln -sf /opt/conf/updatedb.conf          /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules       /etc/udev/rules.d/51-android.rules
