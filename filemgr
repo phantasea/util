@@ -2,12 +2,13 @@
 
 if [ -z "$DISPLAY" ]; then
     SID=0
+    CMD='vifm'
 else
     SID=1
+    CMD='vifmrun'
 fi
 
 WID=9
-CMD='vifm'
 WIN='vifm'
 
 while getopts "b" opt; do
