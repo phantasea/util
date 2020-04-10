@@ -66,15 +66,18 @@ if [ -z "$DISPLAY" ]; then
 else
     PROG="pho -p"
     if [ "$ALT" = "TRUE" ]; then
-        PROG="feh -F"
-        #PROG="pqiv"
+        #PROG="feh -F"
+        #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
+        PROG="sxiv -ft"
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
         if [ "$ALT" = "FALSE" ]; then
-            PROG+=" -s1"
+            PROG="pho -p -s1"
         else
-            PROG+=" -D 1"
+            PROG="feh -F -D 1"
+            #PROG="pqiv -fs"
+            #PROG="sxiv -fS 1"
         fi
     fi
 fi
