@@ -5,7 +5,7 @@ if [ -z "$DISPLAY" ]; then
     CMD="mplayer"
 else
     SID=1
-    CMD="mplayer -vo x11"
+    CMD="mpv"
 fi
 
 WID=6
@@ -24,7 +24,7 @@ while getopts "bB" opt; do
             if [ -z "$DISPLAY" ]; then
                 CMD="mpv --vo=drm"
             else
-                CMD="mpv"
+                CMD="mplayer -vo x11"
             fi
             ;;
         ?)
