@@ -102,6 +102,7 @@ ln -sf /opt/conf/urlview                     ~/.urlview
 ln -sf /opt/conf/vnstatrc                    ~/.vnstatrc
 ln -sf /opt/conf/wgetrc                      ~/.wgetrc
 ln -sf /opt/conf/apvlvrc                     ~/.apvlvrc
+ln -sf /opt/conf/goto.sh                     ~/.goto.sh
 ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
 ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
 ln -sf /opt/conf/feh                         ~/.config/feh
@@ -114,6 +115,7 @@ ln -sf /opt/conf/vimb/style.css              ~/.config/vimb/style.css
 ln -sf /opt/conf/i3/config                   ~/.config/i3wm/i3.config
 ln -sf /opt/conf/i3status/config             ~/.config/i3wm/i3status.config
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
+ln -sf /opt/conf/streamlink.config           ~/.config/streamlink/config
 ln -sf /opt/auds                             ~/auds/auds
 
 ln -sf /usr/local/porn                       /opt/.porn/porn
