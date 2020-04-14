@@ -67,6 +67,7 @@ else
     PROG="pho -p"
     if [ "$ALT" = "TRUE" ]; then
         #PROG="feh -F"
+        #PROG='vimiv'
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
         PROG="sxiv -ft"
     fi
@@ -78,6 +79,7 @@ else
             PROG="feh -F -D 1"
             #PROG="pqiv -fs"
             #PROG="sxiv -fS 1"
+            #PROG="vimiv --slideshow"
         fi
     fi
 fi
