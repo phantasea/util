@@ -1,5 +1,9 @@
 #!/bin/bash
 
-mv -i "$1" ~/.Trash/
+# only work for file without space in the name
+for file in $*
+do
+    mv -i -t ~/.Trash $file
+done
 
 exit $?
