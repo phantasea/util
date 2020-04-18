@@ -4,7 +4,7 @@ shopt -s nullglob
 shopt -s globstar
 shopt -s nocaseglob
 
-ALT="FALSE"
+ALT="0"
 recursive="FALSE"
 slideshow="FALSE"
 
@@ -22,9 +22,10 @@ PROG=""
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
 #while getopts ":brsd:" opt; do
-while getopts "brsd:" opt; do
+while getopts "bBrsd:" opt; do
     case $opt in
-        b) ALT="TRUE";;
+        b) ALT="1";;
+        B) ALT="2";;
         r) recursive="TRUE";;
         s) slideshow="TRUE";;
         d) 
@@ -51,33 +52,37 @@ fi
 # console
 if [ -z "$DISPLAY" ]; then
     PROG="fim"
-    if [ "$ALT" = "TRUE" ]; then
+    if [ "$ALT" = "1" ]; then
         PROG="fbv"
+    elif [ "$ALT" = "2" ]; then
+        PROG="jfbview"
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
-        if [ "$ALT" = "FALSE" ]; then
+        if [ "$ALT" = "0" ]; then
             PROG+=" -c \"endless_slideshow\""
-        else
+        elif [ "$ALT" = "1" ]; then
             PROG+=" -s 10"
         fi
     fi
 # xwindow
 else
     PROG="pho -p"
-    if [ "$ALT" = "TRUE" ]; then
-        #PROG="feh -F"
-        #PROG='vimiv'
+    if [ "$ALT" = "1" ]; then
+        PROG="feh -F"
+    elif [ "$ALT" = "2" ]; then
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
         PROG="sxiv -ft"
+        #PROG='vimiv'
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
-        if [ "$ALT" = "FALSE" ]; then
+        if [ "$ALT" = "0" ]; then
             PROG="pho -p -s1"
-        else
+        elif [ "$ALT" = "1" ]; then
             PROG="feh -F -D 1"
-            #PROG="pqiv -fs"
+        elif [ "$ALT" = "2" ]; then
+            PROG="pqiv -fs"
             #PROG="sxiv -fS 1"
             #PROG="vimiv --slideshow"
         fi
@@ -91,6 +96,12 @@ else
     FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
 fi
 
+if [[ $PROG =~ "jfbview" ]]; then
+    CMD="$PROG $FILES"
+    setterm -cursor off; $CMD
+    exit 0
+fi
+
 CMD="$PROG $FILES > /dev/null 2>&1"
 
 tmux has-session -t $SID
@@ -98,6 +109,8 @@ if [ $? -ne 0 ]; then
     setterm -cursor off; $CMD
     exit 0
 fi
+
+#echo $CMD
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
