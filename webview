@@ -3,22 +3,33 @@
 #CMD="cd ~; TERM=jfbterm w3m -s"
 if [ -z "$DISPLAY" ]; then
     SID=0
+    CMD="cd ~/temp; w3m -s"
 else
     SID=1
+    CMD="cd ~/temp; elinks"
 fi
 
 WID=8
 WIN="webview"
-CMD="cd ~/temp; w3m -s"
 
+bplan=0
 while getopts "bB" opt; do
     case $opt in
         b)
-            CMD="cd ~/temp; elinks"
+            if [ -z "$DISPLAY" ]; then
+                CMD="cd ~/temp; elinks"
+            else
+                CMD="cd ~/temp; w3m -s"
+            fi
+            bplan=1
             ;;
         B)
             if [ ! -z "$DISPLAY" ]; then
-                CMD="firefox"
+                if [ $bplan -eq 0 ]; then
+                    CMD="firefox"
+                else
+                    CMD='vimb'
+                fi
             fi
             ;;
 
@@ -37,7 +48,7 @@ URI="."
 if [ ! -z "$1" ]; then
     if [ -f "$1" ] || [ -d "$1" ]; then
         URI=$(realpath -s "$1")
-        URI="file://${URI}"
+        #URI="file://${URI}"
     else
         URI=$1
         if [[ ! $1 =~ "http" ]]; then
@@ -46,20 +57,26 @@ if [ ! -z "$1" ]; then
     fi
 fi
 
-if [[ $CMD =~ "firefox" ]]; then
+if [[ $CMD =~ "firefox" ]] || [[ $CMD =~ "vimb" ]]; then
     $CMD "$URI" > /dev/null 2>&1 &
     exit 0
 fi
 
+URI=${URI// /\\\ }
+URI=${URI//(/\\\(}
+URI=${URI//)/\\\)}
+URI=${URI//</\\\<}
+URI=${URI//>/\\\>}
+
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
-    $CMD "$URI"
+    $CMD $URI
     exit 0
 fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD \"$URI\""
+    tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD $URI"
     exit 0
 fi
 
