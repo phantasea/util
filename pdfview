@@ -2,7 +2,7 @@
 
 if [ -z "$DISPLAY" ]; then
     SID=0
-    CMD="fimgs"
+    CMD="jfbview --cache_size=5"
 else
     SID=1
     CMD="zathura"
@@ -13,16 +13,23 @@ WIN="pdfview"
 
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
-while getopts "b" opt; do
+while getopts "bB" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
-                CMD="jfbview --cache_size=5"
+                CMD="fimgs"
             else
                 CMD="mupdf"
             fi
             ;;
-        ?) echo 'Usage: pdfview [-b] <file>'
+        B)
+            if [ -z "$DISPLAY" ]; then
+                CMD="fbpdf"
+            else
+                CMD="apvlv"  #slow
+            fi
+            ;;
+        ?) echo 'Usage: pdfview [-bB] <file>'
            exit 1;;
     esac
 done
