@@ -1,22 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-ALT=0
-while getopts "b" opt; do
-    case $opt in
-        b)
-            ALT=1 ;;
-        ?)
-            echo 'Usage: fileview [-b] <file>'
-            exit 1;;
-    esac
-done
+## this util only accepts one file
 
-shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+set -o noclobber -o noglob -o nounset -o pipefail
+IFS=$'\n'
+
+## Settings
+HIGHLIGHT_SIZE_MAX=262143  # 256KiB
+HIGHLIGHT_TABWIDTH=${HIGHLIGHT_TABWIDTH:-8}
+HIGHLIGHT_STYLE=${HIGHLIGHT_STYLE:-pablo}
+HIGHLIGHT_OPTIONS="--replace-tabs=${HIGHLIGHT_TABWIDTH} --style=${HIGHLIGHT_STYLE} ${HIGHLIGHT_OPTIONS:-}"
 
 [ $# -eq 0 ] && exit 1
 
-file="$*"
-if [[ $* =~ '\' ]]; then
+file="$1"
+if [[ "$file" =~ '\' ]]; then
     file=${file// /\\\ }
     file=${file//(/\\\(}
     file=${file//)/\\\)}
@@ -24,92 +22,200 @@ fi
 
 #echo "$file"
 
+if [ -d "$file" ]; then
+    tree -F -L 3 --dirsfirst "$file" && exit 0
+    exit 1
+fi
+
 if [ ! -f "$file" ]; then
-    echo 'Usage1: fileview [-b] <file>'
+    echo 'Usage1: fileview [-bB] <file>'
     exit 1
 fi
 
 ext="${file##*.}"
 ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
-
 case "$ext" in
     mp3|wav|flac|ogg|w4a|wma|ape|rm|\
     rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm|\
     bmp|jpg|jpeg|png|gif|xpm|ppm)
-        if [ $ALT -eq 0 ]; then
-            exiftool "$file"
-        else
-            mediainfo "$file"
-        fi
-        ;;
+        exiftool "$file" && exit 0
+        mediainfo "$file" && exit 0
+        exit 1;;
 
     htm|html|xhtml)
-        if [ $ALT -eq 0 ]; then
-            w3m -dump -T text/html "$file"
-        else
-            elinks -dump "$file"
-        fi
-        ;;
+        w3m -dump -T text/html "$file" && exit 0
+        elinks -dump "$file"
+        pandoc -s -t markdown -- "$file" && exit 0
+        exit 1;;
 
     pdf)
-        pdftotext -l 3 -nopgbrk -q "$file"
-        ;;
+        pdftotext -l 8 -nopgbrk -q -- "$file" - && exit 0
+        mutool draw -F txt -i -- "${file}" 1-8 && exit 0
+        exiftool "${file}"
+        exit 1;;
+
+    djvu)
+        djvutxt "${file}" && exit 0
+        exiftool "${file}" && exit 0
+        exit 1;;
 
     ps)
-        ps2text "$file"
-        ;;
+        ps2text "$file" && exit 0
+        exit 1;;
 
-    h|c|cpp|md|mkd|markdown|py|sh|log)
-        bat --color=always "$file"
-        ;;
+    log)
+        tac "$file" && exit 0
+        tail -n500 "$file" && exit 0
+        exit 1;;
+
+    md|mkd|markdown)
+        pandoc -f markdown -t html "$file" | w3m -dump -cols 128 -T text/html && exit 0
+        bat --color=always "$file" && exit 0
+        exit 1;;
+
+    h|c|cpp)
+        highlight -S c -O ansi -s dante "${file}" && exit 0
+        bat --color=always "${file}" && exit 0
+        exit 1;;
+
+    py)
+        highlight -S python -O ansi -s dante "${file}" && exit 0
+        bat --color=always "${file}" && exit 0
+        exit 1;;
+
+    sh)
+        highlight -S sh -O ansi -s dante "${file}" && exit 0
+        bat --color=always "${file}" && exit 0
+        exit 1;;
+
+    xml)
+        highlight -S xml -O ansi -s dante "${file}" && exit 0
+        bat --color=always "${file}" && exit 0
+        exit 1;;
 
     doc)
-        if [ $ALT -eq 0 ]; then
-            antiword "$file"
-        else
-            catdoc "$file"
-        fi
-        ;;
+        antiword "$file" && exit 0
+        catdoc -- "$file" && exit 0
+        exit 1;;
 
     docx)
-        docx2txt "$file"
-        ;;
+        docx2txt "$file" - && exit 0
+        catdoc -- "$file" && exit 0
+        pandoc -s -t markdown -- "$file" && exit 0
+        exit 1;;
 
     ppt)
-        catppt "$file"
-        ;;
+        catppt "$file" && exit 0
+        exit 1;;
+
+    xls)
+        xls2csv -- "$file" && exit 0
+        catdoc -- "$file" && exit 0
+        exit 1;;
+
+    xlsx)
+        xlsx2csv -- "$file" && exit 0
+        catdoc -- "$file" && exit 0
+        exit 1;;
 
     torrent)
-        transmission-show "$file"
-        ;;
+        transmission-show "$file" && exit 0
+        exit 1;;
 
-    a|deb|alz|xz|txz|tz|tzo|zip|jar|war|ear|tar|tgz|gz|tbz|tbz2|bz2|7z)
-        als "$file"
-        ;;
+    a|deb|alz|xz|txz|tz|tzo|zip|jar|war|ear|tar|tgz|gz|tbz|tbz2|bz2)
+        als "$file" && exit 0
+        atool --list -- "${file}" && exit 0
+        exit 1;;
 
     rar)
-        if [ $ALT -eq 0 ]; then
-            unrar v "$file"
-        else
-            als --option=use_rar_for_unpack=0 "$file"
-        fi
-        ;;
+        unrar v "$file" && exit 0
+        als --option=use_rar_for_unpack=0 "$file" && exit 0
+        unrar lt -p- -- "${file}" && exit 0
+        exit 1;;
+
+    7z)
+        7z l -p -- "${file}" && exit 0
+        als "$file" && exit 0
+        atool --list -- "${file}" && exit 0
+        exit 1;;
 
     iso)
-        isoinfo -l -i "$file"
-        ;;
+        isoinfo -l -i "$file" && exit 0
+        exit 1;;
+
+    1)
+        man ./"$file" | col -b && exit 0
+        man "$file" | col -b && exit 0
+        exit 1;;
 
     asc)
-        gpg --quiet --no-tty --no-use-agent --no-verbose -d "$file"
-        ;;
+        gpg --quiet --no-tty --no-use-agent --no-verbose -d "$file" && exit 0
+        exit 1;;
+
+    json)
+        jq --color-output . "${file}" && exit 0
+        python -m json.tool -- "${file}" && exit 0
+        exit 1;;
+
+    md5)
+        md5sum -c "${file}" && exit 0
+        exit 1;;
+
+    sha1)
+        sha1sum -c "${file}" && exit 0
+        exit 1;;
+
+    sha256)
+        sha256sum -c "${file}" && exit 0
+        exit 1;;
+
+    sha512)
+        sha5121sum -c "${file}" && exit 0
+        exit 1;;
 
     o)
-        nm "$file"
-        ;;
+        nm "$file" && exit 0
+        exit 1;;
 
-    *)
-        vimux "$file"
-        ;;
+    exe)
+        echo "Windows binary file: no preview available!" && exit 0
+        exit 1;;
 esac
 
-exit 0
+mime="$(mimetype -L --output-format %m "$file")"
+case "$mime" in
+    ## Directory
+    inode/directory)
+        tree -F -L 3 --dirsfirst "$file" && exit 0
+        exit 1;;
+
+    ## Shell scripts
+    application/*shellscript)
+        highlight -S sh -O ansi -s dante "${file}" && exit 0
+        exit 1;;
+
+    ## Text/XML
+    text/* | */xml)
+        if [[ "$( stat --printf='%s' -- "${file}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
+            exit 2
+        fi
+
+        local pygmentize_format='terminal'
+        local highlight_format='ansi'
+        if [[ "$( tput colors )" -ge 256 ]]; then
+            local pygmentize_format='terminal256'
+            local highlight_format='xterm256'
+        fi
+
+        env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+            --out-format="${highlight_format}" --force -- "${file}" && exit 0
+
+        env COLORTERM=8bit bat --color=always --style="plain" -- "${file}" && exit 0
+
+        pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}" -- "${file}" && exit 0
+
+        exit 1;;
+esac
+
+echo '----- File Type Classification -----' && file --dereference --brief -- "${file}"
+exit 1
