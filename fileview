@@ -200,17 +200,17 @@ case "$mime" in
             exit 2
         fi
 
-        local pygmentize_format='terminal'
-        local highlight_format='ansi'
+        pygmentize_format='terminal'
+        highlight_format='ansi'
         if [[ "$( tput colors )" -ge 256 ]]; then
-            local pygmentize_format='terminal256'
-            local highlight_format='xterm256'
+            pygmentize_format='terminal256'
+            highlight_format='xterm256'
         fi
 
-        env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
-            --out-format="${highlight_format}" --force -- "${file}" && exit 0
-
         env COLORTERM=8bit bat --color=always --style="plain" -- "${file}" && exit 0
+
+        env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
+            --out-format="${highlight_format}" --force --quiet -- "${file}" && exit 0
 
         pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}" -- "${file}" && exit 0
 
@@ -218,4 +218,4 @@ case "$mime" in
 esac
 
 echo '----- File Type Classification -----' && file --dereference --brief -- "${file}"
-exit 1
+exit 0
