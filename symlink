@@ -103,19 +103,24 @@ ln -sf /opt/conf/vnstatrc                    ~/.vnstatrc
 ln -sf /opt/conf/wgetrc                      ~/.wgetrc
 ln -sf /opt/conf/apvlvrc                     ~/.apvlvrc
 ln -sf /opt/conf/goto.sh                     ~/.goto.sh
-ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
-ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
 ln -sf /opt/conf/feh                         ~/.config/feh
+ln -sf /opt/conf/mpd                         ~/.config/mpd
+ln -sf /opt/conf/ncmpcpp                     ~/.config/ncmpcpp
 ln -sf /opt/conf/mpv                         ~/.config/mpv
-ln -sf /opt/conf/ranger/                     ~/.config/ranger
+ln -sf /opt/conf/ranger                      ~/.config/ranger
+ln -sf /opt/conf/vimiv                       ~/.config/vimiv
 ln -sf /opt/conf/zathura                     ~/.config/zathura
+ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/conf/compton.conf                ~/.config/compton.conf
-ln -sf /opt/conf/vimb/config                 ~/.config/vimb/config
-ln -sf /opt/conf/vimb/style.css              ~/.config/vimb/style.css
 ln -sf /opt/conf/i3/config                   ~/.config/i3wm/i3.config
 ln -sf /opt/conf/i3status/config             ~/.config/i3wm/i3status.config
-ln -sf /opt/conf/bat.config                  ~/.config/bat/config
+ln -sf /opt/conf/pqivrc                      ~/.config/pqivrc
+ln -sf /opt/conf/rtv.cfg                     ~/.config/rtv/rtv.cfg
 ln -sf /opt/conf/streamlink.config           ~/.config/streamlink/config
+ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
+ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
+ln -sf /opt/conf/vimb/config                 ~/.config/vimb/config
+ln -sf /opt/conf/vimb/style.css              ~/.config/vimb/style.css
 ln -sf /opt/auds                             ~/auds/auds
 
 ln -sf /usr/local/porn                       /opt/.porn/porn
@@ -126,5 +131,6 @@ sudo ln -sf /opt/conf/locale.nopurge         /etc/locale.nopurge
 sudo ln -sf /opt/conf/sources.list           /etc/apt/sources.list
 
 sudo cp -f  /opt/conf/rc.local               /etc/rc.local
+sudo rm /etc/mpd.conf    //avoid to start mpd as "mpd" user
 
 exit 0
