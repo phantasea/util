@@ -32,6 +32,15 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
+MAXSIZE=3000000
+#size=$(wc -c < "$1")
+#size=$(stat --printf="%s" "$1")
+size=$(stat -c %s -- "$1")
+if [ $size -gt $MAXSIZE ]; then
+    echo "The file size is too large! ($size > $MAXSIZE)"
+    exit 1
+fi
+
 ext="${file##*.}"
 ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 case "$ext" in
@@ -125,6 +134,7 @@ case "$ext" in
     a|deb|alz|xz|txz|tz|tzo|zip|jar|war|ear|tar|tgz|gz|tbz|tbz2|bz2)
         als "$file" && exit 0
         atool --list -- "${file}" && exit 0
+        zcat "$file" && exit 0
         exit 1;;
 
     rar)
@@ -180,6 +190,12 @@ case "$ext" in
     exe)
         echo "Windows binary file: no preview available!" && exit 0
         exit 1;;
+
+    ## Misc
+    desktop)
+        bat -- "$file" && exit 0
+        cat -- "$file" && exit 0
+        exit 1;;
 esac
 
 mime="$(mimetype -L --output-format %m "$file")"
@@ -207,7 +223,7 @@ case "$mime" in
             highlight_format='xterm256'
         fi
 
-        env COLORTERM=8bit bat --color=always --style="plain" -- "${file}" && exit 0
+        env COLORTERM=8bit bat --color=auto --style="plain" -- "${file}" && exit 0
 
         env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
             --out-format="${highlight_format}" --force --quiet -- "${file}" && exit 0
