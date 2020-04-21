@@ -10,6 +10,18 @@ WID=5
 WIN="music"
 CMD="mocp"
 
+while getopts "b" opt; do
+    case $opt in
+        b)
+            CMD="ncmpcpp --config=~/.config/ncmpcpp/config --bindings=~/.config/ncmpcpp/bindings 2> /dev/null"
+            ;;
+
+        ?)  echo 'Usage: webview [-b] URI'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
     $CMD
@@ -19,20 +31,22 @@ fi
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD"
-    tmux send-keys -t $SID:$WID "/myfav" C-m
-    tmux send-keys -t $SID:$WID M
-    tmux send-keys -t $SID:$WID C-i
-    tmux send-keys -t $SID:$WID "/misc" C-m
-    tmux send-keys -t $SID:$WID G
-    tmux send-keys -t $SID:$WID C-i
-    #sleep 1s
-    #tmux split-window -v
-    #tmux send-keys -t $SID:$WID "ccal -u" C-m
-    #tmux select-pane -l
-    #tmux split-window -h "tty-clock -c -C 3"
-    #tmux resize-pane -R 16
-    #tmux select-pane -L
-    #tmux swap-pane -D
+    if [[ "CMD" =~ "mocp" ]]; then
+        tmux send-keys -t $SID:$WID "/myfav" C-m
+        tmux send-keys -t $SID:$WID M
+        tmux send-keys -t $SID:$WID C-i
+        tmux send-keys -t $SID:$WID "/misc" C-m
+        tmux send-keys -t $SID:$WID G
+        tmux send-keys -t $SID:$WID C-i
+        #sleep 1s
+        #tmux split-window -v
+        #tmux send-keys -t $SID:$WID "ccal -u" C-m
+        #tmux select-pane -l
+        #tmux split-window -h "tty-clock -c -C 3"
+        #tmux resize-pane -R 16
+        #tmux select-pane -L
+        #tmux swap-pane -D
+    fi
 fi
 
 exit 0
