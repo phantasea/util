@@ -8,7 +8,7 @@ else
     CMD="ncmpc -f ~/.config/ncmpc/config -k ~/.config/ncmpc/keys"
 fi
 
-WID=5
+WID=6
 WIN="music"
 
 while getopts "b" opt; do
