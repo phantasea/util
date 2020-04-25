@@ -2,21 +2,26 @@
 
 if [ -z "$DISPLAY" ]; then
     SID=0
+    CMD="mocp"
 else
     SID=1
+    CMD="ncmpc -f ~/.config/ncmpc/config -k ~/.config/ncmpc/keys"
 fi
 
 WID=5
 WIN="music"
-CMD="mocp"
 
 while getopts "b" opt; do
     case $opt in
         b)
-            CMD="ncmpcpp --config=~/.config/ncmpcpp/config --bindings=~/.config/ncmpcpp/bindings 2> /dev/null"
+            if [ -z "$DISPLAY" ]; then
+                CMD="ncmpc -f ~/.config/ncmpc/config -k ~/.config/ncmpc/keys"
+            else
+                CMD="mocp"
+            fi
             ;;
 
-        ?)  echo 'Usage: webview [-b] URI'
+        ?)  echo 'Usage: musmux [-b]'
             exit 1;;
     esac
 done
@@ -31,7 +36,7 @@ fi
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD"
-    if [[ "CMD" =~ "mocp" ]]; then
+    if [[ "$CMD" =~ "mocp" ]]; then
         tmux send-keys -t $SID:$WID "/myfav" C-m
         tmux send-keys -t $SID:$WID M
         tmux send-keys -t $SID:$WID C-i
@@ -46,6 +51,8 @@ if [ $? -ne 0 ]; then
         #tmux resize-pane -R 16
         #tmux select-pane -L
         #tmux swap-pane -D
+    else
+        tmux send-keys -t $SID:$WID M
     fi
 fi
 
