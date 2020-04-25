@@ -198,7 +198,8 @@ case "$ext" in
         exit 1;;
 esac
 
-mime="$(mimetype -L --output-format %m "$file")"
+#mime="$(mimetype -L --output-format %m "$file")"  #some plain text file not working
+mime="$( file --dereference --brief --mime-type -- "${file}" )"
 case "$mime" in
     ## Directory
     inode/directory)
