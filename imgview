@@ -69,11 +69,11 @@ if [ -z "$DISPLAY" ]; then
 else
     PROG="pho -p"
     if [ "$ALT" = "1" ]; then
-        PROG="feh -F"
+        PROG="sxiv -ft"
     elif [ "$ALT" = "2" ]; then
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
-        PROG="sxiv -ft"
-        #PROG='vimiv'
+        PROG='vimiv'
+        #PROG="feh -F"
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
