@@ -73,6 +73,7 @@ ln -sf /opt/conf/inputrc                     ~/.inputrc
 ln -sf /opt/conf/vim                         ~/.vim
 ln -sf /opt/conf/vim/vimrc                   ~/.vimrc
 ln -sf /opt/conf/alias                       ~/.alias
+ln -sf /opt/conf/profile                     ~/.profile
 ln -sf /opt/conf/bashrc                      ~/.bashrc
 ln -sf /opt/conf/fbtermrc                    ~/.fbtermrc
 ln -sf /opt/conf/tmux.conf                   ~/.tmux.conf
