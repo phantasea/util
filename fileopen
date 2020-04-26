@@ -43,19 +43,25 @@ ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 
 case "$ext" in
     mp3|wav|flac|ogg|w4a|wma|ape|rm)
-        audplay $OPTS "$file"
+        audplay $OPTS "$file" && exit 0
         ;;
 
     rmvb|rmb|swf|avi|mp4|wmv|3gp|ogv|mkv|mpg|vob|flv|rmvb|rmb|vdat|webm)
-        vidplay $OPTS "$file"
+        vidplay $OPTS "$file" && exit 0
         ;;
 
     bmp|jpg|jpeg|png|gif|xpm|ppm)
-        imgview $OPTS "$file"
+        imgview $OPTS "$file" && exit 0
+        ;;
+
+    gif)
+        mpv "$file" && exit 0
+        pqiv -f "$file" && exit 0
+        vimiv -f "$file" && exit 0
         ;;
 
     htm|html|xhtml)
-        webview $OPTS "$file"
+        webview $OPTS "$file" && exit 0
         ;;
 
     pdf|ps)
@@ -63,11 +69,11 @@ case "$ext" in
             echo "The file size is too large! ($size > $MAXSIZE)"
             exit 1
         fi
-        pdfview $OPTS "$file"
+        pdfview $OPTS "$file" && exit 0
         ;;
 
     tpp)
-        tpp "$file"
+        tpp "$file" && exit 0
         ;;
 
     *)
@@ -75,8 +81,9 @@ case "$ext" in
             echo "The file size is too large! ($size > $MAXSIZE)"
             exit 1
         fi
-        vimux "$file"
+        vimux "$file" && exit 0
         ;;
 esac
 
-exit 0
+echo "Open file ($file) failed!"
+exit 1
