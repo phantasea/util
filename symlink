@@ -105,7 +105,8 @@ ln -sf /opt/conf/wgetrc                      ~/.wgetrc
 ln -sf /opt/conf/apvlvrc                     ~/.apvlvrc
 ln -sf /opt/conf/goto.sh                     ~/.goto.sh
 ln -sf /opt/conf/feh                         ~/.config/feh
-ln -sf /opt/conf/mpd                         ~/.config/mpd
+ln -sf /opt/conf/mpd.conf                    ~/.config/mpd/mpd.conf
+ln -sf /opt/conf/ncmpc                       ~/.config/ncmpc
 ln -sf /opt/conf/ncmpcpp                     ~/.config/ncmpcpp
 ln -sf /opt/conf/mpv                         ~/.config/mpv
 ln -sf /opt/conf/ranger                      ~/.config/ranger
