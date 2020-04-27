@@ -84,6 +84,7 @@ case "$1" in
         list
         #lsblk -no NAME,LABEL,MOUNTPOINT | sed 's/\s\+/:/'
         ;;
+
     mount)
         if [ $# -ne 2 ]; then
             help
@@ -91,6 +92,7 @@ case "$1" in
         mount "$2"
         #sudo mount -t auto -o noatime,nodev,nosuid "$2"
         ;;
+
     unmount)
         if [ $# -ne 2 ]; then
             help
