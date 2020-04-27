@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# This script is meant to support common media managing utilities.
+# Parameters:
+#  - list           -- list media
+#  - mount <device> -- mount a device
+#  - unmount <path> -- unmount given mount point
+
+function help() {
+    echo "Usage: vifm-media list | mount <device> | unmount <path>"
+    exit 1
+}
+
+function list() {
+    while read -r dev; do
+        if [ "${dev:0:10}" = /dev/disk/ ]; then
+            continue
+        fi
+
+        local out=$(info "$dev")
+
+        if grep -qe '^\s*removable:\s*0\s*$' <<< "$out"; then
+            continue
+        fi
+
+        if grep -qe '^\s*has media:\s*0\s*$' <<< "$out"; then
+            continue
+        fi
+
+        echo device="$dev"
+
+        local label=$(grep -m1 '^\s*label:.*$' <<< "$out" | sed 's/^[^:]*:\s*//')
+        echo "label=$label"
+
+        local paths=$(grep -m1 '^\s*mount paths:.*$' <<< "$out" | sed 's/^[^:]*:\s*//')
+        IFS=',' paths=( $paths )
+        for path in "${paths[@]}"; do
+            echo "mount-point=$path"
+        done
+
+        echo
+    done <<< "$("$monitor" --enumerate-device-files)"
+}
+
+if type -P devmon udevil &>/dev/null; then
+    monitor=devmon
+
+    function info() {
+        udevil info "$@"
+    }
+
+    function mount() {
+        devmon --mount "$1"
+    }
+
+    function unmount() {
+        devmon --unmount "$1"
+    }
+elif type -P udisksctl &>/dev/null; then
+    monitor=udisksctl
+
+    function info() {
+        udisksctl info -b "$@"
+    }
+
+    function mount() {
+        udisksctl mount "$1"
+    }
+
+    function unmount() {
+        udisksctl unmount "$1"
+    }
+else
+    echo "Neither of the supported backends were found" \
+         "(udevil, udisksctl)" >&2
+    exit 1
+fi
+
+case "$1" in
+    list)
+        if [ $# -ne 1 ]; then
+            help
+        fi
+        list
+        #lsblk -no NAME,LABEL,MOUNTPOINT | sed 's/\s\+/:/'
+        ;;
+    mount)
+        if [ $# -ne 2 ]; then
+            help
+        fi
+        mount "$2"
+        #sudo mount -t auto -o noatime,nodev,nosuid "$2"
+        ;;
+    unmount)
+        if [ $# -ne 2 ]; then
+            help
+        fi
+        unmount "$2"
+        #sudo umount "$2"
+        ;;
+
+    *)
+        help
+        ;;
+esac
