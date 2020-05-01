@@ -6,7 +6,7 @@ if [ -z "$DISPLAY" ]; then
     CMD="cd ~/temp; w3m -s"
 else
     SID=1
-    CMD="cd ~/temp; elinks"
+    CMD="elinks"
 fi
 
 WID=8
@@ -17,7 +17,7 @@ while getopts "bB" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
-                CMD="cd ~/temp; elinks"
+                CMD="elinks"
             else
                 CMD="cd ~/temp; w3m -s"
             fi
