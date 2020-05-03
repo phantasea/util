@@ -15,7 +15,7 @@ while getopts "apstuvwxi" opt; do
            iii=1
            ;;
         p)
-           ump=0
+           ump=1
            ;;
         s)
            sds=1
@@ -52,31 +52,38 @@ done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
+wcs=$(ls /media/simone/sandisk_s  2>/dev/null | wc -l)
+wcu=$(ls /media/simone/sandisk_u  2>/dev/null | wc -l)
+wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
+wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
+wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
+wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
+
 if [ $iii -eq 1 ]; then
-  if [ $sds -eq 1 ]; then
+  if [ $sds -eq 1 ] && [ $wcs -eq 0 ]; then
     sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
 
-  if [ $sdu -eq 1 ]; then
+  if [ $sdu -eq 1 ] && [ $wcu -eq 0 ]; then
     sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
   fi
 
-  if [ $sdv -eq 1 ]; then
+  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ]; then
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
   fi
 
-  if [ $sdw -eq 1 ]; then
+  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ]; then
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
 
-  if [ $sdx -eq 1 ]; then
+  if [ $sdx -eq 1 ] && [ $wcx -eq 0 ]; then
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
 
     sleep 1s
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
   fi
 
-  if [ $txt -eq 1 ]; then
+  if [ $txt -eq 1 ] && [ $wct -eq 0 ]; then
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
 
@@ -91,35 +98,35 @@ passphrase="$(< /opt/.priv/passphrase)"
 /usr/bin/expect << EOD
   set timeout 3
 
-  if {$sds == 1} {
+  if {$sds == 1 && $wcs == 0} {
     sleep 0.5
     spawn sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
     expect "password"
     send "$password\r"
   }
 
-  if {$sdu == 1} {
+  if {$sdu == 1 && $wcu == 0} {
     sleep 0.5
     spawn sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
     expect "password"
     send "$password\r"
   }
 
-  if {$sdv == 1} {
+  if {$sdv == 1 && $wcv == 0} {
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
     expect "password"
     send "$password\r"
   }
 
-  if {$sdw == 1} {
+  if {$sdw == 1 && $wcw == 0} {
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
     expect "password"
     send "$password\r"
   }
 
-  if {$sdx == 1} {
+  if {$sdx == 1 && $wcx == 0} {
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
     expect "password"
@@ -131,7 +138,7 @@ passphrase="$(< /opt/.priv/passphrase)"
     send "$password\r"
   }
 
-  if {$txt == 1} {
+  if {$txt == 1 && $wct == 0} {
     sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
