@@ -48,7 +48,7 @@ URI="."
 if [ ! -z "$1" ]; then
     if [ -f "$1" ] || [ -d "$1" ]; then
         URI=$(realpath -s "$1")
-        #URI="file://${URI}"
+        URI="file://${URI}"
     else
         URI=$1
         if [[ ! $1 =~ "http" ]]; then
@@ -62,11 +62,12 @@ if [[ $CMD =~ "firefox" ]] || [[ $CMD =~ "vimb" ]]; then
     exit 0
 fi
 
-URI=${URI// /\\\ }
-URI=${URI//(/\\\(}
-URI=${URI//)/\\\)}
-URI=${URI//</\\\<}
-URI=${URI//>/\\\>}
+#URI=${URI// /\\\ }
+#URI=${URI//(/\\\(}
+#URI=${URI//)/\\\)}
+#URI=${URI//</\\\<}
+#URI=${URI//>/\\\>}
+#URI=${URI//|/\\\|}
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
@@ -76,14 +77,11 @@ fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD $URI"
+    tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD \"$URI\""
     exit 0
 fi
 
-tmux send-keys -t $SID:$WID T
-if [[ "$CMD" =~ "elinks" ]]; then
-    tmux send-keys -t $SID:$WID o
-fi
+tmux send-keys -t $SID:$WID O
 tmux set-buffer "$URI"
 tmux paste-buffer -t $SID:$WID
 tmux send-keys -t $SID:$WID C-m
