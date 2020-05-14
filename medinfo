@@ -6,7 +6,8 @@ case "$MIMETYPE" in
         (exiftool "$1" |grep Bitrate |cut -d':' -f 2 |sed -e 's/[ \t]*//g' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
         exit 0;;
     image/*)
-        exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//'
+        #exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//'
+        identify "$1" | cut -d' ' -f 3
         exit 0;;
     video/*)
         (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
