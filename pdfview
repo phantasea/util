@@ -47,6 +47,13 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
+maxsize=5000000
+size=$(stat -c %s -- "$1")
+if [ $size -gt $maxsize ]; then
+    echo "file size $size is large than $maxsize!"
+    exit 1
+fi
+
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
     setterm -cursor off; "$CMD" "$file"

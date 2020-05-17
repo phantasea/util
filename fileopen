@@ -33,11 +33,6 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
-MAXSIZE=3000000
-#size=$(wc -c < "$1")
-#size=$(stat --printf="%s" "$1")
-size=$(stat -c %s -- "$1")
-
 ext="${file##*.}"
 ext=$(echo ${ext} | tr '[:upper:]' '[:lower:]')
 
@@ -65,10 +60,6 @@ case "$ext" in
         ;;
 
     pdf|ps)
-        if [ $size -gt $MAXSIZE ]; then
-            echo "The file size is too large! ($size > $MAXSIZE)"
-            exit 1
-        fi
         pdfview $OPTS "$file" && exit 0
         ;;
 
@@ -80,10 +71,6 @@ esac
 filemimetype="$(file --dereference --brief --mime-type -- "${file}")"
 case "${filemimetype}" in
     text/*)
-        if [ $size -gt $MAXSIZE ]; then
-            echo "The file size is too large! ($size > $MAXSIZE)"
-            exit 1
-        fi
         vimux "$file" && exit 0
         ;;
 esac
