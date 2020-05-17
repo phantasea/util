@@ -13,7 +13,8 @@ WID=8
 WIN="webview"
 
 bplan=0
-while getopts "bB" opt; do
+hastmux=1
+while getopts "bBX" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
@@ -31,6 +32,9 @@ while getopts "bB" opt; do
                     CMD='vimb'
                 fi
             fi
+            ;;
+        X)
+            hastmux=0
             ;;
 
         ?)  echo 'Usage: webview [-bB] URI'
@@ -70,8 +74,8 @@ fi
 #URI=${URI//|/\\\|}
 
 tmux has-session -t $SID
-if [ $? -ne 0 ]; then
-    $CMD $URI
+if [ $? -ne 0 ] || [ $hastmux -eq 0 ]; then
+    setterm -cursor on; $CMD "$URI"
     exit 0
 fi
 
