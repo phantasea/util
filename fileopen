@@ -75,8 +75,11 @@ case "$ext" in
     tpp)
         tpp "$file" && exit 0
         ;;
+esac
 
-    *)
+filemimetype="$(file --dereference --brief --mime-type -- "${file}")"
+case "${filemimetype}" in
+    text/*)
         if [ $size -gt $MAXSIZE ]; then
             echo "The file size is too large! ($size > $MAXSIZE)"
             exit 1
