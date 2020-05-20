@@ -9,12 +9,15 @@ else
     CMD="elinks"
 fi
 
+if [ $TERM != "screen" ]; then
+    SID=13
+fi
+
 WID=8
 WIN="webview"
 
 bplan=0
-hastmux=1
-while getopts "bBX" opt; do
+while getopts "bB" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
@@ -33,10 +36,6 @@ while getopts "bBX" opt; do
                 fi
             fi
             ;;
-        X)
-            hastmux=0
-            ;;
-
         ?)  echo 'Usage: webview [-bB] URI'
             exit 1;;
     esac
@@ -73,8 +72,8 @@ fi
 #URI=${URI//>/\\\>}
 #URI=${URI//|/\\\|}
 
-tmux has-session -t $SID
-if [ $? -ne 0 ] || [ $hastmux -eq 0 ]; then
+tmux has-session -t $SID 2>/dev/null
+if [ $? -ne 0 ]; then
     setterm -cursor on; $CMD "$URI"
     exit 0
 fi

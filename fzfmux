@@ -6,12 +6,16 @@ else
     SID=1
 fi
 
+if [ $TERM != "screen" ]; then
+    SID=13
+fi
+
 WID=12
 WIN="fzfmux"
 
 CMD="$*"' --height=0 --bind "enter:execute#fileopen {}#"'
 
-tmux has-session -t $SID
+tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
     send-keys "$CMD"
     exit 0

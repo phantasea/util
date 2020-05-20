@@ -8,6 +8,10 @@ else
     CMD="ncmpc -f ~/.config/ncmpc/config -k ~/.config/ncmpc/keys"
 fi
 
+if [ $TERM != "screen" ]; then
+    SID=13
+fi
+
 WID=6
 WIN="music"
 
@@ -27,7 +31,7 @@ while getopts "b" opt; do
 done
 shift $((OPTIND-1))
 
-tmux has-session -t $SID
+tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
     $CMD
     exit 0

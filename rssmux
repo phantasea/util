@@ -10,7 +10,7 @@ WID=2
 WIN="newsbeuter"
 CMD="newsbeuter -q"
 
-tmux has-session -t $SID
+tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
     $CMD
     exit 0

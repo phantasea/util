@@ -8,11 +8,14 @@ else
     CMD="mpv"
 fi
 
+if [ $TERM != "screen" ]; then
+    SID=13
+fi
+
 WID=5
 WIN="vidplay"
-hasTMUX=1
 
-while getopts "bBX" opt; do
+while getopts "bB" opt; do
     case $opt in
         b)
             if [[ $CMD =~ "mplayer" ]]; then
@@ -28,11 +31,8 @@ while getopts "bBX" opt; do
                 CMD="mplayer -vo x11"
             fi
             ;;
-        X)
-            hasTMUX=0
-            ;;
         ?)
-            echo 'Usage: vidmux [-bBX] <file>'
+            echo 'Usage: vidmux [-bB] <file>'
             exit 1;;
     esac
 done
@@ -42,17 +42,17 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 if [ $# -gt 1 ] || [ $# -eq 0 ]; then
-    echo 'Usage1: vidmux [-bBX] <file>'
+    echo 'Usage1: vidmux [-bB] <file>'
     exit 1
 fi
 
 if [ ! -f "$1" ]; then
-    echo 'Usage2: vidmux [-bBX] <file>'
+    echo 'Usage2: vidmux [-bB] <file>'
     exit 1
 fi
 
-tmux has-session -t $SID
-if [ $? -ne 0 ] || [ $hasTMUX -eq 0 ]; then
+tmux has-session -t $SID 2>/dev/null
+if [ $? -ne 0 ]; then
     $CMD "$1"
     exit 0
 fi
