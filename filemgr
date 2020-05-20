@@ -5,7 +5,16 @@ if [ -z "$DISPLAY" ]; then
     CMD='vifm'
 else
     SID=1
-    CMD='cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir'
+    CMD="cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
+fi
+
+if [ $TERM != "screen" ]; then
+    SID=13
+    if [ -z "$DISPLAY" ]; then
+        CMD='vifm'
+    else
+        CMD='ranger --cmd=tab_new'
+    fi
 fi
 
 WID=9
@@ -33,7 +42,7 @@ if [ $# -ne 0 ]; then
     exit 1
 fi
 
-tmux has-session -t $SID
+tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
     $CMD
     exit 0
