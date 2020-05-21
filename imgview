@@ -49,7 +49,7 @@ shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 
 file="$1"
 if [ ! -z "$file" -a ! -f "$file" ]; then
-    echo "$file is not a file!"
+    echo "$0:$file is not a file!" > ~/dddd
     exit 1
 fi
 
@@ -110,7 +110,7 @@ CMD="$PROG $FILES" > /dev/null 2>&1
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
-    $CMD
+    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm}
     exit 0
 fi
 
