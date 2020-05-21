@@ -47,7 +47,7 @@ done
 
 shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 
-file=$1
+file="$1"
 if [ ! -z "$file" -a ! -f "$file" ]; then
     echo "$file is not a file!"
     exit 1
@@ -113,8 +113,6 @@ if [ $? -ne 0 ]; then
     $CMD
     exit 0
 fi
-
-#echo $CMD
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
