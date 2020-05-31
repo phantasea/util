@@ -1,21 +1,19 @@
 #!/bin/bash
 
 iii=0
-ump=0
 txt=0
 sds=0
 sdu=0
 sdv=0
 sdw=0
 sdx=0
+ump=1
+mnt=1
 
-while getopts "apstuvwxi" opt; do
+while getopts "astuvwxiPU" opt; do
     case $opt in
         i)
            iii=1
-           ;;
-        p)
-           ump=1
            ;;
         s)
            sds=1
@@ -35,6 +33,12 @@ while getopts "apstuvwxi" opt; do
         x)
            sdx=1
            ;;
+        P)
+           ump=0
+           ;;
+        U)
+           mnt=0
+           ;;
         a)
            sds=1
            txt=1
@@ -45,7 +49,7 @@ while getopts "apstuvwxi" opt; do
            ump=1
            ;;
         ?)
-           echo 'mudisk -[apstuvwx]'
+           echo 'mudisk -[astuvwxiPU]'
            exit 1;;
     esac
 done
@@ -58,8 +62,23 @@ wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
 wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
+wcp=$(ls /opt/.priv/priv          2>/dev/null | wc -l)
 
 if [ $iii -eq 1 ]; then
+  if [ $mnt -eq 0 ]; then
+    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt && sudo umount /opt/.porn/text
+    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss && sudo umount /media/simone/sandisk_s
+    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu && sudo umount /media/simone/sandisk_u
+    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv && sudo umount /media/simone/sandisk_v
+    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www && sudo umount /media/simone/sandisk_w
+    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx && {
+        sudo umount /media/simone/sandisk_x1
+        sudo umount /media/simone/sandisk_x2
+    }
+
+    exit 0
+  fi
+
   if [ $sds -eq 1 ] && [ $wcs -eq 0 ]; then
     sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
@@ -90,55 +109,81 @@ if [ $iii -eq 1 ]; then
   exit 0
 fi
 
-[ ! -f /opt/.priv/password ] && exit 1
-
-password="$(< /opt/.priv/password)"
-passphrase="$(< /opt/.priv/passphrase)"
+[ $mnt -eq 1 ] && [ ! -f /opt/.priv/password ] && exit 1 || password="$(< /opt/.priv/password)"
+[ $mnt -eq 1 ] && [ ! -f /opt/.priv/passphrase ] && exit 1 || passphrase="$(< /opt/.priv/passphrase)"
 
 /usr/bin/expect << EOD
   set timeout 3
 
-  if {$sds == 1 && $wcs == 0} {
-    sleep 0.5
-    spawn sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
-    expect "password"
-    send "$password\r"
-  }
+  if {$mnt == 0} {
+    if {$txt == 1 && $wct != 0} {
+      puts "ttt"
+      sleep 0.5
+      spawn sudo umount /opt/.porn/text
+      expect "password"
+      send "$password\r"
+    }
 
-  if {$sdu == 1 && $wcu == 0} {
-    sleep 0.5
-    spawn sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
-    expect "password"
-    send "$password\r"
-  }
+    if {$sds == 1 && $wcs != 0} {
+      puts "\n\nsss"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_s
+      expect "password"
+      send "$password\r"
+    }
 
-  if {$sdv == 1 && $wcv == 0} {
-    sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
-    expect "password"
-    send "$password\r"
-  }
+    if {$sdu == 1 && $wcu != 0} {
+      puts "\n\nuuu"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_u
+      expect "password"
+      send "$password\r"
+    }
 
-  if {$sdw == 1 && $wcw == 0} {
-    sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
-    expect "password"
-    send "$password\r"
-  }
+    if {$sdv == 1 && $wcv != 0} {
+      puts "\n\nvvv"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_v
+      expect "password"
+      send "$password\r"
+    }
 
-  if {$sdx == 1 && $wcx == 0} {
-    sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
-    expect "password"
-    send "$password\r"
+    if {$sdw == 1 && $wcw != 0} {
+      puts "\n\nwww"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_w
+      expect "password"
+      send "$password\r"
+    }
 
-    sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
-    expect "password"
-    send "$password\r"
+    if {$sdx == 1 && $wcx != 0} {
+      puts "\n\nxxx1"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_x1
+      expect "password"
+      send "$password\r"
+
+      puts "\n\nxxx2"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_x2
+      expect "password"
+      send "$password\r"
+    }
+
+    if {$ump == 1 && $wcp != 0} {
+      puts "\n\nppp"
+      sleep 0.5
+      spawn sudo umount /opt/.priv
+      expect "password"
+      send "$password\r"
+    }
+
+    expect eof
+    exit
   }
 
   if {$txt == 1 && $wct == 0} {
+    puts "ttt"
     sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
@@ -147,7 +192,54 @@ passphrase="$(< /opt/.priv/passphrase)"
     send "$passphrase\r"
   }
 
-  if {$ump == 1} {
+  if {$sds == 1 && $wcs == 0} {
+    puts "\n\nsss"
+    sleep 0.5
+    spawn sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$sdu == 1 && $wcu == 0} {
+    puts "\n\nuuu"
+    sleep 0.5
+    spawn sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$sdv == 1 && $wcv == 0} {
+    puts "\n\nvvv"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$sdw == 1 && $wcw == 0} {
+    puts "\n\nwww"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$sdx == 1 && $wcx == 0} {
+    puts "\n\nxxx1"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
+    expect "password"
+    send "$password\r"
+
+    puts "\n\nxxx1"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$ump == 1 && $wcp != 0} {
+    puts "\n\nppp"
     sleep 0.5
     spawn sudo umount /opt/.priv
     expect "password"
