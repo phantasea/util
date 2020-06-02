@@ -13,32 +13,23 @@ mnt=1
 while getopts "astuvwxiPU" opt; do
     case $opt in
         i)
-           iii=1
-           ;;
+           iii=1 ;;
         s)
-           sds=1
-           ;;
+           sds=1 ;;
         t)
-           txt=1
-           ;;
+           txt=1 ;;
         u)
-           sdu=1
-           ;;
+           sdu=1 ;;
         v)
-           sdv=1
-           ;;
+           sdv=1 ;;
         w)
-           sdw=1
-           ;;
+           sdw=1 ;;
         x)
-           sdx=1
-           ;;
+           sdx=1 ;;
         P)
-           ump=0
-           ;;
+           ump=0 ;;
         U)
-           mnt=0
-           ;;
+           mnt=0 ;;
         a)
            sds=1
            txt=1
@@ -50,7 +41,7 @@ while getopts "astuvwxiPU" opt; do
            ;;
         ?)
            echo 'mudisk -[astuvwxiPU]'
-           exit 1;;
+           exit 1 ;;
     esac
 done
 
@@ -241,7 +232,7 @@ exist_sds_src=0; [ -f /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     expect "password"
     send "$password\r"
 
-    puts "\n\nxxx1"
+    puts "\n\nxxx2"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
     expect "password"
