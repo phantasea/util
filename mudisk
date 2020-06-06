@@ -75,7 +75,7 @@ if [ $iii -eq 1 ]; then
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
 
-  if [ $sds -eq 1 ] && [ $wcs -eq 0 ] && [ -f /dev/disk/by-uuid/EA1D-0944 ]; then
+  if [ $sds -eq 1 ] && [ $wcs -eq 0 ] && [ -e /dev/disk/by-uuid/EA1D-0944 ]; then
     echo sss
     sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
@@ -90,7 +90,7 @@ if [ $iii -eq 1 ]; then
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
   fi
 
-  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -f /dev/disk/by-label/udisk_hama ]; then
+  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
     echo www
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
@@ -110,8 +110,8 @@ fi
 [ $mnt -eq 1 ] && [ ! -f /opt/.priv/password ] && exit 1 || password="$(< /opt/.priv/password)"
 [ $mnt -eq 1 ] && [ ! -f /opt/.priv/passphrase ] && exit 1 || passphrase="$(< /opt/.priv/passphrase)"
 
-exist_sdw_src=0; [ -f /dev/disk/by-label/udisk_hama ] && exist_sdw_src=1
-exist_sds_src=0; [ -f /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
+exist_sdw_src=0; [ -e /dev/disk/by-label/udisk_hama ] && exist_sdw_src=1
+exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
 
 /usr/bin/expect << EOD
   set timeout 3
