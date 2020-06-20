@@ -193,7 +193,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     send "$passphrase\r"
   }
 
-  if {$sds == 1 && $wcs == 0} {
+  if {$sds == 1 && $wcs == 0 && $exist_sds_src == 1} {
     puts "\n\nsss"
     sleep 0.5
     spawn sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
@@ -217,7 +217,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     send "$password\r"
   }
 
-  if {$sdw == 1 && $wcw == 0} {
+  if {$sdw == 1 && $wcw == 0 && $exist_sdw_src == 1} {
     puts "\n\nwww"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
