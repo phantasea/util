@@ -13,20 +13,23 @@ fi
 WID=7
 WIN="vim"
 
-prog="vim"
+#prog="vim"
+prog="nvim"
 exe="edit"
 diff=0
 
 while getopts "vc:d" opt; do
     case $opt in
         v) 
-           prog="view"
+           #prog="view"
+           prog="nvim -R"
            exe="view"
            ;;
         c) cmd="$OPTARG";;
         d) 
            diff=1
-           prog="vimdiff"
+           #prog="vimdiff"
+           prog="nvim -d"
            WIN="diff"
            WID=0
            ;;
