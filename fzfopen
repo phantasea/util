@@ -1,0 +1,38 @@
+#!/bin/bash
+#this is for fzf ctrl-o persistent file opener
+#fzf --bind 'ctrl-o:execute(fzfopen -d: {})'
+
+search=0
+while getopts "sd:" opt; do
+    case $opt in
+        s)
+            search=1
+            ;;
+        d) 
+            delim="$OPTARG"
+            ;;
+
+        ?)  echo 'Usage: fzfopen -d<delim> <string>'
+            exit 1;;
+    esac
+done
+
+shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
+
+[ -z "$*" ] && echo "fzfopen -d<delim> <string>" && exit 1
+
+file=$(echo "$*" | awk -F"$delim" '{print $1}')
+keyword=$(echo "$*" | awk -F"$delim" '{print $2}' | sed -e 's/^[ \t]*//')
+
+echo "$delim" " | " "$file" " | " "$keyword"
+if [ $search -eq 0 ]; then
+    fileopen "$file"
+    exit 0
+fi
+
+if [ ! -z "$keyword" ]; then
+    vimux -s"$keyword" "$file" 
+    exit 0
+fi
+
+fileopen "$file"
