@@ -18,7 +18,7 @@ prog="nvim"
 exe="edit"
 diff=0
 
-while getopts "vc:d" opt; do
+while getopts "vc:ds:" opt; do
     case $opt in
         v) 
            #prog="view"
@@ -33,12 +33,18 @@ while getopts "vc:d" opt; do
            WIN="diff"
            WID=0
            ;;
-        ?) echo 'Usage: vimux [-v]/[-d]/[-c cmd] file/dir'
+        s)
+           search="$OPTARG"
+           ;;
+
+        ?) echo 'Usage: vimux [-v]/[-d]/[-c cmd]/[-s search] file/dir'
            exit 1;;
     esac
 done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+#echo "$search" " | " "$1"
 
 if [ ! -f "$1" ] && [ ! -d "$1" ]; then
     echo $1
@@ -100,6 +106,12 @@ tmux send-keys -t $SID:$WID C-m
 
 if [ ! -z "$cmd" ]; then
     tmux set-buffer ":$cmd"
+    tmux paste-buffer -t $SID:$WID
+    tmux send-keys -t $SID:$WID C-m
+fi
+
+if [ ! -z "$search" ]; then
+    tmux set-buffer "/\V$search"
     tmux paste-buffer -t $SID:$WID
     tmux send-keys -t $SID:$WID C-m
 fi
