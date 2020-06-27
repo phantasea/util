@@ -1,6 +1,7 @@
 #!/bin/bash
 
 iii=0
+pls=0
 txt=0
 sds=0
 sdu=0
@@ -10,10 +11,12 @@ sdx=0
 ump=1
 mnt=1
 
-while getopts "astuvwxiPU" opt; do
+while getopts "astuvwxilPU" opt; do
     case $opt in
         i)
            iii=1 ;;
+        l)
+           pls=1 ;;
         s)
            sds=1 ;;
         t)
@@ -40,7 +43,7 @@ while getopts "astuvwxiPU" opt; do
            ump=1
            ;;
         ?)
-           echo 'mudisk -[astuvwxiPU]'
+           echo 'mudisk -[astuvwxilPU]'
            exit 1 ;;
     esac
 done
@@ -55,14 +58,28 @@ wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
 wcp=$(ls /opt/.priv/priv          2>/dev/null | wc -l)
 
+if [ $pls -eq 1 ]; then
+    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-lsof && lsof /opt/.porn/text
+    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-lsof && lsof /media/simone/sandisk_s
+    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-lsof && lsof /media/simone/sandisk_u
+    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-lsof && lsof /media/simone/sandisk_v
+    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www-lsof && lsof /media/simone/sandisk_w
+    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx-lsof && {
+        lsof /media/simone/sandisk_x1
+        lsof /media/simone/sandisk_x2
+    }
+
+    exit 0
+fi
+
 if [ $iii -eq 1 ]; then
   if [ $mnt -eq 0 ]; then
-    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt && sudo umount /opt/.porn/text
-    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss && sudo umount /media/simone/sandisk_s
-    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu && sudo umount /media/simone/sandisk_u
-    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv && sudo umount /media/simone/sandisk_v
-    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www && sudo umount /media/simone/sandisk_w
-    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx && {
+    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
+    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
+    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
+    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
+    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
+    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt && {
         sudo umount /media/simone/sandisk_x1
         sudo umount /media/simone/sandisk_x2
     }
@@ -172,7 +189,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$ump == 1 && $wcp != 0} {
-      puts "\n\nppp"
+      puts "\n\nPPP"
       sleep 0.5
       spawn sudo umount /opt/.priv
       expect "password"
@@ -240,7 +257,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$ump == 1 && $wcp != 0} {
-    puts "\n\nppp"
+    puts "\n\nPPP"
     sleep 0.5
     spawn sudo umount /opt/.priv
     expect "password"
