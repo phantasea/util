@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MIMETYPE=$(mimetype -b "$1")
+MIMETYPE=$(mimetype -b -- "$1")
 case "$MIMETYPE" in
     audio/*)
         (exiftool "$1" |grep Bitrate |cut -d':' -f 2 |sed -e 's/[ \t]*//g' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
@@ -17,4 +17,5 @@ case "$MIMETYPE" in
         df -h "$1" |sed '1d' |awk '{print $4,$2}'
 esac
 
+echo "Unkown MIMETYPE = \"MIMETYPE\"!"
 exit 1
