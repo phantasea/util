@@ -1,8 +1,10 @@
 #!/bin/bash
 
 iii=0
+exp=0
 pls=0
 txt=0
+sda=0
 sds=0
 sdu=0
 sdv=0
@@ -11,8 +13,10 @@ sdx=0
 ump=1
 mnt=1
 
-while getopts "astuvwxilPU" opt; do
+while getopts "aestuvwxilPU" opt; do
     case $opt in
+        e)
+           exp=1 ;;
         i)
            iii=1 ;;
         l)
@@ -34,6 +38,7 @@ while getopts "astuvwxilPU" opt; do
         U)
            mnt=0 ;;
         a)
+           sda=1
            sds=1
            txt=1
            sdu=1
@@ -43,12 +48,18 @@ while getopts "astuvwxilPU" opt; do
            ump=1
            ;;
         ?)
-           echo 'mudisk -[astuvwxilPU]'
+           echo 'mudisk -[aestuvwxilPU]'
            exit 1 ;;
     esac
 done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $exp -eq 1 ] && [ $sda -eq 1 ]; then
+    tree -f -L 2 /media/simone > /opt/misc/docs/files-sandisks
+    echo "tree to files-sandisks!"
+    exit 0
+fi
 
 wcs=$(ls /media/simone/sandisk_s  2>/dev/null | wc -l)
 wcu=$(ls /media/simone/sandisk_u  2>/dev/null | wc -l)
