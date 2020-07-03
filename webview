@@ -9,7 +9,7 @@ else
     CMD="cd ~/temp; elinks"
 fi
 
-if [ $TERM != "screen" ]; then
+if [[ ! "$TERM" =~ "screen" ]]; then
     SID=13
 fi
 

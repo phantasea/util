@@ -8,7 +8,7 @@ else
     CMD="cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
 fi
 
-if [ $TERM != "screen" ]; then
+if [[ ! "$TERM" =~ "screen" ]]; then
     SID=13
     if [ -z "$DISPLAY" ]; then
         CMD='vifm'

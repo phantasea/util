@@ -8,7 +8,7 @@ else
     CMD="mpv"
 fi
 
-if [ $TERM != "screen" ]; then
+if [[ ! "$TERM" =~ "screen" ]]; then
     SID=13
 fi
 
