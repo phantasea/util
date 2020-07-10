@@ -1,19 +1,19 @@
 #!/bin/bash
 
 if [ -z "$DISPLAY" ]; then
-    SID=0
     CMD="mplayer"
 else
-    SID=1
     CMD="mpv"
 fi
 
+SID=0
+WID=5
+WIN="vidplay"
+
+# not in tmux session
 if [[ ! "$TERM" =~ "screen" ]]; then
     SID=13
 fi
-
-WID=5
-WIN="vidplay"
 
 while getopts "bB" opt; do
     case $opt in

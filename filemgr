@@ -1,13 +1,16 @@
 #! /usr/bin/env bash
 
+SID=0
+WID=9
+WIN='filemgr'
+
 if [ -z "$DISPLAY" ]; then
-    SID=0
     CMD='vifm'
 else
-    SID=1
     CMD="cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
 fi
 
+# not in tmux session
 if [[ ! "$TERM" =~ "screen" ]]; then
     SID=13
     if [ -z "$DISPLAY" ]; then
@@ -16,9 +19,6 @@ if [[ ! "$TERM" =~ "screen" ]]; then
         CMD='ranger --cmd=tab_new'
     fi
 fi
-
-WID=9
-WIN='filemgr'
 
 while getopts "b" opt; do
     case $opt in

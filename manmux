@@ -1,18 +1,14 @@
 #! /bin/bash
 
-if [ -z "$DISPLAY" ]; then
-    SID=0
-else
-    SID=1
-fi
-
-if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
-fi
-
+SID=0
 WID=7
 WIN="vim"
 CMD="vim"
+
+# not in tmux session
+if [[ ! "$TERM" =~ "screen" ]]; then
+    SID=13
+fi
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
