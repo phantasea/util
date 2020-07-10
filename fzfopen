@@ -24,7 +24,7 @@ shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 file=$(echo "$*" | awk -F"$delim" '{print $1}')
 keyword=$(echo "$*" | awk -F"$delim" '{print $2}' | sed -e 's/^[ \t]*//')
 
-echo "$delim" " | " "$file" " | " "$keyword"
+#echo "$delim" " | " "$file" " | " "$keyword"
 if [ $search -eq 0 ]; then
     fileopen "$file"
     exit 0
