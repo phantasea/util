@@ -10,10 +10,10 @@ SID=0
 WID=5
 WIN="vidplay"
 
+[[ ! -z "$DISPLAY" ]] && SID=1
+
 # not in tmux session
-if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
-fi
+[[ ! "$TERM" =~ "screen" ]] && SID=13
 
 while getopts "bB" opt; do
     case $opt in

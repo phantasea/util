@@ -7,6 +7,7 @@ WIN='filemgr'
 if [ -z "$DISPLAY" ]; then
     CMD='vifm'
 else
+    SID=1
     CMD="cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
 fi
 

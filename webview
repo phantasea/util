@@ -11,10 +11,10 @@ SID=0
 WID=8
 WIN="webview"
 
+[[ ! -z "$DISPLAY" ]] && SID=1
+
 # not in tmux session
-if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
-fi
+[[ ! "$TERM" =~ "screen" ]] && SID=13
 
 bplan=0
 while getopts "bB" opt; do

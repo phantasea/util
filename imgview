@@ -14,10 +14,10 @@ WIN="imgview"
 CMD=""
 PROG=""
 
+[[ ! -z "$DISPLAY" ]] && SID=1
+
 # not in tmux session
-if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
-fi
+[[ ! "$TERM" =~ "screen" ]] && SID=13
 
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.

@@ -5,10 +5,10 @@ WID=7
 WIN="vim"
 CMD="vim"
 
+[[ ! -z "$DISPLAY" ]] && SID=1
+
 # not in tmux session
-if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
-fi
+[[ ! "$TERM" =~ "screen" ]] && SID=13
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
