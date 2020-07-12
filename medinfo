@@ -13,11 +13,11 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 [[ $tsls -eq 1 ]] && {
-    tsp | grep running  | sed -e 's/mpg321/mpgXXX running  mpg321/' | awk -F"mpgXXX " '{print $2}'
+    tsp | grep running  | sed -e 's/mpg321/mpgXXX running  | mpg321/' | awk -F"mpgXXX " '{print $2}'
     echo '--------'
-    tsp | grep queued   | sed -e 's/mpg321/mpgXXX queued   mpg321/' | awk -F"mpgXXX " '{print $2}'
+    tsp | grep queued   | sed -e 's/mpg321/mpgXXX queued   | mpg321/' | awk -F"mpgXXX " '{print $2}'
     echo '--------'
-    tsp | grep finished | sed -e 's/mpg321/mpgXXX finished mpg321/' | awk -F"mpgXXX " '{print $2}'
+    tsp | grep finished | sed -e 's/mpg321/mpgXXX finished | mpg321/' | awk -F"mpgXXX " '{print $2}'
 
     exit 0
 }
