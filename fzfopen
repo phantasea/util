@@ -21,8 +21,11 @@ shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 
 [ -z "$*" ] && echo "fzfopen -d<delim> <string>" && exit 1
 
-file=$(echo "$*" | awk -F"$delim" '{print $1}')
-keyword=$(echo "$*" | awk -F"$delim" '{print $2}' | sed -e 's/^[ \t]*//')
+file="$*"
+if [ ! -z "$delim" ]; then
+    file=$(echo "$*" | awk -F"$delim" '{print $1}')
+    keyword=$(echo "$*" | awk -F"$delim" '{print $2}' | sed -e 's/^[ \t]*//')
+fi
 
 #echo "$delim" " | " "$file" " | " "$keyword"
 if [ $search -eq 0 ]; then
