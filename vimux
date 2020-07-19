@@ -83,11 +83,19 @@ tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $prog $file $file2"
     tmux select-window -t $SID:$WIN
+
+    if [ ! -z "$search" ]; then
+        tmux set-buffer "/\V$search"
+        tmux paste-buffer -t $SID:$WID
+        tmux send-keys -t $SID:$WID C-m
+        tmux send-keys -t $SID:$WID zz
+    fi
+
     exit 0
 fi
 
 if [ $diff -eq 1 ]; then
-    #echo $prog $file $file2
+    $prog $file $file2
     exit 0
 fi
 
@@ -110,6 +118,7 @@ if [ ! -z "$search" ]; then
     tmux set-buffer "/\V$search"
     tmux paste-buffer -t $SID:$WID
     tmux send-keys -t $SID:$WID C-m
+    tmux send-keys -t $SID:$WID zz
 fi
 
 exit 0
