@@ -6,6 +6,8 @@ _video() {
 export -f _video
 
 _open() {
+  [[ -z $DISPLAY ]] && return
+
   case $1 in
     *youtube.com*) _video "$1" ;;
     *youtu.be*) _video "$1" ;;
