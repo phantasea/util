@@ -1,6 +1,8 @@
 #!/bin/bash
-
 # only work for file without space in the name
+
+[[ $# == 0 ]] && exit 1
+
 for file in $*
 do
     mv -i -t ~/.Trash $file
