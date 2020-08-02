@@ -40,5 +40,5 @@ case "$MIMETYPE" in
         exit 0;;
 esac
 
-echo "Unkown MIMETYPE = \"MIMETYPE\"!"
+echo "MIMETYPE = \"$MIMETYPE\""
 exit 1
