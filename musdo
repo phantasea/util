@@ -1,11 +1,6 @@
 #!/bin/bash
 
-if [ -z "$DISPLAY" ]; then
-    SID=0
-else
-    SID=1
-fi
-
+[[ -z "$DISPLAY" ]] && SID=0 || SID=1
 
 tmux has-session -t $SID
 if [ $? -ne 0 ]; then
