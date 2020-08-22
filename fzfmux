@@ -9,7 +9,7 @@ CMD="$*"' --height=0 --bind "enter:execute#fileopen {}#"'
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
-    send-keys "$CMD"
+    "$CMD"
     exit 0
 fi
 
@@ -18,7 +18,7 @@ if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID -c $HOME/temp
 fi
 
-tmux send-keys C-g  #quit pending fzf
-tmux send-keys C-u  #clear existing input
-tmux send-keys "$CMD" 'Enter'
+tmux send-keys -t $SID:$WID C-q  #quit pending fzf
+tmux send-keys -t $SID:$WID C-u  #clear existing input
+tmux send-keys -t $SID:$WID "$CMD" C-m
 exit 0
