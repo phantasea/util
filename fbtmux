@@ -21,6 +21,7 @@ EOF
 
 export FBTERM_BACKGROUND_IMAGE=1
 exec fbterm -- tmux > /dev/null 2>&1
+#[ x-is-run ] && tmux set status on
 
 exit 0
 
