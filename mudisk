@@ -99,36 +99,36 @@ if [ $iii -eq 1 ]; then
   fi
 
   if [ $txt -eq 1 ] && [ $wct -eq 0 ]; then
-    echo ttt
+    echo +ttt+
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
 
   if [ $sds -eq 1 ] && [ $wcs -eq 0 ] && [ -e /dev/disk/by-uuid/EA1D-0944 ]; then
-    echo sss
+    echo +sss+
     sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
 
-  if [ $sdu -eq 1 ] && [ $wcu -eq 0 ]; then
-    echo uuu
+  if [ $sdu -eq 1 ] && [ $wcu -eq 0 ] && [ -e /dev/disk/by-uuid/3166-6338 ]; then
+    echo +uuu+
     sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
   fi
 
-  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ]; then
-    echo vvv
+  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ] && [ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ]; then
+    echo +vvv+
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
   fi
 
   if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
-    echo www
-    sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
+    echo +www+
+    sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
 
-  if [ $sdx -eq 1 ] && [ $wcx -eq 0 ]; then
-    echo xxx1
+  if [ $sdx -eq 1 ] && [ $wcx -eq 0 ] && [ -e /dev/disk/by-label/sandisk_ext ]; then
+    echo +xxx1+
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
 
     sleep 1s
-    echo xxx2
+    echo +xxx2+
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
   fi
 
@@ -146,7 +146,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
 
   if {$mnt == 0} {
     if {$txt == 1 && $wct != 0} {
-      puts "ttt"
+      puts "-ttt-"
       sleep 0.5
       spawn sudo umount /opt/.porn/text
       expect "password"
@@ -154,7 +154,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$sds == 1 && $wcs != 0 && $exist_sds_src == 1} {
-      puts "\n\nsss"
+      puts "\n\n-sss-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_s
       expect "password"
@@ -162,7 +162,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$sdu == 1 && $wcu != 0} {
-      puts "\n\nuuu"
+      puts "\n\n-uuu-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_u
       expect "password"
@@ -170,7 +170,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$sdv == 1 && $wcv != 0} {
-      puts "\n\nvvv"
+      puts "\n\n-vvv-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_v
       expect "password"
@@ -178,7 +178,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$sdw == 1 && $wcw != 0 && $exist_sdw_src == 1} {
-      puts "\n\nwww"
+      puts "\n\n-www-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_w
       expect "password"
@@ -186,13 +186,13 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     }
 
     if {$sdx == 1 && $wcx != 0} {
-      puts "\n\nxxx1"
+      puts "\n\n-xxx1-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_x1
       expect "password"
       send "$password\r"
 
-      puts "\n\nxxx2"
+      puts "\n\n-xxx2-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_x2
       expect "password"
@@ -212,7 +212,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$txt == 1 && $wct == 0} {
-    puts "ttt"
+    puts "+ttt+"
     sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
@@ -222,7 +222,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$sds == 1 && $wcs == 0 && $exist_sds_src == 1} {
-    puts "\n\nsss"
+    puts "\n\n+sss+"
     sleep 0.5
     spawn sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
     expect "password"
@@ -230,7 +230,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$sdu == 1 && $wcu == 0} {
-    puts "\n\nuuu"
+    puts "\n\n+uuu+"
     sleep 0.5
     spawn sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
     expect "password"
@@ -238,7 +238,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$sdv == 1 && $wcv == 0} {
-    puts "\n\nvvv"
+    puts "\n\n+vvv+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
     expect "password"
@@ -246,7 +246,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$sdw == 1 && $wcw == 0 && $exist_sdw_src == 1} {
-    puts "\n\nwww"
+    puts "\n\n+www+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
     expect "password"
@@ -254,13 +254,13 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   }
 
   if {$sdx == 1 && $wcx == 0} {
-    puts "\n\nxxx1"
+    puts "\n\n+xxx1+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
     expect "password"
     send "$password\r"
 
-    puts "\n\nxxx2"
+    puts "\n\n+xxx2+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
     expect "password"
