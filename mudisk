@@ -118,9 +118,11 @@ if [ $iii -eq 1 ]; then
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
   fi
 
-  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
+  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-uuid/3534-6562 ]; then
+  #if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
     echo +www+
-    sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
+    sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/3534-6562 /media/simone/sandisk_w
+    #sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
 
   if [ $sdx -eq 1 ] && [ $wcx -eq 0 ] && [ -e /dev/disk/by-label/sandisk_ext ]; then
@@ -248,7 +250,8 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   if {$sdw == 1 && $wcw == 0 && $exist_sdw_src == 1} {
     puts "\n\n+www+"
     sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/3534-6562 /media/simone/sandisk_w
+    #spawn sudo mount -o rw,nosuid,nodev,relatime,data=ordered /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
     expect "password"
     send "$password\r"
   }
