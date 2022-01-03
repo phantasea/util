@@ -31,11 +31,11 @@ mkdir /opt/misc/docs
 mkdir /opt/misc/dicts
 mkdir /opt/misc/fonts
 
-mkdir /opt/.porn/te*********
+mkdir /opt/.porn/text
 
-cd ~
+cd ~/docs
 git clone https://github.com/phantasea/note note
-git clone https://github.com/phantasea/webs webs
+git clone https://github.com/phantasea/web webs
 
 cd /opt
 git clone https://github.com/phantasea/priv .priv
