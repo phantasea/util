@@ -12,6 +12,14 @@ mkdir ~/docs/misc
 mkdir ~/docs/note
 mkdir ~/docs/webs
 
+sudo chown -R simone:simone /media/simone
+mkdir /media/simone/sandisk-s
+mkdir /media/simone/sandisk-u
+mkdir /media/simone/sandisk-v
+mkdir /media/simone/sandisk-w
+mkdir /media/simone/sandisk-x1
+mkdir /media/simone/sandisk-x2
+
 sudo chown -R simone:simone /opt
 mkdir /opt/apps
 mkdir /opt/auds
@@ -91,7 +99,8 @@ ln -sf /opt/conf/w3m/                        ~/.w3m
 ln -sf /opt/conf/git/gitconfig               ~/.gitconfig
 ln -sf /opt/conf/abookrc                     ~/.abookrc
 ln -sf /opt/conf/dictrc                      ~/.dictrc
-ln -sf /opt/conf/elinks.conf                 ~/.elinks/elinks.conf
+ln -sf /opt/conf/elinks/elinks.conf          ~/.elinks/elinks.conf
+ln -sf /opt/conf/elinks/bookmarks            ~/.elinks/bookmarks
 ln -sf /opt/conf/newsbeuter/                 ~/.newsbeuter
 ln -sf /opt/conf/yong                        ~/.yong
 ln -sf /opt/conf/mutt                        ~/.mutt
@@ -124,8 +133,8 @@ ln -sf /opt/conf/zathura                     ~/.config/zathura
 ln -sf /opt/conf/tridactyl                   ~/.config/tridactyl
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/conf/compton.conf                ~/.config/compton.conf
-ln -sf /opt/conf/i3/config                   ~/.config/i3wm/i3.config
-ln -sf /opt/conf/i3status/config             ~/.config/i3wm/i3status.config
+ln -sf /opt/conf/i3wm/config                 ~/.config/i3/config
+ln -sf /opt/conf/i3wm/i3status.config        ~/.config/i3status/config
 ln -sf /opt/conf/pqivrc                      ~/.config/pqivrc
 ln -sf /opt/conf/rtv.cfg                     ~/.config/rtv/rtv.cfg
 ln -sf /opt/conf/streamlink.config           ~/.config/streamlink/config
