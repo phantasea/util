@@ -1,7 +1,28 @@
 #!/bin/bash
 
 #ffmpeg -i inputfile -ss starttime -t duration -vn -codec copy -loglevel quiet outputfile
+#ffmpeg -i 2.艾辰-错位时空.mp4 -map 0:a 2.艾辰-错位时空.mp3
 #audcut starttime stoptime input.mp3/mp4 output.mp3
+#audcut -a 2.艾辰-错位时空.mp4 2.艾辰-错位时空.mp3
+
+all=0
+while getopts "a" opt; do
+    case $opt in
+        a)
+            all=1 ;;
+
+        ?)  echo 'Usage: audcut [-a]'
+            exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [ $all -eq 1 ]; then
+    ffmpeg -i "$1" -map 0:a -loglevel quiet "$2"
+
+    exit 0
+fi
 
 start=$(date --utc --date "$1" +%s)
  stop=$(date --utc --date "$2" +%s)
