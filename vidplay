@@ -5,7 +5,7 @@
 WID=5
 WIN="vidplay"
 
-[[ -z "$DISPLAY" ]] && CMD="mplayer" || CMD="mpv"
+[[ -z "$DISPLAY" ]] && CMD="mplayer" || CMD="mpv 2>/dev/null"
 
 while getopts "bB" opt; do
     case $opt in
@@ -13,12 +13,12 @@ while getopts "bB" opt; do
             if [[ $CMD =~ "mplayer" ]]; then
                 CMD+=" -nofs -xy 768"
             else
-                CMD+=" --no-fs"
+                CMD+=" --no-fs 2>/dev/null"
             fi
             ;;
         B)
             if [ -z "$DISPLAY" ]; then
-                CMD="mpv --vo=drm"
+                CMD="mpv --vo=drm 2>/dev/null"
             else
                 CMD="mplayer -vo x11"
             fi
