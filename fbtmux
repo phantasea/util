@@ -5,13 +5,13 @@
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
-tmux has-session
-if [ $? -eq 0 ]; then
+if [ ! -z "$DISPLAY" ]; then
+    tmux
     exit 0
 fi
 
-if [ ! -z "$DISPLAY" ]; then
-    tmux
+tmux has-session -t 0
+if [ $? -eq 0 ]; then
     exit 0
 fi
 
