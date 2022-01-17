@@ -1,0 +1,30 @@
+#!/bin/bash
+
+step=3
+current=$(cat /sys/class/backlight/amdgpu_bl0/brightness)
+
+decrease=0
+while getopts "d" opt; do
+    case $opt in
+        d)
+            decrease=1 ;;
+
+        ?)  echo 'Usage: brightness [-d]'
+            exit 1;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [ -z "$1" ]; then
+    if [ $decrease -eq 0 ]; then
+        target=$(( $current + $step ))
+    else
+        target=$(( $current - $step ))
+    fi
+else
+    [[ ! $1 =~ ^[0-9]+$ ]] && exit
+    target=$1
+fi
+
+echo $target | sudo tee /sys/class/backlight/amdgpu_bl0/brightness
