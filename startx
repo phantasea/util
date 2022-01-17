@@ -1,13 +1,24 @@
 #!/bin/bash
 
-[ ! -f /opt/.priv/password ] && exit 1
+ver="$(lsb_release -a 2>/dev/null | grep Release | cut -d':' -f 2 |sed -e 's/^[ \t ]*//')"
+
+if [[ $ver =~ "20.04" ]]; then
+    cmd="sudo systemctl start gdm3.service"
+else
+    cmd="sudo systemctl start lightdm.service"
+fi
+
+if [ ! -f /opt/.priv/password ]; then
+    $cmd
+    exit 0
+fi
 
 password="$(< /opt/.priv/password)"
 
 #/usr/bin/expect <(cat << EOD
 /usr/bin/expect << EOD
     set timeout 30
-    spawn sudo systemctl start lightdm.service
+    spawn $cmd
     expect "password"
     send "$password\r"
     expect eof
