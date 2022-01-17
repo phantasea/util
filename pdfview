@@ -1,7 +1,8 @@
 #! /bin/bash
 
 if [ -z "$DISPLAY" ]; then
-    CMD="jfbview --cache_size=5"
+    #CMD="jfbview --cache_size=5"
+    CMD="fimgs"
 else
     CMD="zathura"
 fi
@@ -17,7 +18,8 @@ while getopts "bB" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
-                CMD="fimgs"
+                #CMD="fimgs"
+                CMD="jfbview --cache_size=5"
             else
                 CMD="mupdf"
             fi
