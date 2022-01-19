@@ -13,7 +13,7 @@ WID=8
 WIN="webview"
 
 bplan=0
-while getopts "bB" opt; do
+while getopts "bBx" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
@@ -32,7 +32,14 @@ while getopts "bB" opt; do
                 fi
             fi
             ;;
-        ?)  echo 'Usage: webview [-bB] URI'
+        x)
+            if [ -z "$DISPLAY" ]; then
+                CMD="elinks"
+            else
+                CMD="w3m -s"
+            fi
+            ;;
+        ?)  echo 'Usage: webview [-bBx] URI'
             exit 1;;
     esac
 done
