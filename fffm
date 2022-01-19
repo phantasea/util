@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 #
 # fffm - fucking fast file-manager.
+# https://github.com/dylanaraps/fff
 
-FFFM_FAV1="/media/$USER"
-FFFM_FAV2="/opt/.porn/text"
-FFFM_FAV3="/opt/conf"
+FFFM_FAV1="/home/$USER"
+FFFM_FAV2="/home/$USER/vids/.porn"
+FFFM_FAV3="/opt/.porn/text"
+FFFM_FAV4="/home/$USER/temp"
+FFFM_FAV7="/home/$USER/docs/note"
+FFFM_FAV8="/home/$USER/docs/webs"
+FFFM_FAV9="/media/$USER"
 
 get_os() {
     # Figure out the current operating system to set some specific variables.
@@ -639,7 +644,7 @@ open() {
         # Everything else goes through 'xdg-open'/'open'.
         case "$mime_type" in
             *html*)
-                webview "$1"
+                webview -x "$1"
                 redraw
                 ;;
 
@@ -656,6 +661,11 @@ open() {
                 reset_terminal
                 "${VISUAL:-${EDITOR:-vi}}" "$1"
                 setup_terminal
+                redraw
+                ;;
+
+            audio/*)
+                audplay "$1"
                 redraw
                 ;;
 
