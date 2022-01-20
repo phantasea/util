@@ -1,6 +1,5 @@
 #!/bin/bash
 
-iii=0
 exp=0
 pls=0
 txt=0
@@ -10,15 +9,12 @@ sdu=0
 sdv=0
 sdw=0
 sdx=0
-ump=0
 mnt=1
 
-while getopts "aestuvwxilPU" opt; do
+while getopts "aestuvwxlU" opt; do
     case $opt in
         e)
            exp=1 ;;
-        i)
-           iii=1 ;;
         l)
            pls=1 ;;
         s)
@@ -33,8 +29,6 @@ while getopts "aestuvwxilPU" opt; do
            sdw=1 ;;
         x)
            sdx=1 ;;
-        p)
-           ump=1 ;;
         U)
            mnt=0 ;;
         a)
@@ -45,16 +39,16 @@ while getopts "aestuvwxilPU" opt; do
            sdv=1
            sdw=1
            sdx=1
-           ump=1
            ;;
         ?)
-           echo 'mudisk -[aestuvwxilPU]'
+           echo 'mudisk -[aestuvwxlU]'
            exit 1 ;;
     esac
 done
 
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
+#export /media/simone tree files
 if [ $exp -eq 1 ] && [ $sda -eq 1 ]; then
     tree -f -L 2 /media/simone > /opt/misc/docs/files-sandisks
     echo "tree to files-sandisks!"
@@ -67,8 +61,8 @@ wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
 wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
-wcp=$(ls /opt/.priv/priv          2>/dev/null | wc -l)
 
+#list which process is occupying the mount point
 if [ $pls -eq 1 ]; then
     [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-lsof && lsof /opt/.porn/text
     [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-lsof && lsof /media/simone/sandisk_s
@@ -83,52 +77,61 @@ if [ $pls -eq 1 ]; then
     exit 0
 fi
 
-if [ $iii -eq 1 ]; then
-  if [ $mnt -eq 0 ]; then
-    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
-    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
-    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
-    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
-    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
-    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt && {
-        sudo umount /media/simone/sandisk_x1
-        sudo umount /media/simone/sandisk_x2
-    }
+#umount the specific mount point
+if [ $mnt -eq 0 ]; then
+  [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
+  [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
+  [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
+  [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
+  [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
+  [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt && {
+      sudo umount /media/simone/sandisk_x1
+      sudo umount /media/simone/sandisk_x2
+  }
 
-    exit 0
-  fi
+  exit 0
+fi
 
+#mount the specific point when the .priv is not available
+wcp=$(ls /opt/.priv/priv 2>/dev/null | wc -l)
+if [ $wcp -eq 0 ]; then
+  #mount text manually
   if [ $txt -eq 1 ] && [ $wct -eq 0 ]; then
     echo +ttt+
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
-
+  
+  #mount sandisk_s manually
   if [ $sds -eq 1 ] && [ $wcs -eq 0 ] && [ -e /dev/disk/by-uuid/EA1D-0944 ]; then
     echo +sss+
     sudo mount -t exfat -o rw,nosuid,nodev,relatime,fmask=0133,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
-
+  
+  #mount sandisk_u manually
   if [ $sdu -eq 1 ] && [ $wcu -eq 0 ] && [ -e /dev/disk/by-uuid/3166-6338 ]; then
     echo +uuu+
     sudo mount -t vfat -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
   fi
-
+  
+  #mount sandisk_v manually
   if [ $sdv -eq 1 ] && [ $wcv -eq 0 ] && [ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ]; then
     echo +vvv+
     sudo mount -o rw,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
   fi
-
+  
+  #mount sandisk_w manually
   if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-uuid/3534-6562 ]; then
   #if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
     echo +www+
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/3534-6562 /media/simone/sandisk_w
     #sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
-
+  
+  #mount sandisk_x manually
   if [ $sdx -eq 1 ] && [ $wcx -eq 0 ] && [ -e /dev/disk/by-label/sandisk_ext ]; then
     echo +xxx1+
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
-
+  
     sleep 1s
     echo +xxx2+
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
@@ -137,8 +140,9 @@ if [ $iii -eq 1 ]; then
   exit 0
 fi
 
-[ $mnt -eq 1 ] && [ ! -f /opt/.priv/password ] && exit 1 || password="$(< /opt/.priv/password)"
-[ $mnt -eq 1 ] && [ ! -f /opt/.priv/passphrase ] && exit 1 || passphrase="$(< /opt/.priv/passphrase)"
+#mount the specific point when the .priv is available
+[ ! -f /opt/.priv/password ]   && exit 1 || password="$(< /opt/.priv/password)"
+[ ! -f /opt/.priv/passphrase ] && exit 1 || passphrase="$(< /opt/.priv/passphrase)"
 
 exist_sdw_src=0; [ -e /dev/disk/by-label/udisk_hama ] && exist_sdw_src=1
 exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
@@ -201,14 +205,6 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
       send "$password\r"
     }
 
-    if {$ump == 1 && $wcp != 0} {
-      puts "\n\nPPP"
-      sleep 0.5
-      spawn sudo umount /opt/.priv
-      expect "password"
-      send "$password\r"
-    }
-
     expect eof
     exit
   }
@@ -266,14 +262,6 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     puts "\n\n+xxx2+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_exp /media/simone/sandisk_x2
-    expect "password"
-    send "$password\r"
-  }
-
-  if {$ump == 1 && $wcp != 0} {
-    puts "\n\nPPP"
-    sleep 0.5
-    spawn sudo umount /opt/.priv
     expect "password"
     send "$password\r"
   }
