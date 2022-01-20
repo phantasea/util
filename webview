@@ -34,9 +34,9 @@ while getopts "bBx" opt; do
             ;;
         x)
             if [ -z "$DISPLAY" ]; then
-                CMD="elinks"
-            else
                 CMD="w3m -s"
+            else
+                CMD="elinks"
             fi
             ;;
         ?)  echo 'Usage: webview [-bBx] URI'
