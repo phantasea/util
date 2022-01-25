@@ -4,12 +4,16 @@ step=3
 current=$(cat /sys/class/backlight/amdgpu_bl0/brightness)
 
 decrease=0
-while getopts "d" opt; do
+while getopts "dl" opt; do
     case $opt in
         d)
             decrease=1 ;;
 
-        ?)  echo 'Usage: brightness [-d]'
+        l)
+            echo backlight = $current
+            exit 0;;
+
+        ?)  echo 'Usage: backlight [-dl]'
             exit 1;;
     esac
 done
