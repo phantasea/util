@@ -54,8 +54,12 @@ if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "stty -ixon; $CMD"
 
     if [[ "$CMD" =~ "ranger" ]]; then
-        tmux send-keys -t $SID:$WID C-t
-        tmux send-keys -t $SID:$WID Space
+        #tmux send-keys -t $SID:$WID C-t
+        #tmux send-keys -t $SID:$WID Space
+        dir2="$(cat $HOME/.cache/ranger/rangerdir2)"
+        tmux set-buffer ":tab_new $dir2"
+        tmux paste-buffer -t $SID:$WID
+        tmux send-keys -t $SID:$WID C-m
     fi
 fi
 
