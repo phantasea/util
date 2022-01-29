@@ -1,43 +1,25 @@
 #!/bin/bash
 
-mkdir ~/auds
-mkdir ~/docs
-mkdir ~/misc
-mkdir ~/pics
-mkdir ~/temp
-mkdir ~/vids
+cd ~
+mkdir auds vids docs pics misc temp
 
-mkdir ~/docs/book
-mkdir ~/docs/misc
-mkdir ~/docs/note
-mkdir ~/docs/webs
+cd ~/docs
+mkdir book misc note webs
+
+cd ~/.config
+mkdir mpd imv bat i3 i3status syncthing
 
 sudo chown -R simone:simone /media/simone
-mkdir /media/simone/sandisk-s
-mkdir /media/simone/sandisk-u
-mkdir /media/simone/sandisk-v
-mkdir /media/simone/sandisk-w
-mkdir /media/simone/sandisk-x1
-mkdir /media/simone/sandisk-x2
+cd /media/simone
+mkdir sandisk-s sandisk-u sandisk-v sandisk-w sandisk-x1 sandisk-x2
 
 sudo chown -R simone:simone /opt
-mkdir /opt/apps
-mkdir /opt/auds
-mkdir /opt/conf
-mkdir /opt/misc
-mkdir /opt/util
-mkdir /opt/vids
+cd /opt
+mkdir apps conf misc util
+mkdir .certs .logs .mail .porn .priv
 
-mkdir /opt/.certs
-mkdir /opt/.logs
-mkdir /opt/.mail
-mkdir /opt/.porn
-mkdir /opt/.priv
-
-mkdir /opt/misc/apps
-mkdir /opt/misc/docs
-mkdir /opt/misc/dicts
-mkdir /opt/misc/fonts
+cd /opt/misc
+mkdir apps docs dicts fonts
 
 mkdir /opt/.porn/text
 
@@ -120,6 +102,7 @@ ln -sf /opt/conf/visidatarc                  ~/.visidatarc
 ln -sf /opt/conf/Xresources                  ~/.Xresources
 ln -sf /opt/conf/z.sh                        ~/.z.sh
 ln -sf /opt/conf/feh                         ~/.config/feh
+ln -sf /opt/conf/imv_config                  ~/.config/imv/config
 ln -sf /opt/conf/mpd.conf                    ~/.config/mpd/mpd.conf
 ln -sf /opt/conf/ncmpc                       ~/.config/ncmpc
 ln -sf /opt/conf/ncmpcpp                     ~/.config/ncmpcpp
@@ -156,6 +139,8 @@ sudo ln -sf /opt/conf/locale.nopurge         /etc/locale.nopurge
 sudo ln -sf /opt/conf/sources.list           /etc/apt/sources.list
 
 sudo cp -f  /opt/conf/rc.local               /etc/rc.local
-sudo rm /etc/mpd.conf    //avoid to start mpd as "mpd" user
+
+#avoid to start mpd as "mpd" user
+sudo rm /etc/mpd.conf
 
 exit 0
