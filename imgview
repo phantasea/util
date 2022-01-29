@@ -70,6 +70,7 @@ else
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
         PROG='vimiv'
         #PROG="feh -F"
+        #PROG="imv -f"
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
@@ -81,6 +82,7 @@ else
             PROG="pqiv -fs"
             #PROG="sxiv -fS 1"
             #PROG="vimiv --slideshow"
+            #PROG="imv -f -t 1"
         fi
     fi
 fi
