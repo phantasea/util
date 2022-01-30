@@ -8,7 +8,7 @@ if [ -z "$DISPLAY" ]; then
     CMD='vifm'
 else
     SID=1
-    CMD="cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
+    CMD="cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
 fi
 
 # not in tmux session
@@ -25,7 +25,7 @@ while getopts "b" opt; do
     case $opt in
         b)
             if [ -z "$DISPLAY" ]; then
-                CMD='cd $(cat $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir'
+                CMD='cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir'
             else
                 CMD='vifm'
             fi
@@ -56,7 +56,7 @@ if [ $? -ne 0 ]; then
     if [[ "$CMD" =~ "ranger" ]]; then
         #tmux send-keys -t $SID:$WID C-t
         #tmux send-keys -t $SID:$WID Space
-        dir2="$(cat $HOME/.cache/ranger/rangerdir2)"
+        dir2="$(< $HOME/.cache/ranger/rangerdir2)"
         tmux set-buffer ":tab_new $dir2"
         tmux paste-buffer -t $SID:$WID
         tmux send-keys -t $SID:$WID C-m
