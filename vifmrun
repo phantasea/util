@@ -1,15 +1,26 @@
-#!/usr/bin/env bash
-export FIFO_UEBERZUG="/tmp/vifm-ueberzug-${PPID}"
+#!/bin/sh
 
-function cleanup {
-    rm "$FIFO_UEBERZUG" 2>/dev/null
-    pkill -P $$ 2>/dev/null
-}
+if [ -z "$DISPLAY" ]; then
+    vifm
+    exit 0
+fi
 
-rm "$FIFO_UEBERZUG" 2>/dev/null
-mkfifo "$FIFO_UEBERZUG"
-trap cleanup EXIT
-tail --follow "$FIFO_UEBERZUG" | ueberzug layer --silent --parser bash &
+if [ -z "$(command -v ueberzug)" ]; then
+    exec vifm "$@"
+else
+    cleanup() {
+        exec 3>&-
+        rm "$FIFO_UEBERZUG"
+    }
 
-vifm
-cleanup
+    [ ! -d "/tmp/vifm" ] && mkdir -p "/tmp/vifm"
+    export FIFO_UEBERZUG="/tmp/vifm/ueberzug-${$}"
+    mkfifo "$FIFO_UEBERZUG"
+
+    ueberzug layer -s <"$FIFO_UEBERZUG" -p json &
+    exec 3>"$FIFO_UEBERZUG"
+    trap cleanup EXIT
+
+    vifm "$@" 3>&-
+    vifmimg clear
+fi

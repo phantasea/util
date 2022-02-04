@@ -27,7 +27,7 @@ while getopts "b" opt; do
             if [ -z "$DISPLAY" ]; then
                 CMD='cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir'
             else
-                CMD='vifm'
+                CMD='vifmrun'
             fi
             ;;
 

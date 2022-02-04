@@ -1,7 +1,9 @@
 #!/bin/bash
  
 #W3MIMG="/usr/local/libexec/w3m/w3mimgdisplay"
+#W3MIMG="/usr/lib/w3m/w3mimgdisplay"
 W3MIMG="w3mimgdisplay"
+
 FONTH=15  # Size of one terminal row
 FONTW=8   # Size of one terminal column
  
