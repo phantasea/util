@@ -2,13 +2,14 @@
 
 SID=0
 WID=9
-WIN='filemgr'
 
 if [ -z "$DISPLAY" ]; then
     CMD='vifm'
+    WIN='vifm'
 else
     SID=1
     CMD="cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
+    WIN='ranger'
 fi
 
 # not in tmux session
@@ -24,10 +25,14 @@ fi
 while getopts "b" opt; do
     case $opt in
         b)
+            WID=0
+
             if [ -z "$DISPLAY" ]; then
                 CMD='cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir'
+                WIN='ranger'
             else
                 CMD='vifmrun'
+                WIN='vifmrun'
             fi
             ;;
 

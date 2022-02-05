@@ -20,7 +20,7 @@ while getopts "vc:ds:" opt; do
            diff=1
            [[ -z "$DISPLAY" ]] && prog="vimdiff" || prog="nvim -d"
            WIN="diff"
-           WID=0
+           WID=3
            ;;
         s)
            search="$OPTARG"
