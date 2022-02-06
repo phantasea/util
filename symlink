@@ -15,7 +15,7 @@ mkdir sandisk-s sandisk-u sandisk-v sandisk-w sandisk-x1 sandisk-x2
 
 sudo chown -R simone:simone /opt
 cd /opt
-mkdir apps conf misc util
+mkdir apps conf misc util vids
 mkdir .certs .logs .mail .porn .priv
 
 cd /opt/misc
@@ -129,7 +129,6 @@ ln -sf /opt/conf/syncthing/key.pem           ~/.config/syncthing/key.pem
 ln -sf /opt/conf/syncthing/csrftokens.txt    ~/.config/syncthing/csrftokens.txt
 ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
 ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
-ln -sf /opt/auds                             ~/auds/auds
 
 ln -sf /usr/local/porn                       /opt/.porn/porn
 
