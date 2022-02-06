@@ -9,6 +9,6 @@ if [ "$bat" -lt 32 ]; then
     if [ ! -z $DISPLAY ]; then
         export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1001/bus && notify-send -u critical "Battery critically low!"
     else
-        cat /opt/conf/batwarn | wall
+        echo "Battery is LOW ($bat%), Charge ASAP!" | wall
     fi
 fi
