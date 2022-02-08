@@ -41,7 +41,7 @@ shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
 
 file="$1"
 if [ ! -z "$file" -a ! -f "$file" ]; then
-    echo "$0:$file is not a file!" > ~/dddd
+    echo "$0:$file is not a file!"
     exit 1
 fi
 
@@ -93,6 +93,7 @@ if [ "$recursive" = "FALSE" ]; then
 else
     FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
 fi
+#echo $FILES > ~/dddd
 
 if [[ $PROG =~ "jfbview" ]]; then
     CMD="$PROG $FILES"
@@ -110,7 +111,7 @@ fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD"
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD 2>/dev/null"
 fi
 
 exit 0
