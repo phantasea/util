@@ -87,6 +87,13 @@ else
     fi
 fi
 
+# jfbview can only input one file to view
+if [[ $PROG =~ "jfbview" ]]; then
+    CMD="$PROG $file"
+    setterm -cursor off; $CMD
+    exit 0
+fi
+
 FILES="$file"
 if [ "$recursive" = "FALSE" ]; then
     FILES+=" *.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
@@ -94,12 +101,6 @@ else
     FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
 fi
 #echo $FILES > ~/dddd
-
-if [[ $PROG =~ "jfbview" ]]; then
-    CMD="$PROG $FILES"
-    setterm -cursor off; $CMD
-    exit 0
-fi
 
 CMD="$PROG $FILES" > /dev/null 2>&1
 
