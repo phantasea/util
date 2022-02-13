@@ -116,6 +116,7 @@ ln -sf /opt/conf/zathura                     ~/.config/zathura
 ln -sf /opt/conf/tridactyl                   ~/.config/tridactyl
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/conf/compton.conf                ~/.config/compton.conf
+ln -sf /opt/conf/neofetch.conf               ~/.config/neofetch/config.conf
 ln -sf /opt/conf/i3wm/config                 ~/.config/i3/config
 ln -sf /opt/conf/i3wm/i3status.config        ~/.config/i3status/config
 ln -sf /opt/conf/pqivrc                      ~/.config/pqivrc
