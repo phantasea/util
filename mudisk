@@ -11,8 +11,10 @@ sdw=0
 sdx=0
 mnt=1
 
-while getopts "aestuvwxlU" opt; do
+while getopts "adestuvwxlU" opt; do
     case $opt in
+        d)
+           win=1 ;;
         e)
            exp=1 ;;
         l)
@@ -41,7 +43,7 @@ while getopts "aestuvwxlU" opt; do
            sdx=1
            ;;
         ?)
-           echo 'mudisk -[aestuvwxlU]'
+           echo 'mudisk -[adestuvwxlU]'
            exit 1 ;;
     esac
 done
@@ -55,6 +57,7 @@ if [ $exp -eq 1 ] && [ $sda -eq 1 ]; then
     exit 0
 fi
 
+wcd=$(ls /media/simone/winD       2>/dev/null | wc -l)
 wcs=$(ls /media/simone/sandisk_s  2>/dev/null | wc -l)
 wcu=$(ls /media/simone/sandisk_u  2>/dev/null | wc -l)
 wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
@@ -79,6 +82,7 @@ fi
 
 #umount the specific mount point
 if [ $mnt -eq 0 ]; then
+  [[ $win == 1 ]] && [[ $wcd != 0 ]] && echo win-umnt && sudo umount /media/simone/winD
   [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
   [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
   [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
@@ -95,6 +99,12 @@ fi
 #mount the specific point when the .priv is not available
 wcp=$(ls /opt/.priv/priv 2>/dev/null | wc -l)
 if [ $wcp -eq 0 ]; then
+  #mount winD manually
+  if [ $win -eq 1 ] && [ $wcd -eq 0 ]; then
+    echo +win+
+    sudo mount -o rw,nosuid,nodev,relatime,uhelper=udisks2 /dev/nvme0n1p4 /media/simone/winD
+  fi
+  
   #mount text manually
   if [ $txt -eq 1 ] && [ $wct -eq 0 ]; then
     echo +ttt+
@@ -151,6 +161,14 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   set timeout 3
 
   if {$mnt == 0} {
+    if {$win == 1 && $wcd != 0} {
+      puts "-win-"
+      sleep 0.5
+      spawn sudo umount /media/simone/winD
+      expect "password"
+      send "$password\r"
+    }
+
     if {$txt == 1 && $wct != 0} {
       puts "-ttt-"
       sleep 0.5
@@ -207,6 +225,14 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
 
     expect eof
     exit
+  }
+
+  if {$win == 1 && $wcd == 0} {
+    puts "+win+"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,uhelper=udisks2 /dev/nvme0n1p4 /media/simone/winD
+    expect "password"
+    send "$password\r"
   }
 
   if {$txt == 1 && $wct == 0} {
