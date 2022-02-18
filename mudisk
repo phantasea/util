@@ -102,7 +102,7 @@ if [ $wcp -eq 0 ]; then
   #mount winD manually
   if [ $win -eq 1 ] && [ $wcd -eq 0 ]; then
     echo +win+
-    sudo mount -o rw,nosuid,nodev,relatime,uhelper=udisks2 /dev/nvme0n1p4 /media/simone/winD
+    sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winD
   fi
   
   #mount text manually
@@ -230,7 +230,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   if {$win == 1 && $wcd == 0} {
     puts "+win+"
     sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,uhelper=udisks2 /dev/nvme0n1p4 /media/simone/winD
+    spawn sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winD
     expect "password"
     send "$password\r"
   }
