@@ -32,7 +32,7 @@ case "$MIMETYPE" in
         #identify "$1" | cut -d' ' -f 3
         exit 0;;
     video/*)
-        (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n' && mediainfo --Output="Audio; %Title%" "$1"
+        (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n' && mediainfo "$1" | grep 'Audio #' | tail -1 | cut -d'o' -f2
         exit 0;;
     inode/directory | inode/mount-point)
         #df -h "$1" |egrep -iv 'Used' |sed 's/\s\+/ /g' |cut -d' ' -f 4
