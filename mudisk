@@ -100,7 +100,7 @@ fi
 wcp=$(ls /opt/.priv/priv 2>/dev/null | wc -l)
 if [ $wcp -eq 0 ]; then
   #mount winD manually
-  if [ $win -eq 1 ] && [ $wcd -eq 0 ]; then
+  if [[ $win -eq 1 ]] && [[ $wcd -eq 0 ]]; then
     echo +win+
     sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winD
   fi
