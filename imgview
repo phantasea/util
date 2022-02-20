@@ -116,3 +116,25 @@ if [ $? -ne 0 ]; then
 fi
 
 exit 0
+
+## https://github.com/ranger/ranger/blob/master/examples/rifle_sxiv.sh
+## https://q2a.vifm.info/431/sxiv-scroll-through-all-images
+if [[ ! -f $1 ]]; then
+    echo "$0: first argument is not a file!" >&2
+    exit 1
+fi
+
+file=$(basename -- "$1")
+dir=$(dirname -- "$1")
+arr=()
+shift
+
+cd -- "$dir"
+
+for i in *; do
+    [[ -f "$i" ]] || continue
+    arr+=("$i")
+    [[ "$i" == "$file" ]] && n=${#arr[@]}
+done
+
+exec sxiv -n "$n" "$@" "${arr[@]}"
