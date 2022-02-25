@@ -3,7 +3,7 @@
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
 WID=4
-WIN="mailmgr"
+WIN="mail"
 CMD="mutt"
 
 tmux has-session -t $SID 2>/dev/null
