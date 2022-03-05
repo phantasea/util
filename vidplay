@@ -43,8 +43,9 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
+# cannot switch between mpv and other window
 tmux has-session -t $SID 2>/dev/null
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]] || [[ $CMD =~ "mpv" ]]; then
     $CMD "$1"
     exit 0
 fi
