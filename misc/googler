@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Copyright © 2008 Henri Hakkinen
-# Copyright © 2015-2020 Arun Prakash Jana <engineerarun@gmail.com>
+# Copyright © 2015-2021 Arun Prakash Jana <engineerarun@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import shutil
 import signal
 import socket
 import ssl
+import subprocess
 from subprocess import Popen, PIPE, DEVNULL
 import sys
 import textwrap
@@ -89,7 +90,8 @@ except ValueError:
 
 # Constants
 
-_VERSION_ = '4.1'
+_VERSION_ = '4.3.2'
+_EPOCH_ = '20210115'
 
 COLORMAP = {k: '\x1b[%sm' % v for k, v in {
     'a': '30', 'b': '31', 'c': '32', 'd': '33',
@@ -264,7 +266,6 @@ class TrackedTextwrap:
 
 import html
 import re
-import textwrap
 from collections import OrderedDict
 from enum import Enum
 from html.parser import HTMLParser
@@ -302,6 +303,7 @@ class Node(object):
 
         # Used in DOMBuilder.
         self._partial = False
+        self._namespace = None  # type: Optional[str]
 
     # HTML representation of the node. Meant to be implemented by
     # subclasses.
@@ -536,7 +538,7 @@ class ElementNode(Node):
         s += ">"
         return s
 
-    # https://ipython.org/ipython-doc/3/api/generated/IPython.lib.pretty.html
+    # https://ipython.readthedocs.io/en/stable/api/generated/IPython.lib.pretty.html
     def _repr_pretty_(self, p: Any, cycle: bool) -> None:  # pragma: no cover
         if cycle:
             raise RuntimeError("cycle detected in DOM tree")
@@ -659,7 +661,19 @@ class DOMBuilder(HTMLParser):
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
+        # _stack is the stack for nodes. Each node is pushed to the
+        # stack when its start tag is processed, and remains on the
+        # stack until its parent node is completed (end tag processed),
+        # at which point the node is attached to the parent node as a
+        # child and popped from the stack.
         self._stack = []  # type: List[Node]
+        # _namespace_stack is another stack tracking the parsing
+        # context, which is generally the default namespace (None) but
+        # changes when parsing foreign objects (e.g. 'svg' when parsing
+        # an <svg>). The top element is always the current parsing
+        # context, so popping works differently from _stack: an element
+        # is popped as soon as the corresponding end tag is processed.
+        self._namespace_stack = [None]  # type: List[Optional[str]]
 
     def handle_starttag(
         self, tag: str, attrs: Sequence[Tuple[str, Optional[str]]]
@@ -667,9 +681,16 @@ class DOMBuilder(HTMLParser):
         node = ElementNode(tag, attrs)
         node._partial = True
         self._stack.append(node)
-        # For void elements, immediately invoke the end tag handler (see
-        # handle_startendtag()).
-        if _tag_is_void(tag):
+        namespace = (
+            tag.lower()
+            if _tag_encloses_foreign_namespace(tag)
+            else self._namespace_stack[-1]  # Inherit parent namespace
+        )
+        node._namespace = namespace
+        self._namespace_stack.append(namespace)
+        # For void elements (not in a foreign context), immediately
+        # invoke the end tag handler (see handle_startendtag()).
+        if not namespace and _tag_is_void(tag):
             self.handle_endtag(tag)
 
     def handle_endtag(self, tag: str) -> None:
@@ -689,16 +710,35 @@ class DOMBuilder(HTMLParser):
         parent._partial = False
         for child in children:
             child.parent = parent
+        self._namespace_stack.pop()
 
     # Make parser behavior for explicitly and implicitly void elements
     # (e.g., <hr> vs <hr/>) consistent. The former triggers
     # handle_starttag only, whereas the latter triggers
     # handle_startendtag (which by default triggers both handle_starttag
-    # and handle_endtag). See https://www.bugs.python.org/issue25258.
+    # and handle_endtag). See https://bugs.python.org/issue25258.
+    #
+    # An exception is foreign elements, which aren't considered void
+    # elements but can be explicitly marked as self-closing according to
+    # the HTML spec (e.g. <path/> is valid but <path> is not).
+    # Therefore, both handle_starttag and handle_endtag must be called,
+    # and handle_endtag should not be triggered from within
+    # handle_starttag in that case.
+    #
+    # Note that for simplicity we do not check whether the foreign
+    # element in question is allowed to be self-closing by spec. (The
+    # SVG spec unfortunately doesn't provide a readily available list of
+    # such elements.)
+    #
+    # https://html.spec.whatwg.org/multipage/syntax.html#foreign-elements
     def handle_startendtag(
         self, tag: str, attrs: Sequence[Tuple[str, Optional[str]]]
     ) -> None:
-        self.handle_starttag(tag, attrs)
+        if self._namespace_stack[-1] or _tag_encloses_foreign_namespace(tag):
+            self.handle_starttag(tag, attrs)
+            self.handle_endtag(tag)
+        else:
+            self.handle_starttag(tag, attrs)
 
     def handle_data(self, text: str) -> None:
         if not self._stack:
@@ -1378,6 +1418,16 @@ def _tag_is_void(tag: str) -> bool:
         "wbr",
     )
 
+
+def _tag_encloses_foreign_namespace(tag: str) -> bool:
+    """
+    Checks whether the tag encloses a foreign namespace (MathML or SVG).
+
+    https://html.spec.whatwg.org/multipage/syntax.html#foreign-elements
+    """
+    return tag.lower() in ("math", "svg")
+
+
 ### end dim ###
 
 
@@ -1406,8 +1456,7 @@ def open_url(url):
 
     # Custom URL handler gets max priority
     if hasattr(open_url, 'url_handler'):
-        p = Popen([open_url.url_handler, url], stdin=PIPE)
-        p.communicate()
+        subprocess.run([open_url.url_handler, url])
         return
 
     browser = webbrowser.get()
@@ -1507,6 +1556,26 @@ def check_stdout_encoding():
         sys.exit(1)
 
 
+def time_it(description=None):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapped(*args, **kwargs):
+            # Only profile in debug mode.
+            if not logger.isEnabledFor(logging.DEBUG):
+                return func(*args, **kwargs)
+
+            import time
+            mark = time.perf_counter()
+            ret = func(*args, **kwargs)
+            duration = time.perf_counter() - mark
+            logger.debug('%s completed in \x1b[33m%.3fs\x1b[0m', description or func.__name__, duration)
+            return ret
+
+        return wrapped
+
+    return decorator
+
+
 # Classes
 
 class HardenedHTTPSConnection(HTTPSConnection):
@@ -1537,7 +1606,12 @@ class HardenedHTTPSConnection(HTTPSConnection):
         elif not notweak:
             # Try to use TLS 1.2
             ssl_context = None
-            if hasattr(ssl, 'PROTOCOL_TLS'):
+            if hasattr(ssl, 'PROTOCOL_TLS_CLIENT'):
+                # Since Python 3.6
+                ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+            elif hasattr(ssl, 'PROTOCOL_TLS'):
                 # Since Python 3.5.3
                 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
                 if hasattr(ssl_context, "minimum_version"):
@@ -1656,12 +1730,13 @@ class GoogleUrl(object):
         self._start = 0
         self._keywords = []
         self._sites = None
+        self._exclude = None
 
         self._query_dict = {
             'ie': 'UTF-8',
             'oe': 'UTF-8',
             #'gbv': '1',  # control the presence of javascript on the page, 1=no js, 2=js
-            'sei': base64.encodebytes(uuid.uuid1().bytes).decode("ascii").rstrip('=\n').replace('/', '_'),
+            'sei': base64.encodebytes(uuid.uuid4().bytes).decode("ascii").rstrip('=\n').replace('/', '_'),
         }
 
         # In preloaded HTML parsing mode, set keywords to something so
@@ -1794,6 +1869,8 @@ class GoogleUrl(object):
             self._keywords = opts['keywords']
         if 'lang' in opts and opts['lang']:
             qd['hl'] = opts['lang']
+        if 'geoloc' in opts and opts['geoloc']:
+            qd['gl'] = opts['geoloc']
         if 'news' in opts and opts['news']:
             qd['tbm'] = 'nws'
         elif 'videos' in opts and opts['videos']:
@@ -1804,6 +1881,8 @@ class GoogleUrl(object):
             self._num = opts['num']
         if 'sites' in opts:
             self._sites = opts['sites']
+        if 'exclude' in opts:
+            self._exclude = opts['exclude']
         if 'start' in opts:
             self._start = opts['start']
         if 'tld' in opts:
@@ -1969,6 +2048,7 @@ class GoogleUrl(object):
         q = ''
         keywords = self._keywords
         sites = self._sites
+        exclude = self._exclude
         if keywords:
             if isinstance(keywords, list):
                 q += '+'.join(urllib.parse.quote_plus(kw) for kw in keywords)
@@ -1976,8 +2056,9 @@ class GoogleUrl(object):
                 q += urllib.parse.quote_plus(keywords)
         if sites:
             q += '+OR'.join('+site:' + urllib.parse.quote_plus(site) for site in sites)
+        if exclude:
+            q += ''.join('+-site:' + urllib.parse.quote_plus(e) for e in exclude)
         qd['q'] = q
-
         return '&'.join('%s=%s' % (k, qd[k]) for k in sorted(qd.keys()))
 
 
@@ -2028,6 +2109,7 @@ class GoogleConnection(object):
         """The host currently connected to."""
         return self._host
 
+    @time_it()
     def new_connection(self, host=None, port=None, timeout=45):
         """Close the current connection (if any) and establish a new one.
 
@@ -2092,6 +2174,7 @@ class GoogleConnection(object):
         """
         self.new_connection(timeout=timeout)
 
+    @time_it()
     def fetch_page(self, url):
         """Fetch a URL.
 
@@ -2170,7 +2253,7 @@ class GoogleConnection(object):
         """Redirect to and fetch a new URL.
 
         Like `_raw_get`, the response is stored in ``self._resp``. A new
-        connection is made if redirecting to a different host.
+        connection is made if redirecting to a different host or local proxy is enabled.
 
         Parameters
         ----------
@@ -2187,7 +2270,7 @@ class GoogleConnection(object):
         segments = urllib.parse.urlparse(url)
 
         host = segments.netloc
-        if host != self._host:
+        if host != self._host or self._proxy is not None:
             self.new_connection(host)
 
         relurl = urllib.parse.urlunparse(('', '') + segments[2:])
@@ -2247,6 +2330,7 @@ class GoogleParser(object):
         self.results = []
         self.parse(html)
 
+    @time_it()
     def parse(self, html):
         tree = parse_html(html)
 
@@ -2260,42 +2344,128 @@ class GoogleParser(object):
                 import pdb
                 pdb.set_trace()
 
+        # Google changed their news structure around September 2021
+        # Changing the parser breaks the non-news functionality
+        # So it might be easier to just set these dynamically here.
+
+        # The Title is a dot-separated string in the format:
+        #     - NewsAgency.Title.(Abstract).NewsAge
+        #       (NewsAgency can have dot(s) within)
+        # Abstract has the NewsAgency.
+        # Metadata is same as the actual news Title.
+        # So we set Title as Metadata, append NewsAge to Abstract and
+        # clear Metadata to avoid showing the same Title and Metadata
+        if self.news:
+            div_selector = 'div[data-hveid]'
+            title_selector = 'div'
+            h3_selector = 'div'
+        else:
+            div_selector = 'div.g'
+            title_selector = 'div.tF2Cxc > div'
+            h3_selector = 'h3'
+
         # cw is short for collapse_whitespace.
         cw = lambda s: re.sub(r'[ \t\n\r]+', ' ', s) if s is not None else s
 
         index = 0
-        for div_g in tree.select_all('div.g'):
+        for div_g in tree.select_all(div_selector):
             if div_g.select('.hp-xpdbox'):
                 # Skip smart cards.
                 continue
             try:
-                h3 = div_g.select('div.r h3')
-                if h3:
-                    title = h3.text
-                    url = self.unwrap_link(h3.parent.attr('href'))
+                if div_g.select('.st'):
+                    # Old class structure, stopped working some time in
+                    # September 2020, but kept just in case.
+                    h3 = div_g.select('div.r h3')
+                    if h3:
+                        title = h3.text
+                        a = h3.parent
+                    else:
+                        h3 = div_g.select('h3.r')
+                        a = h3.select('a')
+                        title = a.text
+                        mime = div_g.select('.mime')
+                        if mime:
+                            title = mime.text + ' ' + title
+                    abstract_node = div_g.select('.st')
+                    metadata_node = div_g.select('.f')
                 else:
-                    h3 = div_g.select('h3.r')
-                    a = h3.select('a')
-                    title = a.text
-                    mime = div_g.select('.mime')
-                    if mime:
-                        title = mime.text + ' ' + title
-                    url = self.unwrap_link(a.attr('href'))
+                    # Current structure as of October 2020.
+                    # Note that a filetype tag (e.g. PDF) is now pretty
+                    # damn hard to parse with confidence (that it'll
+                    # survive the slighest further change), so we don't.
+
+                    # As of January 15th 2021, the html class is not rc anymore, it's tF2Cxc.
+                    # This approach is not very resilient to changes by Google, but it works for now.
+                    # title_node, details_node, *_ = div_g.select_all('div.rc > div')
+                    title_node, details_node, *_ = div_g.select_all(title_selector)
+                    if 'yuRUbf' not in title_node.classes:
+                        logger.debug('unexpected title node class(es): expected %r, got %r',
+                                     'yuRUbf', ' '.join(title_node.classes))
+                    if 'IsZvec' not in details_node.classes:
+                        logger.debug('unexpected details node class(es): expected %r, got %r',
+                                     'IsZvec', ' '.join(details_node.classes))
+                    a = title_node.select('a')
+                    h3 = a.select(h3_selector)
+                    title = h3.text
+
+                    if self.news:
+                        newstitle = title.split('.')
+                        #title = newstitle[1]
+
+                    abstract_node = details_node.select('span')
+                    metadata_node = details_node.select('.f, span ~ div')
+                url = self.unwrap_link(a.attr('href'))
                 matched_keywords = []
                 abstract = ''
-                for childnode in div_g.select('.st').children:
-                    if 'f' in childnode.classes:
+                # BFS descendant nodes. Necessary to locate matches (b,
+                # em) while skipping metadata (.f).
+                abstract_nodes = collections.deque([abstract_node])
+                while abstract_nodes:
+                    node = abstract_nodes.popleft()
+                    if 'f' in node.classes:
                         # .f is handled as metadata instead.
                         continue
-                    childnode_text = cw(childnode.text)
-                    if childnode.tag in ['b', 'em'] and childnode_text != '...':
-                        matched_keywords.append({'phrase': childnode_text, 'offset': len(abstract)})
-                    abstract = abstract + childnode_text
+                    if node.tag in ['b', 'em']:
+                        matched_keywords.append({'phrase': node.text, 'offset': len(abstract)})
+                        abstract += node.text
+                        continue
+                    if not node.children:
+                        abstract += node.text
+                        continue
+                    for child in node.children:
+                        abstract_nodes.append(child)
+
+                if self.news:
+                    abstract = abstract + " - " + newstitle[-1]
+
+                metadata = None
                 try:
-                    metadata = div_g.select('.f').text
-                    metadata = metadata.replace('\u200e', '').replace(' - ', ', ').strip().rstrip(',')
+                    # Sometimes there are multiple metadata fields
+                    # associated with a single entry, e.g. "Released",
+                    # "Producer(s)", "Genre", etc. for a song (sample
+                    # query: "never gonna give you up"). These need to
+                    # be delimited when displayed.
+                    metadata_fields = metadata_node.select_all('div > div.wFMWsc')
+                    if metadata_fields:
+                        metadata = ' | '.join(field.text for field in metadata_fields)
+                    elif not metadata_node.select('a') and not metadata_node.select('g-expandable-container'):
+                        metadata = metadata_node.text
+                    if metadata:
+                        metadata = (
+                            metadata
+                            .replace('\u200e', '')
+                            .replace(' - ', ', ')
+                            .replace(' \u2014 ', ', ')
+                            .strip().rstrip(',')
+                        )
                 except AttributeError:
-                    metadata = None
+                    pass
+
+                if self.news:
+                    title = metadata
+                    metadata = ""
+
             except (AttributeError, ValueError):
                 continue
             sitelinks = []
@@ -2474,9 +2644,9 @@ class Result(object):
         )
 
     def __hash__(self):
-        sitelinks_hashable = tuple(sitelinks) if sitelinks is not None else None
-        matches_hashable = tuple(matches) if matches is not None else None
-        return hash(self.title, self.url, self.abstract, self.metadata, self.sitelinks, self.matches)
+        sitelinks_hashable = tuple(self.sitelinks) if self.sitelinks is not None else None
+        matches_hashable = tuple(self.matches) if self.matches is not None else None
+        return hash(self.title, self.url, self.abstract, self.metadata, sitelinks_hashable, matches_hashable)
 
     def _print_title_and_url(self, index, title, url, indent=0):
         colors = self.colors
@@ -2726,10 +2896,46 @@ class GooglerCmd(object):
 
     def warn_no_results(self):
         printerr('No results.')
-        if not self.no_results_instructions_shown:
-            printerr('If you believe this is a bug, please review '
-                     'https://git.io/googler-no-results before submitting a bug report.')
-            self.no_results_instructions_shown = True
+        if self.no_results_instructions_shown:
+            return
+
+        try:
+            import json
+            import urllib.error
+            import urllib.request
+            info_json_url = '%s/master/info.json' % RAW_DOWNLOAD_REPO_BASE
+            logger.debug('Fetching %s for project status...', info_json_url)
+            try:
+                with urllib.request.urlopen(info_json_url, timeout=5) as response:
+                    try:
+                        info = json.load(response)
+                    except Exception:
+                        logger.error('Failed to decode project status from %s', info_json_url)
+                        raise RuntimeError
+            except urllib.error.HTTPError as e:
+                logger.error('Failed to fetch project status from %s: HTTP %d', info_json_url, e.code)
+                raise RuntimeError
+            epoch = info.get('epoch')
+            if epoch > _EPOCH_:
+                printerr('Your version of googler is broken due to Google-side changes.')
+                tracking_issue = info.get('tracking_issue')
+                fixed_on_master = info.get('fixed_on_master')
+                fixed_in_release = info.get('fixed_in_release')
+                if fixed_in_release:
+                    printerr('A new version, %s, has been released to address the changes.' % fixed_in_release)
+                    printerr('Please upgrade to the latest version.')
+                elif fixed_on_master:
+                    printerr('The fix has been pushed to master, pending a release.')
+                    printerr('Please download the master version https://git.io/googler or wait for a release.')
+                else:
+                    printerr('The issue is tracked at https://github.com/jarun/googler/issues/%s.' % tracking_issue)
+                return
+        except RuntimeError:
+            pass
+
+        printerr('If you believe this is a bug, please review '
+                 'https://git.io/googler-no-results before submitting a bug report.')
+        self.no_results_instructions_shown = True
 
     @require_keywords
     def display_results(self, prelude='\n', json_output=False):
@@ -3083,7 +3289,7 @@ class GooglerArgumentParser(argparse.ArgumentParser):
         file.write(textwrap.dedent("""
         Version %s
         Copyright © 2008 Henri Hakkinen
-        Copyright © 2015-2020 Arun Prakash Jana <engineerarun@gmail.com>
+        Copyright © 2015-2021 Arun Prakash Jana <engineerarun@gmail.com>
         Zhiming Wang <zmwangx@gmail.com>
         License: GPLv3
         Webpage: https://github.com/jarun/googler
@@ -3480,6 +3686,9 @@ def parse_args(args=None, namespace=None):
            help="""country-specific search with top-level domain .TLD, e.g., 'in'
            for India""")
     addarg('-l', '--lang', metavar='LANG', help='display in language LANG')
+    addarg('-g', '--geoloc', metavar='CC',
+           help="""country-specific geolocation search with country code CC, e.g.
+           'in' for India. Country codes are the same as top-level domains""")
     addarg('-x', '--exact', action='store_true',
            help='disable automatic spelling correction')
     addarg('--colorize', nargs='?', choices=['auto', 'always', 'never'],
@@ -3505,6 +3714,8 @@ def parse_args(args=None, namespace=None):
            help='ending date/month/year of date range; see --from')
     addarg('-w', '--site', dest='sites', action='append', metavar='SITE',
            help='search a site using Google')
+    addarg('-e', '--exclude', dest='exclude', action='append', metavar='SITE',
+           help='exclude site from results')
     addarg('--unfilter', action='store_true', help='do not omit similar results')
     addarg('-p', '--proxy', default=https_proxy_from_environment(),
            help="""tunnel traffic through an HTTP proxy;
