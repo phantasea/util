@@ -1,8 +1,8 @@
 #!/bin/bash
  
-#W3MIMG="/usr/local/libexec/w3m/w3mimgdisplay"
+W3MIMG="/usr/local/libexec/w3m/w3mimgdisplay"
 #W3MIMG="/usr/lib/w3m/w3mimgdisplay"
-W3MIMG="w3mimgdisplay"
+#W3MIMG="w3mimgdisplay"
 
 FONTH=15  # Size of one terminal row
 FONTW=8   # Size of one terminal column
@@ -15,7 +15,7 @@ FILENAME=$5
  
 read width height <<< `echo "5;$FILENAME" | $W3MIMG`
 if [ -z "$width" -o -z "$height" ]; then
-    echo 'Error: failed to obtain image size.'
+    echo "Error: failed to obtain image size ($width,$height)"
     exit 1
 fi
  
