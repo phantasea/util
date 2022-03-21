@@ -25,7 +25,8 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 MIMETYPE=$(mimetype -b -- "$1")
 case "$MIMETYPE" in
     audio/*)
-        (exiftool "$1" |grep Bitrate |cut -d':' -f 2 |sed -e 's/[ \t]*//g' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
+        #(exiftool "$1" |grep Bitrate |cut -d':' -f 2 |sed -e 's/[ \t]*//g' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
+        (mediainfo "$1" | grep 'Bit rate  ' | cut -d: -f2 | sed -e 's/\s//g' && mediainfo "$1"| grep Duration | head -1 | cut -d: -f2 | sed -e 's/\smin/min/' | sed -e 's/\ss/s/') | tr -d '\n'
         exit 0;;
     image/*)
         exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//'
