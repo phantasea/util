@@ -2,8 +2,8 @@
 
 #ffmpeg -i inputfile -ss starttime -t duration -vn -codec copy -loglevel quiet outputfile
 #ffmpeg -i 2.艾辰-错位时空.mp4 -map 0:a 2.艾辰-错位时空.mp3
-#audcut starttime stoptime input.mp3/mp4 output.mp3
-#audcut -a 2.艾辰-错位时空.mp4 2.艾辰-错位时空.mp3
+#audcut -a input.mp4 output.mp3
+#audcut starttime stoptime input.mp3 output.mp3
 
 all=0
 while getopts "a" opt; do
