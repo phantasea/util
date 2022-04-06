@@ -97,9 +97,9 @@ fi
 
 FILES="$file"
 if [ "$recursive" = "FALSE" ]; then
-    FILES+=" *.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
+    FILES+=" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp}"
 else
-    FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm}"
+    FILES+=" {,**/}*.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp}"
 fi
 #echo $FILES > ~/dddd
 
@@ -107,7 +107,7 @@ CMD="$PROG $FILES" > /dev/null 2>&1
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
-    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm}
+    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp}
     exit 0
 fi
 

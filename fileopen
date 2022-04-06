@@ -45,7 +45,7 @@ case "$ext" in
         vidplay $OPTS "$file" && exit 0
         ;;
 
-    bmp|jpg|jpeg|png|gif|xpm|ppm)
+    bmp|jpg|jpeg|png|gif|xpm|ppm|webp)
         imgview $OPTS "$file" && exit 0
         ;;
 
@@ -70,7 +70,7 @@ esac
 
 filemimetype="$(file --dereference --brief --mime-type -- "${file}")"
 case "${filemimetype}" in
-    text/*)
+    text/*|*/json)
         vimux "$file" && exit 0
         ;;
 esac
