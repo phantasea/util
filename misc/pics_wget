@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#for i in {00..29}
+for i in $(seq -w 000 029)
+do
+    wget -q --no-use-server-timestamps \
+        "https://img.xsnvshen.com/album/17782/12885/$i.jpg" \
+        --referer="https://img.xsnvshen.com/album/17782/12885/"
+done
