@@ -43,6 +43,11 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
+size=$(stat -c %s -- "$1")
+if [[ $size -lt 10000000 ]] && [[ -z "$DISPLAY" ]]; then
+    CMD="mpv --vo=drm 2>/dev/null"
+fi
+
 # cannot switch between mpv and other window
 tmux has-session -t $SID 2>/dev/null
 if [[ $? -ne 0 ]] || [[ $CMD =~ "mpv" ]]; then
