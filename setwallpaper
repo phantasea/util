@@ -16,8 +16,7 @@ if [ ! -z "$DISPLAY" ]; then
     exit 0
 fi
 
+## the effect is not persistent!
 fbv -ciuker "$1" << EOF
 q
 EOF
-
-export FBTERM_BACKGROUND_IMAGE=1
