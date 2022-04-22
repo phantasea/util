@@ -53,13 +53,13 @@ if [ $? -ne 0 ]; then
         #tmux swap-pane -D
     fi
 
-    if [[ "$CMD" =~ "ncmpc" ]]; then
-        tmux send-keys -t $SID:$WID M
-        tmux split-window -h -t $SID:$WID
-        tmux send-keys -t $SID:$WID "cd ~/auds" C-m
-        tmux send-keys -t $SID:$WID "fd -t=f -e=mp3 . ~/auds | sed -e 's#.*/auds/##' | fzf --height=0 --inline-info --bind 'ctrl-d:execute(tmux killp)' --bind 'ctrl-o:execute-silent(fzfopen {})'" C-m
-        tmux select-pane -l -t $SID:$WID
-    fi
+    #if [[ "$CMD" =~ "ncmpc" ]]; then
+    #    tmux send-keys -t $SID:$WID M
+    #    tmux split-window -h -t $SID:$WID
+    #    tmux send-keys -t $SID:$WID "cd ~/auds" C-m
+    #    tmux send-keys -t $SID:$WID "fd -t=f -e=mp3 . ~/auds | sed -e 's#.*/auds/##' | fzf --height=0 --inline-info --bind 'ctrl-d:execute(tmux killp)' --bind 'ctrl-o:execute-silent(fzfopen {})'" C-m
+    #    tmux select-pane -l -t $SID:$WID
+    #fi
 fi
 
 exit 0

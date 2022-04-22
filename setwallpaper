@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ ! -f "$1" ]; then
+    echo "$1 is not a file!"
+    exit 1
+fi
+
+MIMETYPE="$(file --dereference --brief --mime-type -- "${1}")"
+if [[ ! "$MIMETYPE" =~ "image" ]]; then
+    echo "$1 is not an image file!"
+    exit 1
+fi
+
+if [ ! -z "$DISPLAY" ]; then
+    feh --bg-scale --no-fehbg "$1"
+    exit 0
+fi
+
+fbv -ciuker "$1" << EOF
+q
+EOF
+
+export FBTERM_BACKGROUND_IMAGE=1
