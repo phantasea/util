@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# JUL-527 木下凛凛子-1.mp4 >>> 木下凛凛子
+
+if [ -z "$DISPLAY" ]; then
+    clip=$(tmux show-buffer | cut -d' ' -f2 | cut -d'.' -f1 | cut -d'-' -f1 | tr -d '\n') 
+    tmux setb $clip
+else
+    xsel -ob | cut -d' ' -f2 | cut -d'.' -f1 | cut -d'-' -f1 | tr -d '\n' | xsel -ib
+fi
