@@ -2,6 +2,7 @@
 
 winC=0
 winD=0
+winX=0
 exp=0
 pls=0
 txt=0
@@ -13,12 +14,14 @@ sdw=0
 sdx=0
 mnt=1
 
-while getopts "acdestuvwxlU" opt; do
+while getopts "abcdestuvwxlU" opt; do
     case $opt in
         c)
            winC=1 ;;
         d)
            winD=1 ;;
+        b)
+           winX=1 ;;
         e)
            exp=1 ;;
         l)
@@ -39,6 +42,8 @@ while getopts "acdestuvwxlU" opt; do
            mnt=0 ;;
         a)
            sda=1
+          winD=1
+          winX=1
            sds=1
            txt=1
            sdu=1
@@ -47,7 +52,7 @@ while getopts "acdestuvwxlU" opt; do
            sdx=1
            ;;
         ?)
-           echo 'mudisk -[adestuvwxlU]'
+           echo 'mudisk -[abcdelstuvwxU]'
            exit 1 ;;
     esac
 done
@@ -61,6 +66,7 @@ if [ $exp -eq 1 ] && [ $sda -eq 1 ]; then
     exit 0
 fi
 
+wcb=$(ls /media/simone/winX       2>/dev/null | wc -l)
 wcc=$(ls /media/simone/winC       2>/dev/null | wc -l)
 wcd=$(ls /media/simone/winD       2>/dev/null | wc -l)
 wcs=$(ls /media/simone/sandisk_s  2>/dev/null | wc -l)
@@ -87,6 +93,7 @@ fi
 
 #umount the specific mount point
 if [ $mnt -eq 0 ]; then
+  [[ $winX == 1 ]] && [[ $wcb != 0 ]] && echo bbb-umnt && sudo umount /media/simone/winX
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo ccc-umnt && sudo umount /media/simone/winC
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo ddd-umnt && sudo umount /media/simone/winD
   [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
@@ -105,6 +112,12 @@ fi
 #mount the specific point when the .priv is not available
 wcp=$(ls /opt/.priv/priv 2>/dev/null | wc -l)
 if [ $wcp -eq 0 ]; then
+  #mount winX manually
+  if [[ $winX -eq 1 ]] && [[ $wcb -eq 0 ]]; then
+    echo +winX+
+    sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+  fi
+  
   #mount winC manually
   if [[ $winC -eq 1 ]] && [[ $wcc -eq 0 ]]; then
     echo +winC+
@@ -114,7 +127,7 @@ if [ $wcp -eq 0 ]; then
   #mount winD manually
   if [[ $winD -eq 1 ]] && [[ $wcd -eq 0 ]]; then
     echo +winD+
-    sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winD
+    sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p5 /media/simone/winD
   fi
   
   #mount text manually
@@ -171,6 +184,15 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
 
 /usr/bin/expect << EOD
   set timeout 3
+
+  if {$mnt == 0} {
+    if {$winX == 1 && $wcb != 0} {
+      puts "-winX-"
+      sleep 0.5
+      spawn sudo umount /media/simone/winX
+      expect "password"
+      send "$password\r"
+    }
 
   if {$mnt == 0} {
     if {$winC == 1 && $wcc != 0} {
@@ -247,7 +269,15 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     exit
   }
 
-  if {$winC == 1 && $wcd == 0} {
+  if {$winX == 1 && $wcx == 0} {
+    puts "+winX+"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$winC == 1 && $wcc == 0} {
     puts "+winC+"
     sleep 0.5
     spawn sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p3 /media/simone/winC
@@ -258,7 +288,7 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
   if {$winD == 1 && $wcd == 0} {
     puts "+winD+"
     sleep 0.5
-    spawn sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winD
+    spawn sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p5 /media/simone/winD
     expect "password"
     send "$password\r"
   }
