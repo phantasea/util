@@ -191,6 +191,10 @@ case "$ext" in
         echo "Windows binary file: no preview available!" && exit 0
         exit 1;;
 
+    url)
+        cat "$file" && exit 0
+        exit 1;;
+
     ## Misc
     desktop)
         bat -- "$file" && exit 0

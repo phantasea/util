@@ -63,9 +63,16 @@ case "$ext" in
         pdfview $OPTS "$file" && exit 0
         ;;
 
+    epub|djvu)
+        zathura "$file" && exit 0
+        ;;
+
     tpp)
         tpp "$file" && exit 0
         ;;
+
+    url)
+        vimux "$file" && exit 0
 esac
 
 filemimetype="$(file --dereference --brief --mime-type -- "${file}")"
