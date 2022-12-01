@@ -15,7 +15,7 @@ sdw=0
 sdx=0
 mnt=1
 
-while getopts "abcdestuvwxlU" opt; do
+while getopts "abcdelmstuvwxU" opt; do
     case $opt in
         c)
            winC=1 ;;
@@ -56,7 +56,7 @@ while getopts "abcdestuvwxlU" opt; do
            sdx=1
            ;;
         ?)
-           echo 'mudisk -[abcdelstuvwxU]'
+           echo 'mudisk -[abcdelmstuvwxU]'
            exit 1 ;;
     esac
 done
@@ -79,7 +79,7 @@ wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
 wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
-wcm=$(ls /usr/local/.porn/auds    2>/dev/null | wc -l)
+wcm=$(ls /usr/local/.porn/auds/0* 2>/dev/null | wc -l)
 
 #list which process is occupying the mount point
 if [ $pls -eq 1 ]; then
