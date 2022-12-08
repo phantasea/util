@@ -147,6 +147,7 @@ if [ $wcp -eq 0 ]; then
   if [ $aud -eq 1 ] && [ $wcm -eq 0 ]; then
     echo +mmm+
     sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /opt/.porn/asmr       /opt/.porn/asmr       -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
  
   #mount sandisk_s manually
@@ -236,6 +237,10 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
       puts "-mmm-"
       sleep 0.5
       spawn sudo umount /usr/local/.porn/auds
+      expect "password"
+      send "$password\r"
+
+      spawn sudo umount /opt/.porn/asmr
       expect "password"
       send "$password\r"
     }
@@ -328,6 +333,13 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     puts "+mmm+"
     sleep 0.5
     spawn sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    expect "password"
+    send "$password\r"
+    expect "Passphrase"
+    send "$passphrase\r"
+
+    sleep 0.5
+    spawn sudo mount -t ecryptfs /opt/.porn/asmr /opt/.porn/asmr -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
     send "$password\r"
     expect "Passphrase"
