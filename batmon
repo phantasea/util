@@ -5,7 +5,7 @@
 #bat=` acpi | awk -F, '/,.*%/ {print $2}' | awk '{print $1}' | awk -F% '{print $1}'`
 bat=$(cat /sys/class/power_supply/BAT0/capacity)
 
-if [ "$bat" -lt 32 ]; then
+if [ "$bat" -lt 20 ]; then
     if [ ! -z $DISPLAY ]; then
         export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1001/bus && notify-send -u critical "Battery critically low!"
     else
