@@ -1,0 +1,20 @@
+#!/bin/bash
+
+[[ -z "$DISPLAY" ]] && SID=0 || SID=1
+[[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
+
+tmux list-w | grep "ranger\*" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    exit 0
+fi
+
+tmux send-keys xY
+tmux select-window -t $SID:1 > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    exit 0
+fi
+
+tmux send-keys C-u
+tmux send-keys "cd $(xclip -o)"
+tmux send-keys C-m
+exit 0

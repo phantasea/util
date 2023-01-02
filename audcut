@@ -20,7 +20,6 @@ shift $((OPTIND-1))
 
 if [ $all -eq 1 ]; then
     ffmpeg -i "$1" -map 0:a -loglevel quiet "$2"
-
     exit 0
 fi
 

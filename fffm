@@ -4,11 +4,13 @@
 # https://github.com/dylanaraps/fff
 
 FFFM_FAV1="/home/$USER"
-FFFM_FAV2="/home/$USER/vids/.porn"
+FFFM_FAV2="/opt/.porn"
 FFFM_FAV3="/opt/.porn/text"
-FFFM_FAV4="/home/$USER/temp"
-FFFM_FAV7="/home/$USER/docs/note"
-FFFM_FAV8="/home/$USER/docs/webs"
+FFFM_FAV4="/opt/.porn/asmr"
+FFFM_FAV5="/opt/.porn/pics"
+FFFM_FAV6="/opt/conf"
+FFFM_FAV7="/opt/util"
+FFFM_FAV8="/home/$USER/docs"
 FFFM_FAV9="/media/$USER"
 
 get_os() {
