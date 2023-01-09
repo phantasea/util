@@ -7,17 +7,27 @@ if [ $? -ne 0 ]; then
     exit 0
 fi
 
-while getopts "pnsPu" opt; do
+while getopts "pnst" opt; do
     case $opt in
         p) action="previous";;
         n) action="next";;
         s) action="stop";;
-        P) action="pause";;
-        u) action="unpause";;
-        ?) echo 'Usage: musdo [-pnsPu]'
+        t) action="toggle-pause";;
+        ?) echo 'Usage: musdo [-pnst]'
            exit 1;;
     esac
 done
+
+#state=$(mocp -i | grep "State:" | cut -d' ' -f2)
+#if [[ action =~ "toggle" ]]; then
+#    if [[ $state =~ "PLAY" ]]; then
+#        action="pause"
+#    elif [[ $state =~ "PAUSE" ]]; then
+#        action="unpause"
+#    else
+#        action="play"
+#    fi
+#fi
 
 mocp --$action
 exit 0

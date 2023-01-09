@@ -79,12 +79,12 @@ wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
 wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
-wcm=$(ls /usr/local/.porn/auds/0* 2>/dev/null | wc -l)
+wca=$(ls /usr/local/.porn/auds/asmr* 2>/dev/null | wc -l)
 
 #list which process is occupying the mount point
 if [ $pls -eq 1 ]; then
     [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-lsof && lsof /opt/.porn/text
-    [[ $aud == 1 ]] && [[ $wcm != 0 ]] && echo mmm-lsof && lsof /usr/local/.porn/auds
+    [[ $aud == 1 ]] && [[ $wca != 0 ]] && echo aaa-lsof && lsof /usr/local/.porn/auds
     [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-lsof && lsof /media/simone/sandisk_s
     [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-lsof && lsof /media/simone/sandisk_u
     [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-lsof && lsof /media/simone/sandisk_v
@@ -103,7 +103,7 @@ if [ $mnt -eq 0 ]; then
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo ccc-umnt && sudo umount /media/simone/winC
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo ddd-umnt && sudo umount /media/simone/winD
   [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
-  [[ $aud == 1 ]] && [[ $wcm != 0 ]] && echo mmm-umnt && sudo umount /usr/local/.porn/auds
+  [[ $aud == 1 ]] && [[ $wca != 0 ]] && echo aaa-umnt && sudo umount /usr/local/.porn/auds
   [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
   [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
   [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
@@ -143,9 +143,9 @@ if [ $wcp -eq 0 ]; then
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
   
-  #mount mp3 manually
-  if [ $aud -eq 1 ] && [ $wcm -eq 0 ]; then
-    echo +mmm+
+  #mount asmr manually
+  if [ $aud -eq 1 ] && [ $wca -eq 0 ]; then
+    echo +aaa+
     sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     sudo mount -t ecryptfs /opt/.porn/asmr       /opt/.porn/asmr       -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
@@ -208,7 +208,6 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
       send "$password\r"
     }
 
-  if {$mnt == 0} {
     if {$winC == 1 && $wcc != 0} {
       puts "-winC-"
       sleep 0.5
@@ -233,8 +232,8 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
       send "$password\r"
     }
 
-    if {$aud == 1 && $wcm != 0} {
-      puts "-mmm-"
+    if {$aud == 1 && $wca != 0} {
+      puts "-aaa-"
       sleep 0.5
       spawn sudo umount /usr/local/.porn/auds
       expect "password"
@@ -329,8 +328,8 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     send "$passphrase\r"
   }
 
-  if {$aud == 1 && $wcm == 0} {
-    puts "+mmm+"
+  if {$aud == 1 && $wca == 0} {
+    puts "+aaa+"
     sleep 0.5
     spawn sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
@@ -392,6 +391,10 @@ exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]   && exist_sds_src=1
     expect "password"
     send "$password\r"
   }
+
+  spawn sudo umount /opt/.priv
+  expect "password"
+  send "$password\r"
 
   expect eof
 EOD
