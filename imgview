@@ -47,7 +47,8 @@ fi
 
 # console
 if [ -z "$DISPLAY" ]; then
-    PROG="fim"
+    #PROG="fim"
+    PROG="mpv --vo=drm --config-dir=/opt/conf/mpi"
     if [ "$ALT" = "1" ]; then
         PROG="fbv"
     elif [ "$ALT" = "2" ]; then
