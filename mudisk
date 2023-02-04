@@ -348,31 +348,21 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
     send "$password\r"
   }
 
-  if {$txt == 1 && $wct == 0} {
-    puts "\n\n+ttt+"
-    sleep 0.5
-    spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
-    expect "password"
-    send "$password\r"
-    expect "Passphrase"
-    send "$passphrase\r"
-  }
-
   if {$aud == 1 && $wca == 0} {
     puts "\n\n+auds+"
-    sleep 0.5
     spawn sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
     send "$password\r"
     expect "Passphrase"
+    sleep 0.5
     send "$passphrase\r"
 
     puts "\n\n+asmr+"
-    sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/asmr /opt/.porn/asmr -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
     send "$password\r"
     expect "Passphrase"
+    sleep 0.5
     send "$passphrase\r"
   }
 
@@ -429,6 +419,32 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
     spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_z /media/simone/sandisk_z
     expect "password"
     send "$password\r"
+  }
+  if {$sdz == 1 && $wcz == 0 && $exist_sdz_src ==1} {
+    puts "\n\n+ZZZ+"
+    sleep 0.5
+    spawn sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_z /media/simone/sandisk_z
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$txt == 1 && $wct == 0} {
+    puts "\n\n+ttt+"
+    sleep 0.5
+    spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    expect "password"
+    send "$password\r"
+    expect "Passphrase"
+    send "$passphrase\r"
+  }
+  if {$txt == 1 && $wct == 0} {
+    puts "\n\n+TTT+"
+    sleep 0.5
+    spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    expect "password"
+    send "$password\r"
+    expect "Passphrase"
+    send "$passphrase\r"
   }
 
   puts "\n\n-priv-"
