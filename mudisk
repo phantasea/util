@@ -16,7 +16,7 @@ sdx=0
 sdz=0
 mnt=1
 
-while getopts "abcdelmstuvwxU" opt; do
+while getopts "abcdelmstuvwxzU" opt; do
     case $opt in
         c)
            winC=1 ;;
@@ -61,7 +61,7 @@ while getopts "abcdelmstuvwxU" opt; do
            sdz=1
            ;;
         ?)
-           echo 'mudisk -[abcdelmstuvwxU]'
+           echo 'mudisk -[abcdelmstuvwxzU]'
            exit 1 ;;
     esac
 done
@@ -198,7 +198,7 @@ if [ $wcp -eq 0 ]; then
   fi
 
   #mount sandisk_z manually
-  if [ $sdz -eq 1 ] && [ $wcz -eq 0 ] && [ -e /dev/disk/by-lable/sandisk_z ]; then
+  if [ $sdz -eq 1 ] && [ $wcz -eq 0 ] && [ -e /dev/disk/by-label/sandisk_z ]; then
     echo +zzz+++
     sudo mount -o rw,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_z /media/simone/sandisk_z
   fi

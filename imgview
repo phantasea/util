@@ -64,6 +64,7 @@ if [ -z "$DISPLAY" ]; then
     fi
 # xwindow
 else
+    #PROG="feh -ZF"
     PROG="feh -F"
     if [ "$ALT" = "1" ]; then
         PROG="sxiv -f"
@@ -77,6 +78,7 @@ else
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
+        #PROG="feh -ZF -D 1"
         PROG="feh -F -D 1"
         if [ "$ALT" = "1" ]; then
             PROG="pqiv -fs"
