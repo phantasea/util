@@ -57,7 +57,9 @@ if [ -z "$DISPLAY" ]; then
 
     if [ "$slideshow" = "TRUE" ]; then
         if [ "$ALT" = "0" ]; then
-            PROG+=" -c \"endless_slideshow\""
+            if [[ $PROG =~ "fim" ]]; then
+                PROG+=" -c \"endless_slideshow\""
+            fi
         elif [ "$ALT" = "1" ]; then
             PROG+=" -s 10"
         fi
