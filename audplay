@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CMD="mpg123 -q"
+CMD="mpg321 -q"
 while getopts "bB" opt; do
     case $opt in
         b)
