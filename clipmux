@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+#curr_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
+#if [ $curr_name =~ "term" ]; then
+#    i3-msg exec 'xdotool key ctrl+c'
+#    exit 0
+#fi
+#
+#if [ $curr_name =~ "www" ]; then
+#    i3-msg exec 'xdotool click 3'
+#    i3-msg exec 'xdotool key c'
+#fi
+
 #xclip -o | xargs tmux setb   //not work if the content has spaces
 clip=$(xclip -o)
 tmux setb "$clip"
