@@ -11,9 +11,8 @@ if [ $? -eq 0 ]; then
     exit 0
 fi
 
-TMUXCMD="tmux new-session -s $SID"
 if [ ! -z "$DISPLAY" ]; then
-    $TMUXCMD
+    tmux -L x-serv new-session -s $SID
     exit 0
 fi
 
@@ -21,6 +20,8 @@ echo -ne "\e[?25l"  #hide cursor
 fbv -ciuker "/home/simone/.wallpaper/desktop-$(date +%d).jpg" << EOF
 q
 EOF
+
+TMUXCMD="tmux new-session -s $SID"
 
 export FBTERM_BACKGROUND_IMAGE=1
 exec fbterm -- $TMUXCMD > /dev/null 2>&1
