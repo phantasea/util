@@ -3,14 +3,15 @@
 # fffm - fucking fast file-manager.
 # https://github.com/dylanaraps/fff
 
-FFFM_FAV1="/home/$USER"
-FFFM_FAV2="/opt/.porn"
-FFFM_FAV3="/opt/.porn/text"
+FFFM_FAV0="/home/$USER"
+FFFM_FAV1="/opt"
+FFFM_FAV2="/opt/.porn/text"
+FFFM_FAV3="/opt/.porn/pics"
 FFFM_FAV4="/opt/.porn/asmr"
-FFFM_FAV5="/opt/.porn/pics"
-FFFM_FAV6="/opt/conf"
-FFFM_FAV7="/opt/util"
-FFFM_FAV8="/home/$USER/docs"
+FFFM_FAV5="/home/$USER/vids/.porn"
+FFFM_FAV6="/home/$USER/vids/.pr0n"
+FFFM_FAV7="/home/$USER/vids/.vids"
+FFFM_FAV8="/home/$USER/vids/.xxxx"
 FFFM_FAV9="/media/$USER"
 
 get_os() {
@@ -1113,7 +1114,7 @@ key() {
         ;;
 
         # Directory favourites.
-        [1-9])
+        [0-9])
             favourite="FFFM_FAV${1}"
             favourite="${!favourite}"
 
