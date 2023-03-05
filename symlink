@@ -1,7 +1,9 @@
 #!/bin/bash
 
 cd ~
-mkdir auds vids docs pics misc temp
+git clone https://github.com/phantasea/auds auds
+mkdir vids docs misc pics temp vids
+ln -s ~/docs/note/TODO ~/TODO
 
 cd ~/docs
 mkdir book misc note webs
@@ -11,17 +13,18 @@ mkdir mpd imv bat i3 i3status syncthing
 
 sudo chown -R simone:simone /media/simone
 cd /media/simone
-mkdir sandisk-s sandisk-u sandisk-v sandisk-w sandisk-x1 sandisk-x2
+mkdir adbfs sandisk-s sandisk-u sandisk-v sandisk-w sandisk-x1 sandisk-x2 sandiskz winD winX
 
 sudo chown -R simone:simone /opt
 cd /opt
-mkdir apps conf misc util vids
+mkdir apps conf misc util
 mkdir .certs .logs .mail .porn .priv
 
 cd /opt/misc
 mkdir apps docs dicts fonts
 
-mkdir /opt/.porn/text
+cd /opt/.porn
+git clone https://github.com/phantasea/pr0n text
 
 cd ~/docs
 git clone https://github.com/phantasea/note note
@@ -39,15 +42,21 @@ git clone https://github.com/phantasea/autojump
 git clone https://github.com/phantasea/elinks
 git clone https://github.com/phantasea/fbv
 git clone https://github.com/phantasea/fim
+git clone https://github.com/phantasea/fim-ng
 git clone https://github.com/phantasea/fzf
 git clone https://github.com/phantasea/htop
 git clone https://github.com/phantasea/jfbview
 git clone https://github.com/phantasea/moc
+git clone https://github.com/phantasea/moc-ng
 git clone https://github.com/phantasea/myst
 git clone https://github.com/phantasea/pho
 git clone https://github.com/phantasea/ranger
 git clone https://github.com/phantasea/vifm
+git clone https://github.com/phantasea/vifm.vim
 git clone https://github.com/phantasea/w3m
+git clone --depth=1 https://git.sr.ht/~exec64/imv
+git clone --depth=1 https://github.com/muennich/sxiv
+git clone --depth=1 https://github.com/jbensmann/xmouseless
 
 ln -sf /opt/.mail                            ~/.mail
 ln -sf /opt/.logs                            ~/.logs
@@ -59,6 +68,7 @@ ln -sf /opt/misc/fonts                       ~/.fonts
 ln -sf /opt/misc/dicts                       ~/.stardict/dic
 ln -sf /opt/conf/favedirs                    ~/.favedirs
 ln -sf /opt/conf/wallpaper                   ~/.wallpaper
+ln -sf /opt/conf/wallpaper                   ~/pics/wallpaper-2
 ln -sf /opt/conf/mailcap                     ~/.mailcap
 ln -sf /opt/conf/inputrc                     ~/.inputrc
 ln -sf /opt/conf/vim                         ~/.vim
@@ -75,15 +85,15 @@ ln -sf /opt/conf/hhighlighter.sh             ~/.hhighlighter.sh
 ln -sf /opt/conf/fimrc                       ~/.fimrc
 ln -sf /opt/conf/dircolors                   ~/.dircolors
 ln -sf /opt/conf/moc                         ~/.moc
-ln -sf /opt/conf/mplayer/                    ~/.mplayer
-ln -sf /opt/conf/vifm/                       ~/.vifm
-ln -sf /opt/conf/w3m/                        ~/.w3m
+ln -sf /opt/conf/mplayer                     ~/.mplayer
+ln -sf /opt/conf/vifm                        ~/.vifm
+ln -sf /opt/conf/w3m                         ~/.w3m
 ln -sf /opt/conf/git/gitconfig               ~/.gitconfig
 ln -sf /opt/conf/abookrc                     ~/.abookrc
 ln -sf /opt/conf/dictrc                      ~/.dictrc
 ln -sf /opt/conf/elinks/elinks.conf          ~/.elinks/elinks.conf
 ln -sf /opt/conf/elinks/bookmarks            ~/.elinks/bookmarks
-ln -sf /opt/conf/newsbeuter/                 ~/.newsbeuter
+ln -sf /opt/conf/newsbeuter                  ~/.newsbeuter
 ln -sf /opt/conf/yong                        ~/.yong
 ln -sf /opt/conf/mutt                        ~/.mutt
 ln -sf /opt/conf/muttrc                      ~/.muttrc
@@ -110,15 +120,19 @@ ln -sf /opt/conf/bashtop                     ~/.config/bashtop
 ln -sf /opt/conf/surfraw                     ~/.config/surfraw
 ln -sf /opt/conf/mpv                         ~/.config/mpv
 ln -sf /opt/conf/ranger                      ~/.config/ranger
+ln -sf /opt/conf/vim/init.vim                ~/.config/nvim/init.vim
 ln -sf /opt/conf/vimb                        ~/.config/vimb
 ln -sf /opt/conf/vimiv                       ~/.config/vimiv
 ln -sf /opt/conf/zathura                     ~/.config/zathura
-ln -sf /opt/conf/tridactyl                   ~/.config/tridactyl
+ln -sf /opt/conf/tridactylrc                 ~/.config/tridactyl/tridactylrc
 ln -sf /opt/conf/bat.config                  ~/.config/bat/config
 ln -sf /opt/conf/compton.conf                ~/.config/compton.conf
 ln -sf /opt/conf/neofetch.conf               ~/.config/neofetch/config.conf
-ln -sf /opt/conf/i3wm/config                 ~/.config/i3/config
+ln -sf /opt/conf/i3wm/i3.config              ~/.config/i3/config
+ln -sf /opt/conf/i3wm/scrypts                ~/.config/i3/scrypts
 ln -sf /opt/conf/i3wm/i3status.config        ~/.config/i3status/config
+ln -sf /opt/conf/i3wm/i3blocks.config        ~/.config/i3blocks/config
+ln -sf /opt/conf/imv.conf                    ~/.config/imv/config
 ln -sf /opt/conf/pqivrc                      ~/.config/pqivrc
 ln -sf /opt/conf/rtv.cfg                     ~/.config/rtv/rtv.cfg
 ln -sf /opt/conf/streamlink.config           ~/.config/streamlink/config
@@ -130,8 +144,6 @@ ln -sf /opt/conf/syncthing/key.pem           ~/.config/syncthing/key.pem
 ln -sf /opt/conf/syncthing/csrftokens.txt    ~/.config/syncthing/csrftokens.txt
 ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
 ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
-
-ln -sf /usr/local/porn                       /opt/.porn/porn
 
 sudo ln -sf /opt/conf/updatedb.conf          /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules       /etc/udev/rules.d/51-android.rules

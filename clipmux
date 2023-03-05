@@ -11,6 +11,6 @@
 #    i3-msg exec 'xdotool key c'
 #fi
 
-#xclip -o | xargs tmux setb   //not work if the content has spaces
-clip=$(xclip -o)
-tmux setb "$clip"
+xclip -o | xargs -0 tmux setb
+#clip=$(xclip -o)
+#tmux setb "$clip"
