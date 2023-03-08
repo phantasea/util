@@ -9,14 +9,14 @@ WIN="vidplay"
 
 while getopts "bB" opt; do
     case $opt in
-        b)
+        B)
             if [[ $CMD =~ "mplayer" ]]; then
                 CMD+=" -nofs -xy 768"
             else
                 CMD+=" --no-fs 2>/dev/null"
             fi
             ;;
-        B)
+        b)
             if [ -z "$DISPLAY" ]; then
                 CMD="mpv --vo=drm 2>/dev/null"
             else
