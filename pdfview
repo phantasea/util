@@ -4,7 +4,8 @@ if [ -z "$DISPLAY" ]; then
     #CMD="jfbview --cache_size=5"
     CMD="fimgs"
 else
-    CMD="zathura"
+    #CMD="zathura 2>/dev/null"
+    CMD="zathura.sh 2>/dev/null"
 fi
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
@@ -54,6 +55,12 @@ size=$(stat -c %s -- "$1")
 if [ $size -gt $maxsize ]; then
     echo "file size $size is large than $maxsize!"
     exit 1
+fi
+
+if [[ "$CMD" =~ "zathura.sh" ]]; then
+    $CMD "$file"
+    i3-msg workspace "misc" >/dev/null
+    exit 0
 fi
 
 tmux has-session -t $SID 2>/dev/null
