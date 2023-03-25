@@ -65,6 +65,7 @@ fi
 
 if [[ $CMD =~ "firefox" ]] || [[ $CMD =~ "vimb" ]]; then
     $CMD "$URI" > /dev/null 2>&1 &
+    i3-msg workspace www
     exit 0
 fi
 
