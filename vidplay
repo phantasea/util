@@ -55,9 +55,14 @@ if [[ $? -ne 0 ]] || [[ $CMD =~ "mpv" ]]; then
     exit 0
 fi
 
+FILES="$1"
+if [[ $CMD =~ "mplayer" ]]; then
+    FILES+=" *.mp4"
+fi
+
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\""
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD $FILES"
 fi
 
 exit 0
