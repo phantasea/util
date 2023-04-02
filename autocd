@@ -3,19 +3,25 @@
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
 
-tmux list-w | egrep "ranger\*|vifmrun\*" > /dev/null 2>&1
+tmux list-w | egrep "ranger\*|vifm\*" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     exit 0
 fi
 
-#xclip -sel clip < /dev/null
-
-tmux send-keys xY
-
+tmux send-keys gY
 sleep 0.2
 
 tmux select-window -t $SID:1 > /dev/null 2>&1
 if [ $? -ne 0 ]; then
+    exit 0
+fi
+
+if [ -z "$DISPLAY" ]; then
+    tmux send-keys C-u
+    tmux send-keys "cd "
+    sleep 0.1
+    tmux send-keys "$(tmux paste-buffer)"
+    tmux send-keys C-m
     exit 0
 fi
 
