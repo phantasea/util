@@ -48,19 +48,19 @@ if [[ $size -lt 10000000 ]] && [[ -z "$DISPLAY" ]]; then
     CMD="mpv --vo=drm 2>/dev/null"
 fi
 
-# cannot switch between mpv and other window
-tmux has-session -t $SID 2>/dev/null
-if [[ $? -ne 0 ]] || [[ $CMD =~ "mpv" ]]; then
-    $CMD "$1" 2>/dev/null
-    exit 0
-fi
-
-# only mplayer goes here
 FILES=""
 if [[ $CMD =~ "mplayer" ]]; then
     FILES="*.mp4"
 fi
 
+# cannot switch between mpv and other window
+tmux has-session -t $SID 2>/dev/null
+if [[ $? -ne 0 ]] || [[ $CMD =~ "mpv" ]] || [[ ! -z "$DISPLAY" ]]; then
+    $CMD "$1" $FILES 2>/dev/null &
+    exit 0
+fi
+
+# only mplayer in console goes here
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\" $FILES"
