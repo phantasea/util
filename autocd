@@ -3,7 +3,7 @@
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
 
-tmux list-w | egrep "ranger\*|vifm\*" > /dev/null 2>&1
+tmux list-w | egrep "ranger\*|vifm\*|vifmrun\*" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     exit 0
 fi
