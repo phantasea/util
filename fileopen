@@ -27,6 +27,12 @@ if [[ $* =~ '\' ]]; then
     file=${file//)/\\\)}
 fi
 
+#file is directory
+if [ -d "$file" ]; then
+    nautilus --no-desktop 2>/dev/null "$file" &
+    exit 0
+fi
+
 #echo $file
 if [ ! -f "$file" ]; then
     echo 'Usage1: fileopen [-bB] <file>'
