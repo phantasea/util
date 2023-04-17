@@ -42,8 +42,9 @@ function list() {
     done <<< "$("$monitor" --enumerate-device-files)"
 }
 
+opt=3
 # we can also use "udisksctl info/mount/unmount", but need to re-write list function.
-if type -P devmon udevil &>/dev/null; then
+if [ $opt -eq 1 ] && type -P devmon udevil &>/dev/null; then
     monitor=devmon
 
     function info() {
@@ -55,7 +56,7 @@ if type -P devmon udevil &>/dev/null; then
     function unmount() {
         devmon --unmount "$1"
     }
-elif type -P udisks umount &>/dev/null; then
+elif [ $opt -eq 2 ] && type -P udisks umount &>/dev/null; then
     monitor=udisks
 
     function info() {
@@ -67,7 +68,7 @@ elif type -P udisks umount &>/dev/null; then
     function unmount() {
         umount "$1"
     }
-elif python2 -c 'import dbus' &>/dev/null ||
+elif [ $opt -eq 3 ] && python2 -c 'import dbus' &>/dev/null ||
      ${python3:=python3} -c 'import dbus' &>/dev/null &&
      type -P udisksctl &>/dev/null; then
     python=${python3:-python2}
@@ -86,14 +87,16 @@ def devs():
     om = dbus.Interface(ud_manager_obj, 'org.freedesktop.DBus.ObjectManager')
     for v in om.GetManagedObjects().values():
         drive_info = v.get('org.freedesktop.UDisks2.Block', {})
-        usage = drive_info.get('IdUsage')
+        #usage = drive_info.get('IdUsage')
+        fs = v.get('org.freedesktop.UDisks2.Filesystem', {})
         hint = drive_info.get('HintSystem')
         ro = drive_info.get('ReadOnly')
-        if usage == "filesystem" and not hint and not ro:
+        #if usage == "filesystem" and not hint and not ro:
+        if fs is not None and not hint and not ro:
             device = drive_info.get('Device')
             if device is not None:
                 device = decode(device)
-                fs = v.get('org.freedesktop.UDisks2.Filesystem', {})
+                #fs = v.get('org.freedesktop.UDisks2.Filesystem', {})
                 yield (device, drive_info.get('IdLabel'), fs)
 
 def list_usb():
