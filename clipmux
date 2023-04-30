@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ -z "$DISPLAY" ]]; then
+    tmux paste-buffer
+    exit 0
+fi
+
+xclip -o | xargs -0 tmux setb && tmux paste-buffer
+
 #curr_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
 #if [ $curr_name =~ "term" ]; then
 #    i3-msg exec 'xdotool key ctrl+c'
@@ -10,9 +17,3 @@
 #    i3-msg exec 'xdotool click 3'
 #    i3-msg exec 'xdotool key c'
 #fi
-
-[[ -z "$DISPLAY" ]] && exit 0
-
-xclip -o | xargs -0 tmux setb
-#clip=$(xclip -o)
-#tmux setb "$clip"
