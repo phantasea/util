@@ -1,0 +1,24 @@
+#!/bin/bash
+
+unmount=0
+while getopts "u" opt; do
+    case $opt in
+        u)
+            unmount=1 ;;
+        ?)
+            echo 'Usage: adbmnt [-u]'
+            exit 1;;
+    esac
+done
+shift $((OPTIND -1))
+
+if [ $unmount -eq 1 ]; then
+    umount /media/simone/adbfs
+    exit 0
+fi
+
+output=$(adbfs shell "ls" 2>&1 | grep "error")
+echo "$output"
+[[ ! -z "$output" ]] && exit 1
+
+adbfs /media/simone/adbfs
