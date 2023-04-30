@@ -1,23 +1,26 @@
 #!/bin/bash
 
-[[ -z "$DISPLAY" ]] && SID=0 || SID=1
+#[[ -z "$DISPLAY" ]] && SID=0 || SID=1
+#
+#tmux has-session -t $SID
+#if [ $? -ne 0 ]; then
+#    exit 0
+#fi
 
-tmux has-session -t $SID
-if [ $? -ne 0 ]; then
-    exit 0
-fi
-
-while getopts "pnst" opt; do
+while getopts "npsStx" opt; do
     case $opt in
-        p) action="previous";;
         n) action="next";;
-        s) action="stop";;
+        p) action="previous";;
+        s) action="seek +10";;
+        S) action="seek -10";;
         t) action="toggle-pause";;
-        ?) echo 'Usage: musdo [-pnst]'
+        x) action="stop";;
+        ?) echo 'Usage: musdo [-npsStx]'
            exit 1;;
     esac
 done
 
+#{{{
 #state=$(mocp -i | grep "State:" | cut -d' ' -f2)
 #if [[ action =~ "toggle" ]]; then
 #    if [[ $state =~ "PLAY" ]]; then
@@ -28,6 +31,9 @@ done
 #        action="play"
 #    fi
 #fi
+#}}}
 
 mocp --$action
 exit 0
+
+# vim: foldmethod=marker

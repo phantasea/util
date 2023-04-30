@@ -11,6 +11,8 @@
 #    i3-msg exec 'xdotool key c'
 #fi
 
+[[ -z "$DISPLAY" ]] && exit 0
+
 xclip -o | xargs -0 tmux setb
 #clip=$(xclip -o)
 #tmux setb "$clip"
