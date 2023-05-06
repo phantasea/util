@@ -63,6 +63,11 @@ case "$ext" in
         exiftool "${file}"
         exit 1;;
 
+    epub)
+        pandoc -t plain "${file}" && exit 0
+        epr -d "${file}" && exit 0
+        exit 1;;
+
     djvu)
         djvutxt "${file}" && exit 0
         exiftool "${file}" && exit 0

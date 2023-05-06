@@ -9,7 +9,8 @@ else
 fi
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
-[[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
+[[ ! "$TERM" =~ "screen" ]] && SID=12    #not in tmux session
+[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
 WID=11
 WIN="pdfview"
 

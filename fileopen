@@ -69,8 +69,21 @@ case "$ext" in
         pdfview $OPTS "$file" && exit 0
         ;;
 
-    epub|djvu)
-        zathura "$file" && exit 0
+    epub)
+        if [ -z $DISPLAY ]; then
+            epr "$file" && exit 0
+        else
+            zathura "$file" && exit 0
+        fi
+        ;;
+
+    djvu)
+        if [ -z $DISPLAY ]; then
+            fbpdf "$file" && exit 0
+            exiftool "$file" && exit 0
+        else
+            zathura "$file" && exit 0
+        fi
         ;;
 
     tpp)

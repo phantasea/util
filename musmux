@@ -7,9 +7,11 @@ else
 fi
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
-[[ ! "$TERM" =~ "screen" ]] && SID=13    #not in tmux session
+[[ ! "$TERM" =~ "screen" ]] && SID=12    #not in tmux session
+[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
 WID=6
 WIN="music"
+OPTS=""
 
 while getopts "bd" opt; do
     case $opt in
@@ -45,29 +47,29 @@ tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window $OPTS -n $WIN -t $SID:$WID "stty -ixon; $CMD"
     if [[ "$CMD" =~ "mocp" ]]; then
-        if [ -z "$DISPLAY" ]; then
-            tmux send-keys -t $SID:$WID "/fave" C-m
-            tmux send-keys -t $SID:$WID w
-
-            if [[ "$WIN" =~ "asmr" ]]; then
-                tmux send-keys -t $SID:$WID "=/opt/.porn/asmr" C-m
+        if [[ -z "$DISPLAY" && "$WIN" =~ "asmr" ]]; then
+                sleep 1s
+                tmux list-w -t 13 >/dev/null 2>&1 && tmux move-w -s 0:13 -t 13:13
+                sleep 1s
+                tmux send-keys -t 13:13 "/fave" C-m
+                sleep 1s
+                tmux send-keys -t 13:13 w
+                sleep 1s
+                tmux send-keys -t 13:13 "=/opt/.porn/asmr" C-m
                 exit 0
-            fi
         fi
-    #    tmux send-keys -t $SID:$WID M
-    #    tmux send-keys -t $SID:$WID C-i
-    #    tmux send-keys -t $SID:$WID "/misc" C-m
-    #    tmux send-keys -t $SID:$WID G
-    #    tmux send-keys -t $SID:$WID C-i
-    #    #sleep 1s
-    #    #tmux split-window -v
-    #    #tmux send-keys -t $SID:$WID "ccal -u" C-m
-    #    #tmux select-pane -l
-    #    #tmux split-window -h "tty-clock -c -C 3"
-    #    #tmux resize-pane -R 16
-    #    #tmux select-pane -L
-    #    #tmux swap-pane -D
     fi
+
+    #if [[ "$CMD" =~ "mocp" ]]; then
+    #    sleep 1s
+    #    tmux split-window -v
+    #    tmux send-keys -t $SID:$WID "ccal -u" C-m
+    #    tmux select-pane -l
+    #    tmux split-window -h "tty-clock -c -C 3"
+    #    tmux resize-pane -R 16
+    #    tmux select-pane -L
+    #    tmux swap-pane -D
+    #fi
 
     #if [[ "$CMD" =~ "ncmpc" ]]; then
     #    tmux send-keys -t $SID:$WID M

@@ -15,7 +15,7 @@ fi
 
 # not in tmux session
 if [[ ! "$TERM" =~ "screen" ]]; then
-    SID=13
+    SID=12
     if [ -z "$DISPLAY" ]; then
         CMD='vifm'
     else
@@ -23,6 +23,8 @@ if [[ ! "$TERM" =~ "screen" ]]; then
         CMD='ranger'
     fi
 fi
+
+[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
 
 while getopts "b" opt; do
     case $opt in
