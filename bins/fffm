@@ -12,7 +12,7 @@ FFFM_FAV5="/home/$USER/vids/.porn"
 FFFM_FAV6="/home/$USER/vids/.pr0n"
 FFFM_FAV7="/home/$USER/vids/.vids"
 FFFM_FAV8="/home/$USER/vids/.xxxx"
-FFFM_FAV9="/media/$USER"
+FFFM_FAV9="/home/$USER/vids/.zzzz"
 
 get_os() {
     # Figure out the current operating system to set some specific variables.
@@ -668,7 +668,7 @@ open() {
                 ;;
 
             audio/*)
-                audplay "$1"
+                [[ -z $DISPLAY ]] && audplay "$1" || audplay -B "$1"
                 redraw
                 ;;
 
@@ -1127,7 +1127,7 @@ key() {
         # Quit and store current directory in a file for CD on exit.
         # Don't allow user to redefine 'q' so a bad keybinding doesn't
         # remove the option to quit.
-        q)
+        Q)
             : "${FFFM_CD_FILE:=${XDG_CACHE_HOME:=${HOME}/.cache}/fffm/.fffm_d}"
 
             [[ -w $FFFM_CD_FILE ]] &&

@@ -13,7 +13,7 @@ done
 shift $((OPTIND -1))
 
 if [ $unmount -eq 1 ]; then
-    umount /media/simone/adbfs
+    umount /media/$USER/adbfs
     exit 0
 fi
 
@@ -21,4 +21,4 @@ output=$(adbfs shell "ls" 2>&1 | grep "error")
 echo "$output"
 [[ ! -z "$output" ]] && exit 1
 
-adbfs /media/simone/adbfs
+adbfs /media/$USER/adbfs
