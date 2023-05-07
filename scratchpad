@@ -1,0 +1,11 @@
+#!/bin/bash
+
+[[ ! -z $DISPLAY ]] && exit 0
+tmux -L default has-session -t 13 2>/dev/null || tmux new-session -d -s 13
+
+tmux list-w -t 13 2>/dev/null | grep nova \
+    || tmux new-w -n nova -t 13:12 "fffm /opt/.porn/text"
+
+tmux list-w -t 13 2>/dev/null | grep asmr \
+    || tmux new-w -n asmr -t 13:13 "mocp /opt/.porn/asmr"
+#tmux send-keys -t 13:asmr "/asmr.m3u" C-m)

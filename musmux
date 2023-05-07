@@ -27,7 +27,7 @@ while getopts "bd" opt; do
             if [ -z "$DISPLAY" ]; then
                 CMD="ncmpc -f ~/.config/ncmpc/config -k ~/.config/ncmpc/keys"
             else
-                CMD="mocp"
+                CMD="mocp -C ~/.moc/config2"
             fi
             ;;
 
