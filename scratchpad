@@ -1,7 +1,11 @@
 #!/bin/bash
 
 if [ ! -z $DISPLAY ]; then
-    [[ "$I3_SCRATCHPAD" == "YES" ]] && vifmrun
+    if [[ "$I3_SCRATCHPAD" == "YES" ]]; then
+        tmux -L x-serv has-session -t 9 2>/dev/null \
+            || tmux -L x-serv new-session -s 9 vifmrun
+    fi
+
     exit 0
 fi
 
