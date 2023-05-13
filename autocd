@@ -23,23 +23,27 @@ fi
 tmux send-keys gY
 sleep 0.1
 
-tmux select-window -t $SID:1 > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    exit 0
-fi
+#tmux select-window -t $SID:1 > /dev/null 2>&1
+#if [ $? -ne 0 ]; then
+#    exit 0
+#fi
 
 if [ -z "$DISPLAY" ]; then
-    tmux send-keys C-u
-    tmux send-keys "cd "
+    tmux send-keys -t $SID:1 C-u
+    tmux send-keys -t $SID:1 "cd "
     sleep 0.1
-    tmux send-keys "$(tmux paste-buffer)"
-    tmux send-keys C-m
-    [[ $background -eq 1 ]] && tmux select-window -l
+    tmux send-keys -t $SID:1 "$(tmux paste-buffer)"
+    tmux send-keys -t $SID:1 C-m
+    if [ $background -eq 0 ]; then
+        tmux select-window -t $SID:1
+    fi
     exit 0
 fi
 
-tmux send-keys C-u
-tmux send-keys "cd $(xclip -o -sel clip)"
-tmux send-keys C-m
-[[ $background -eq 1 ]] && tmux select-window -l
+tmux send-keys -t $SID:1 C-u
+tmux send-keys -t $SID:1 "cd $(xclip -o -sel clip)"
+tmux send-keys -t $SID:1 C-m
+if [ $background -eq 0 ]; then
+    tmux select-window -t $SID:1
+fi
 exit 0
