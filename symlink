@@ -121,6 +121,8 @@ ln -sf /opt/conf/surfraw                     ~/.config/surfraw
 ln -sf /opt/conf/mpv                         ~/.config/mpv
 ln -sf /opt/conf/ranger                      ~/.config/ranger
 ln -sf /opt/conf/vim/init.vim                ~/.config/nvim/init.vim
+ln -sf /opt/conf/greenclip.toml              ~/.config/greenclip.toml
+ln -sf /opt/conf/rofi                        ~/.config/rofi
 ln -sf /opt/conf/vimb                        ~/.config/vimb
 ln -sf /opt/conf/vimiv                       ~/.config/vimiv
 ln -sf /opt/conf/zathura                     ~/.config/zathura
