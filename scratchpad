@@ -17,3 +17,17 @@ tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 1
 asmr_cmd="mocp /opt/.porn/asmr"
 tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 13:13 $asmr_cmd
 #tmux send-keys -t 13:asmr "/asmr.m3u" C-m)
+
+exit 0
+
+#scratchlist=$('i3-msg -t get_tree | jq ".nodes|.[]|.|.nodes|.[]|.nodes|.[]|select(.name==\"__i3_scratch\")|.floating_nodes|.[]|.nodes|.[]|.window_properties.class"')
+#"nova"
+#"asmr"
+
+#curr_scratchpad=$('i3-msg -t get_tree | jq ".nodes|.[]|.|.nodes|.[]|.nodes|.[]|select(.name==\"__i3_scratch\")|.floating_nodes|.[]|.nodes|.[]|select(.focused==true).window_properties.class"')
+#[[ -z $curr_scratchpad ]] && i3-msg workspace misc
+
+#ScratchHasNova=$(i3-msg -t get_tree | jq '.nodes[].nodes[].nodes[] | .type == "workspace" and .name =="__i3_scratch" and .floating_nodes[].nodes[].window_properties.class == "nova"' | grep -q true)
+
+#curr_workspace=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
+#[[ $curr_workspace =~ "term" ]] && i3-msg workspace misc

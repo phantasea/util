@@ -23,14 +23,3 @@ printf "%s" "$selected" | xsel -b
 printf "%s" "$selected" | tmux load-buffer -
 #xsel -b < "$selected"
 #tmux load-buffer "$selected"
-
-#curr_name=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
-#if [ $curr_name =~ "term" ]; then
-#    i3-msg exec 'xdotool key ctrl+c'
-#    exit 0
-#fi
-#
-#if [ $curr_name =~ "www" ]; then
-#    i3-msg exec 'xdotool click 3'
-#    i3-msg exec 'xdotool key c'
-#fi
