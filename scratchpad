@@ -11,8 +11,9 @@ fi
 
 tmux -L default has-session -t 13 2>/dev/null || tmux new-session -d -s 13
 
-nova_cmd="fffm /opt/.porn/text"
-tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:12 $nova_cmd
+#nova_cmd="fffm /opt/.porn/text"
+#nova_cmd="ranger /opt/.porn/text"
+#tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:12 $nova_cmd
 
 asmr_cmd="mocp /opt/.porn/asmr"
 tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 13:13 $asmr_cmd
