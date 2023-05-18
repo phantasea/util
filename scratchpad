@@ -9,15 +9,16 @@ if [ ! -z $DISPLAY ]; then
     exit 0
 fi
 
-tmux -L default has-session -t 13 2>/dev/null || tmux new-session -d -s 13
+tmux -L default has-session -t 13 2>/dev/null || tmux new-session -d -s 13 "clear; screenfetch"
 
 #nova_cmd="fffm /opt/.porn/text"
 #nova_cmd="ranger /opt/.porn/text"
-#tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:12 $nova_cmd
+#tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:11 $nova_cmd
 
 asmr_cmd="mocp /opt/.porn/asmr"
 tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 13:13 $asmr_cmd
-#tmux send-keys -t 13:asmr "/asmr.m3u" C-m)
+#tmux send-keys -t 13:asmr "/asmr.m3u" C-m
+#[[ -f /opt/.porn/asmr/asmr.m3u ]] && mocp -a /opt/.porn/asmr/asmr.m3u
 
 exit 0
 
