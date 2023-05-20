@@ -1127,7 +1127,7 @@ key() {
         # Quit and store current directory in a file for CD on exit.
         # Don't allow user to redefine 'q' so a bad keybinding doesn't
         # remove the option to quit.
-        Q)
+        q|Q)
             : "${FFFM_CD_FILE:=${XDG_CACHE_HOME:=${HOME}/.cache}/fffm/.fffm_d}"
 
             [[ -w $FFFM_CD_FILE ]] &&
