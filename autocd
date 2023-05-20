@@ -2,7 +2,7 @@
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ ! "$TERM" =~ "screen" ]] && SID=12    #not in tmux session
-[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
+#[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
 
 background=0
 while getopts "b" opt; do
@@ -15,7 +15,7 @@ while getopts "b" opt; do
 done
 shift $((OPTIND-1))
 
-tmux list-w | egrep "ranger\*|vifm\*|vifmrun\*" > /dev/null 2>&1
+tmux list-w | egrep "ranger\*|vifm\*|vifmrun\*|nova\*" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     exit 0
 fi
