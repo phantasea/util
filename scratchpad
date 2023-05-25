@@ -1,21 +1,45 @@
 #!/bin/bash
 
-if [ ! -z $DISPLAY ]; then
-    if [[ "$I3_SCRATCHPAD" == "YES" ]]; then
-        tmux -L x-serv has-session -t 9 2>/dev/null && exit 0
-        tmux -L x-serv new-session -s 9 -n nova vifmrun
-        #Not working cuz the window is created only when showing scratch
-        #tmux -L x-serv move-window -s 9:nova -t 9:9
-    fi
+OPTS=""
+while getopts "B" opt; do
+    case $opt in
+        B)  OPTS="-B" ;;
+        ?)  echo 'Usage: scratchpad [-B]'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))
+
+## tmux in i3wm
+if [[ ! -z $DISPLAY ]] && [[ "$I3_SCRATCHPAD" == "YES" ]]; then
+    tmux -L x-serv has-session -t 9 2>/dev/null && tmux -L x-serv attach -t 9
+    tmux -L x-serv new-session -s 9 -n nova vifmrun
+    #Not working cuz the window is created only when showing scratch
+    #tmux -L x-serv move-window -s 9:nova -t 9:9
 
     exit 0
 fi
 
-tmux -L default has-session -t 13 2>/dev/null || tmux new-session -d -s 13 "clear; screenfetch"
+## tmux in fbterm
+SID="${1:-pops}"
+APP="${2:-fffm}"
+WIDTH=${3:-81%}
+HEIGHT=${4:-64%}
+
+if [[ "$(tmux display-message -p -F '#{session_name}')" == $SID ]]; then
+    tmux detach-client
+else
+    tmux popup $OPTS -E -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
+fi
+
+exit 0
+
+### For tmux-3.0a(/opt/misc/appimg/tmux.appimage) {{{
+tmux -L default has-session -t 13 2>/dev/null || tmux new-s -d -s 13 "clear; screenfetch"
 
 #nova_cmd="fffm /opt/.porn/text"
-#nova_cmd="ranger /opt/.porn/text"
-#tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:11 $nova_cmd
+nova_cmd="ranger /opt/.porn/text"
+tmux list-w -t 13 2>/dev/null | grep nova > /dev/null || tmux new-w -n nova -t 13:11 $nova_cmd
 
 asmr_cmd="mocp /opt/.porn/asmr"
 tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 13:13 $asmr_cmd
@@ -23,7 +47,9 @@ tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 1
 #[[ -f /opt/.porn/asmr/asmr.m3u ]] && mocp -a /opt/.porn/asmr/asmr.m3u
 
 exit 0
+### }}}
 
+### For reference {{{
 #scratchlist=$('i3-msg -t get_tree | jq ".nodes|.[]|.|.nodes|.[]|.nodes|.[]|select(.name==\"__i3_scratch\")|.floating_nodes|.[]|.nodes|.[]|.window_properties.class"')
 #"nova"
 #"asmr"
@@ -35,3 +61,4 @@ exit 0
 
 #curr_workspace=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
 #[[ $curr_workspace =~ "term" ]] && i3-msg workspace misc
+### }}}
