@@ -1,38 +1,106 @@
 #!/bin/bash
 
+### getopts {{{
 OPTS=""
-while getopts "B" opt; do
+POPS=0
+TEMP=0
+MOVE=0
+CYCLE=0
+while getopts "BMPTY" opt; do
     case $opt in
         B)  OPTS="-B" ;;
-        ?)  echo 'Usage: scratchpad [-B]'
+        M)  MOVE=1    ;;
+        P)  POPS=1    ;;
+        T)  TEMP=1    ;;
+        Y)  CYCLE=1   ;;
+        ?)  echo 'Usage: scratchpad [-BMPTY]'
             exit 1;;
     esac
 done
 shift $((OPTIND-1))
+### }}}
 
-## tmux in i3wm
-if [[ ! -z $DISPLAY ]] && [[ "$I3_SCRATCHPAD" == "YES" ]]; then
-    tmux -L x-serv has-session -t 9 2>/dev/null && tmux -L x-serv attach -t 9
-    tmux -L x-serv new-session -s 9 -n nova vifmrun
-    #Not working cuz the window is created only when showing scratch
-    #tmux -L x-serv move-window -s 9:nova -t 9:9
+### tmux in i3wm {{{
+if [[ ! -z $DISPLAY ]]; then
+    if [[ "$I3_SCRATCHPAD" == "YES" ]]; then
+        tmux -L x-serv has-session -t nova 2>/dev/null && \
+            tmux -L x-serv attach-s -t nova && exit 0
+        tmux -L x-serv new-session -s nova -n nova vifmrun
+    fi
 
     exit 0
 fi
+### }}}
 
-## tmux in fbterm
+### tmux in fbterm {{{
 SID="${1:-pops}"
 APP="${2:-fffm}"
 WIDTH=${3:-81%}
 HEIGHT=${4:-64%}
 
-if [[ "$(tmux display-message -p -F '#{session_name}')" == $SID ]]; then
-    tmux detach-client
-else
-    tmux popup $OPTS -E -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
+CURR_SID=$(tmux display-message -p -F '#{session_name}')
+CURR_WID=$(tmux display-message -p -F '#{window_index}')
+
+if [ $POPS -eq 1 ]; then
+    if [[ "$(tmux display-message -p -F '#{session_name}')" == $SID ]]; then
+        tmux detach-client
+    else
+        tmux popup $OPTS -E -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
+    fi
+
+    exit 0
 fi
 
+if [ $MOVE -eq 1 ]; then
+    tmux popup $OPTS -E -w 80% -h 80% "tmux attach-s -t temp || \
+        (tmux new-s -d -s temp && tmux move-w -s $CURR_SID:$CURR_WID -t temp)"
+    exit 0
+fi
+
+if [ $TEMP -eq 1 ]; then
+    if [[ "$CURR_SID" == "temp" ]]; then
+        tmux detach-client
+    else
+        tmux popup $OPTS -E -w 80% -h 80% "tmux attach-s -t temp"
+    fi
+
+    exit 0
+fi
+
+if [ $CYCLE -eq 1 ]; then  ### {{{
+    if [[ $CURR_SID == 0 ]]; then
+        tmux has-session -t asmr 2>/dev/null && tmux popup -BE -w64% -h64% "tmux attach-s -t asmr" && exit 0
+        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
+        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        exit 0
+    fi
+
+    if [[ "$CURR_SID" == "asmr" ]]; then
+        tmux detach-client -s asmr
+        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
+        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        exit 0
+    fi
+
+    if [[ "$CURR_SID" == "nova" ]]; then
+        tmux detach-client -s nova
+        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        exit 0
+    fi
+
+    if [[ $CURR_SID == "temp" ]]; then
+        tmux detach-client -s temp
+        tmux has-session -t asmr 2>/dev/null && tmux popup -BE -w64% -h64% "tmux attach-s -t asmr" && exit 0
+        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
+        exit 0
+    fi
+
+    exit 0
+fi
+### }}}
+
 exit 0
+### }}}
 
 ### For tmux-3.0a(/opt/misc/appimg/tmux.appimage) {{{
 tmux -L default has-session -t 13 2>/dev/null || tmux new-s -d -s 13 "clear; screenfetch"
@@ -62,3 +130,5 @@ exit 0
 #curr_workspace=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).name')
 #[[ $curr_workspace =~ "term" ]] && i3-msg workspace misc
 ### }}}
+
+# vim: set foldmethod=marker:
