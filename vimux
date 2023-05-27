@@ -7,20 +7,23 @@
 WID=7
 WIN="vim"
 
-[[ -z "$DISPLAY" ]] && prog="vim" || prog="nvim"
+#[[ -z "$DISPLAY" ]] && prog="vim" || prog="nvim"
+prog="vim"
 exe="edit"
 diff=0
 
 while getopts "vc:ds:" opt; do
     case $opt in
         v) 
-           [[ -z "$DISPLAY" ]] && prog="view" || prog="nvim -R"
+           #[[ -z "$DISPLAY" ]] && prog="view" || prog="nvim -R"
+           prog="view"
            exe="view"
            ;;
         c) cmd="$OPTARG";;
         d) 
            diff=1
-           [[ -z "$DISPLAY" ]] && prog="vimdiff" || prog="nvim -d"
+           #[[ -z "$DISPLAY" ]] && prog="vimdiff" || prog="nvim -d"
+           prog="vimdiff"
            WIN="diff"
            WID=3
            ;;
