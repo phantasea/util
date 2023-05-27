@@ -49,6 +49,8 @@ if [[ $size -lt 10000000 ]] && [[ -z "$DISPLAY" ]]; then
     CMD="mpv --vo=drm 2>/dev/null"
 fi
 
+dir=$(dirname -- "$1")
+cd -- "$dir"
 FILES=""
 if [[ $CMD =~ "mplayer" ]]; then
     FILES="*.mp4"
