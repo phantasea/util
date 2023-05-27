@@ -5,15 +5,15 @@ OPTS=""
 POPS=0
 TEMP=0
 MOVE=0
-CYCLE=0
-while getopts "BMPTY" opt; do
+TRAV=0
+while getopts "BPTXY" opt; do
     case $opt in
         B)  OPTS="-B" ;;
-        M)  MOVE=1    ;;
         P)  POPS=1    ;;
         T)  TEMP=1    ;;
-        Y)  CYCLE=1   ;;
-        ?)  echo 'Usage: scratchpad [-BMPTY]'
+        X)  MOVE=1    ;;
+        Y)  TRAV=1   ;;
+        ?)  echo 'Usage: scratchpad [-BPTXY]'
             exit 1;;
     esac
 done
@@ -38,21 +38,25 @@ APP="${2:-fffm}"
 WIDTH=${3:-81%}
 HEIGHT=${4:-64%}
 
+# tmux display-message -p -d 5000 -t session_name:window_index.pane_index
+# tmux display-message == "[1] 7:vim, current pane 1 - (11:13 27-May-23)"
+# [#{session_name}] #{window_index}:#{window_name}, current #{pane_index}
 CURR_SID=$(tmux display-message -p -F '#{session_name}')
 CURR_WID=$(tmux display-message -p -F '#{window_index}')
 
+POPUP="tmux popup $OPTS -E -xC -yC"
 if [ $POPS -eq 1 ]; then
-    if [[ "$(tmux display-message -p -F '#{session_name}')" == $SID ]]; then
+    if [[ "$CURR_SID" == $SID ]]; then
         tmux detach-client
-    else
-        tmux popup $OPTS -E -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
+    elif [[ ! "$CURR_SID" =~ (asmr|nova|temp) ]]; then
+        $POPUP -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
     fi
 
     exit 0
 fi
 
 if [ $MOVE -eq 1 ]; then
-    tmux popup $OPTS -E -w 80% -h 80% "tmux attach-s -t temp || \
+    $POPUP -w80% -h80% "tmux attach-s -t temp || \
         (tmux new-s -d -s temp && tmux move-w -s $CURR_SID:$CURR_WID -t temp)"
     exit 0
 fi
@@ -60,38 +64,43 @@ fi
 if [ $TEMP -eq 1 ]; then
     if [[ "$CURR_SID" == "temp" ]]; then
         tmux detach-client
-    else
-        tmux popup $OPTS -E -w 80% -h 80% "tmux attach-s -t temp"
+    elif [[ ! "$CURR_SID" =~ (asmr|nova|temp) ]]; then
+        $POPUP -w80% -h80% "tmux attach-s -t temp"
     fi
 
     exit 0
 fi
 
-if [ $CYCLE -eq 1 ]; then  ### {{{
+HAS_SESS="tmux has-session -t"
+if [ $TRAV -eq 1 ]; then  ### {{{
+    # this cycle-thru way shows each client/session NOT as POPUP
+    #tmux switch-client -n && exit 0
+
     if [[ $CURR_SID == 0 ]]; then
-        tmux has-session -t asmr 2>/dev/null && tmux popup -BE -w64% -h64% "tmux attach-s -t asmr" && exit 0
-        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
-        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        $HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
+        $HAS_SESS nova 2>/dev/null && $POPUP    -w81% -h64% "tmux attach-s -t nova" && exit 0
+        $HAS_SESS temp 2>/dev/null && $POPUP    -w80% -h80% "tmux attach-s -t temp" && exit 0
         exit 0
     fi
 
     if [[ "$CURR_SID" == "asmr" ]]; then
         tmux detach-client -s asmr
-        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
-        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        $HAS_SESS nova 2>/dev/null && $POPUP    -w81% -h64% "tmux attach-s -t nova" && exit 0
+        $HAS_SESS temp 2>/dev/null && $POPUP    -w80% -h80% "tmux attach-s -t temp" && exit 0
         exit 0
     fi
 
     if [[ "$CURR_SID" == "nova" ]]; then
         tmux detach-client -s nova
-        tmux has-session -t temp 2>/dev/null && tmux popup -E  -w80% -h80% "tmux attach-s -t temp" && exit 0
+        $HAS_SESS temp 2>/dev/null && $POPUP    -w80% -h80% "tmux attach-s -t temp" && exit 0
+        $HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
         exit 0
     fi
 
     if [[ $CURR_SID == "temp" ]]; then
         tmux detach-client -s temp
-        tmux has-session -t asmr 2>/dev/null && tmux popup -BE -w64% -h64% "tmux attach-s -t asmr" && exit 0
-        tmux has-session -t nova 2>/dev/null && tmux popup -E  -w81% -h64% "tmux attach-s -t nova" && exit 0
+        $HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
+        $HAS_SESS nova 2>/dev/null && $POPUP    -w81% -h64% "tmux attach-s -t nova" && exit 0
         exit 0
     fi
 
