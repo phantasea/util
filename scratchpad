@@ -93,14 +93,14 @@ if [ $TRAV -eq 1 ]; then  ### {{{
     if [[ "$CURR_SID" == "nova" ]]; then
         tmux detach-client -s nova
         $HAS_SESS temp 2>/dev/null && $POPUP    -w80% -h80% "tmux attach-s -t temp" && exit 0
-        $HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
+       #$HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
         exit 0
     fi
 
     if [[ $CURR_SID == "temp" ]]; then
         tmux detach-client -s temp
-        $HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
-        $HAS_SESS nova 2>/dev/null && $POPUP    -w81% -h64% "tmux attach-s -t nova" && exit 0
+       #$HAS_SESS asmr 2>/dev/null && $POPUP -B -w64% -h64% "tmux attach-s -t asmr" && exit 0
+       #$HAS_SESS nova 2>/dev/null && $POPUP    -w81% -h64% "tmux attach-s -t nova" && exit 0
         exit 0
     fi
 
