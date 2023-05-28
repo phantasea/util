@@ -3,6 +3,7 @@
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ ! "$TERM" =~ "screen" ]] && SID=12    #not in tmux session
 [[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
+[[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
 WID=5
 WIN="vidplay"
 
@@ -67,9 +68,10 @@ fi
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$1\" $FILES"
-    if [[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]]; then
-        tmux detach-client
-    fi
+    #CURR_SID="$(tmux display-message -p -F '#{session_name}')"
+    #if [[ $CURR_SID == "nova" && $DISPLAY == "" ]]; then
+    #    tmux detach-client
+    #fi
 fi
 
 exit 0
