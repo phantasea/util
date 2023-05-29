@@ -3,7 +3,7 @@
 file=$*
 file=${file// /\\\ }
 
-[ ! -f $file ] && exit 1
+[[ ! -f $file ]] && exit 1
 
 vifm --remote -c "edit $file"
 

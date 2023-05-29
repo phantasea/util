@@ -16,7 +16,7 @@ exit 0
 # https://github.com/erebe/greenclip
 
 selected="$(greenclip print | fzf -e -i --reverse)"
-[ -z "$selected" ] && exit
+[[ -z "$selected" ]] && exit
 
 # add to tmux and X11 clipboard
 printf "%s" "$selected" | xsel -b

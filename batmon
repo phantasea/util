@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ "$(cat /sys/class/power_supply/BAT0/status)" = "Charging" ] && exit
+[[ "$(cat /sys/class/power_supply/BAT0/status)" == "Charging" ]] && exit
 
 #bat=` acpi | awk -F, '/,.*%/ {print $2}' | awk '{print $1}' | awk -F% '{print $1}'`
 bat=$(cat /sys/class/power_supply/BAT0/capacity)
