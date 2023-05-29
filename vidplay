@@ -9,7 +9,7 @@ WIN="vidplay"
 
 [[ -z "$DISPLAY" ]] && CMD="mplayer" || CMD="mpv 2>/dev/null"
 
-while getopts "bB" opt; do
+while getopts "bBx" opt; do
     case $opt in
         B)
             if [[ $CMD =~ "mplayer" ]]; then
@@ -25,8 +25,13 @@ while getopts "bB" opt; do
                 CMD="mplayer -vo x11"
             fi
             ;;
+        x)
+            if [ -z "$DISPLAY" ]; then
+                CMD="mpv --vo=drm 2>/dev/null"
+            fi
+            ;;
         ?)
-            echo 'Usage: vidmux [-bB] <file>'
+            echo 'Usage: vidmux [-bBx] <file>'
             exit 1;;
     esac
 done
