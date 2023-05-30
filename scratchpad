@@ -62,6 +62,7 @@ if [ $MOVE -eq 1 ]; then
 fi
 
 if [ $TEMP -eq 1 ]; then
+    tmux has-session -t temp || exit 0
     if [[ "$CURR_SID" == "temp" ]]; then
         tmux detach-client
     elif [[ ! "$CURR_SID" =~ (asmr|nova|temp) ]]; then
