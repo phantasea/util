@@ -50,6 +50,9 @@ if [ $POPS -eq 1 ]; then
         tmux detach-client
     elif [[ ! "$CURR_SID" =~ (asmr|nova|temp) ]]; then
         $POPUP -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
+    else
+        tmux detach-client
+        $POPUP -w$WIDTH -h$HEIGHT "tmux attach-s -t $SID || tmux new-s -s $SID $APP"
     fi
 
     exit 0
