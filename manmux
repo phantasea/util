@@ -7,10 +7,20 @@
 WID=7
 WIN="vim"
 CMD="vim"
+APP="man"
+
+while getopts "w" opt; do
+    case $opt in
+        w)  APP="w3mman" ;;
+        ?)  echo 'Usage: manmux [-w]'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
-    man $1
+    $APP $*
     exit 0
 fi
 
