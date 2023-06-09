@@ -22,10 +22,11 @@ shift $((OPTIND-1))
 
 ### tmux in i3wm {{{
 if [[ ! -z $DISPLAY ]]; then
-    if [[ "$I3_SCRATCHPAD" == "YES" ]]; then
+    if [[ ! -z $I3_SCRATCHPAD ]]; then
+        [[ "$I3_SCRATCHPAD" == "VIFM" ]] && APP=vifmrun || APP=ranger
         tmux -L x-serv has-session -t nova 2>/dev/null && \
             tmux -L x-serv attach-s -t nova && exit 0
-        tmux -L x-serv new-session -s nova -n nova vifmrun
+        tmux -L x-serv new-session -s nova -n nova $APP
     fi
 
     exit 0
