@@ -89,19 +89,20 @@ wca=$(ls /opt/.porn/asmr/asmr.mp3 2>/dev/null | wc -l)
 
 #list which process is occupying the mount point
 if [ $pls -eq 1 ]; then
-    [[ $txt == 1 ]] && [[ $wct != 0 ]] && echo ttt-lsof && lsof /opt/.porn/text
-    [[ $aud == 1 ]] && [[ $wca != 0 ]] && echo aaa-lsof && lsof /opt/.porn/asmr
-    [[ $sds == 1 ]] && [[ $wcs != 0 ]] && echo sss-lsof && lsof /media/simone/sandisk_s
-    [[ $sdu == 1 ]] && [[ $wcu != 0 ]] && echo uuu-lsof && lsof /media/simone/sandisk_u
-    [[ $sdv == 1 ]] && [[ $wcv != 0 ]] && echo vvv-lsof && lsof /media/simone/sandisk_v
-    [[ $sdw == 1 ]] && [[ $wcw != 0 ]] && echo www-lsof && lsof /media/simone/sandisk_w
-    [[ $sdx == 1 ]] && [[ $wcx != 0 ]] && echo xxx-lsof && {
-        lsof /media/simone/sandisk_x1
-        lsof /media/simone/sandisk_x2
-    }
-    [[ $sdz == 1 ]] && [[ $wcz != 0 ]] && echo zzz-lsof && lsof /media/simone/sandisk_z
+  [[ $txt  == 1 ]] && [[ $wct != 0 ]] && lsof /opt/.porn/text          && echo -e "==ttt-lsof\n"
+  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /opt/.porn/asmr          && echo -e "==aaa-lsof\n"
+  [[ $winX == 1 ]] && [[ $wcb != 0 ]] && lsof /media/simone/winX       && echo -e "==bbb-lsof\n"
+  [[ $winC == 1 ]] && [[ $wcc != 0 ]] && lsof /media/simone/winC       && echo -e "==ccc-lsof\n"
+  [[ $winD == 1 ]] && [[ $wcd != 0 ]] && lsof /media/simone/winD       && echo -e "==ddd-lsof\n"
+  [[ $sds  == 1 ]] && [[ $wcs != 0 ]] && lsof /media/simone/sandisk_s  && echo -e "==sss-lsof\n"
+  [[ $sdu  == 1 ]] && [[ $wcu != 0 ]] && lsof /media/simone/sandisk_u  && echo -e "==uuu-lsof\n"
+  [[ $sdv  == 1 ]] && [[ $wcv != 0 ]] && lsof /media/simone/sandisk_v  && echo -e "==vvv-lsof\n"
+  [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && lsof /media/simone/sandisk_w  && echo -e "==www-lsof\n"
+  [[ $sdx  == 1 ]] && [[ $wcx != 0 ]] && lsof /media/simone/sandisk_x1 && echo -e "==xx1-lsof\n"
+  [[ $sdx  == 1 ]] && [[ $wcx != 0 ]] && lsof /media/simone/sandisk_x2 && echo -e "==xx2-lsof\n"
+  [[ $sdz  == 1 ]] && [[ $wcz != 0 ]] && lsof /media/simone/sandisk_z  && echo -e "==zzz-lsof\n"
 
-    exit 0
+  exit 0
 fi
 
 #umount the specific mount point
