@@ -112,9 +112,8 @@ if [ $TRAV -eq 1 ]; then  ### {{{
     exit 0
 fi
 ### }}}
-
-exit 0
 ### }}}
+exit 0
 
 ### For tmux-3.0a(/opt/misc/appimg/tmux.appimage) {{{
 tmux -L default has-session -t 13 2>/dev/null || tmux new-s -d -s 13 "clear; screenfetch"
@@ -127,9 +126,8 @@ asmr_cmd="mocp /opt/.porn/asmr"
 tmux list-w -t 13 2>/dev/null | grep asmr > /dev/null || tmux new-w -n asmr -t 13:13 $asmr_cmd
 #tmux send-keys -t 13:asmr "/asmr.m3u" C-m
 #[[ -f /opt/.porn/asmr/asmr.m3u ]] && mocp -a /opt/.porn/asmr/asmr.m3u
-
-exit 0
 ### }}}
+exit 0
 
 ### For reference {{{
 #scratchlist=$('i3-msg -t get_tree | jq ".nodes|.[]|.|.nodes|.[]|.nodes|.[]|select(.name==\"__i3_scratch\")|.floating_nodes|.[]|.nodes|.[]|.window_properties.class"')

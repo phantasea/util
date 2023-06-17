@@ -1,10 +1,10 @@
 #!/bin/bash
 
 file=$*
-file=${file// /\\\ }
+#file=${file// /\\\ }
 
-[[ ! -f $file ]] && exit 1
+[[ ! -f "$file" ]] && exit 1
 
-vifm --remote -c "goto $file"
+vifm --remote -c "goto \"$file\""
 
 exit 0

@@ -146,6 +146,9 @@ ln -sf /opt/conf/syncthing/key.pem           ~/.config/syncthing/key.pem
 ln -sf /opt/conf/syncthing/csrftokens.txt    ~/.config/syncthing/csrftokens.txt
 ln -sf /opt/conf/user-dirs.dirs              ~/.config/user-dirs.dirs
 ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
+ln -sf /opt/misc/apps/powerline/powerline/bindings      /opt/conf/powerline/apps
+ln -sf /opt/misc/apps/powerline/powerline/config_files  /opt/conf/powerline/conf
+ln -sf /opt/conf/powerline/conf              ~/.config/powerline
 
 sudo ln -sf /opt/conf/updatedb.conf          /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules       /etc/udev/rules.d/51-android.rules
