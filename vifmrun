@@ -6,7 +6,7 @@ if [ -z "$DISPLAY" ]; then
 fi
 
 if [ -z "$(command -v ueberzug)" ]; then
-    exec vifm "$@"
+    exec vifm --server-name vifm-gui "$@"
 else
     cleanup() {
         exec 3>&-
@@ -21,6 +21,6 @@ else
     exec 3>"$FIFO_UEBERZUG"
     trap cleanup EXIT
 
-    vifm "$@" 3>&-
+    vifm --server-name vifm-gui "$@" 3>&-
     vifmimg clear
 fi

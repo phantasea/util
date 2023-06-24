@@ -4,7 +4,7 @@ SID=0
 WID=9
 
 if [ -z "$DISPLAY" ]; then
-    CMD='vifm'
+    CMD='vifm --server-name vifm-tty'
     WIN='vifm'
 else
     SID=1

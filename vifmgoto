@@ -5,6 +5,7 @@ file=$*
 
 [[ ! -f "$file" ]] && exit 1
 
-vifm --remote -c "goto \"$file\""
+[[ -z "$DISPLAY" ]] && SERV='vifm-tty' || SERV='vifm-gui'
+vifm --server-name $SERV --remote -c "goto \"$file\""
 
 exit 0
