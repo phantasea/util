@@ -3,7 +3,13 @@
 file=$*
 #file=${file// /\\\ }
 
-[[ ! -f "$file" ]] && exit 1
+if [[ ! -f "$file" ]]; then
+    if [[ ! -f "$1" ]]; then
+        exit
+    fi
+
+    file=$1
+fi
 
 [[ -z "$DISPLAY" ]] && SERV='vifm-tty' || SERV='vifm-gui'
 vifm --server-name $SERV --remote -c "goto \"$file\""

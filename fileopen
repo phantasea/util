@@ -21,7 +21,7 @@ fi
 [ $# -eq 0 ] && exit 1
 
 file="$*"
-if [[ $* =~ '\' ]]; then
+if [[ $file =~ '\' ]]; then
     file=${file// /\\\ }
     file=${file//(/\\\(}
     file=${file//)/\\\)}
@@ -35,8 +35,17 @@ fi
 
 #echo $file
 if [ ! -f "$file" ]; then
-    echo 'Usage1: fileopen [-bB] <file>'
-    exit 1
+    if [ ! -f "$1" ]; then
+        echo -e 'Usage1: fileopen [-bB] <file>\nfile='\"$file\"
+        exit 1
+    fi
+
+    file="$1"
+    if [[ $file =~ '\' ]]; then
+        file=${file// /\\\ }
+        file=${file//(/\\\(}
+        file=${file//)/\\\)}
+    fi
 fi
 
 ext="${file##*.}"
