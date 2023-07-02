@@ -106,7 +106,7 @@ esac
 filemimetype="$(file --dereference --brief --mime-type -- "${file}")"
 case "${filemimetype}" in
     text/*|*/json)
-        vimux "$file" && exit 0
+        vimux $OPTS "$file" && exit 0
         ;;
 esac
 
