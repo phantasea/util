@@ -3,8 +3,39 @@
 #abspath=$(realpath "$1")
 #abspath=$(readlink -f "$1")
 #find "$abspath" -name '*.mp3' > "$2"
-
 #find /opt/auds -name '*.mp3' | sort -f > ~/auds/myfav.m3u
 #find /opt/auds/*.mp3 > ~/auds/myfav.m3u
 
+force=1
+while getopts "F" opt; do
+    case $opt in
+        F)
+            force=0 ;;
+        ?)
+            echo 'Usage: genm3u [-F]'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ $force -eq 1 ]; then
+    find ~/auds/*.mp3 > ~/auds/00.fave.m3u
+    exit 0
+fi
+
+[[ ! -f ~/.cache/auds_chk_sum ]] && exit 1
+oldsum="$(< ~/.cache/auds_chk_sum)"
+newsum="$(ls -l ~/auds/*.mp3 | sha256sum)"
+
+[[ $newsum == $oldsum ]] && exit 0
+
 find ~/auds/*.mp3 > ~/auds/00.fave.m3u
+ls -l ~/auds/*.mp3 | sha256sum > ~/.cache/auds_chk_sum
+
+if [ -z $DISPLAY ]; then
+    echo '---fave.m3u updated!---' | wall
+else
+    export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && notify-send '---fave.m3u updated!---'
+fi
+#watch --chgexit -n 360 "ls -l ~/auds/*.mp3 | sha256sum" \
+#   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && notify-send '---fave.m3u updated!---'
