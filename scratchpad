@@ -42,6 +42,7 @@ HEIGHT=${4:-64%}
 # [#{session_name}] #{window_index}:#{window_name}, current #{pane_index}
 CURR_SID=$(tmux display-message -p -F '#{session_name}')
 CURR_WID=$(tmux display-message -p -F '#{window_index}')
+CURR_WIN=$(tmux display-message -p -F '#{window_name}')
 
 POPUP="tmux popup $OPTS -E -xC -yC"
 if [ $POPS -eq 1 ]; then
@@ -58,6 +59,8 @@ if [ $POPS -eq 1 ]; then
 fi
 
 if [ $MOVE -eq 1 ]; then
+    [[ $CURR_WIN =~ (bash|vim|vifm|ranger) ]] && exit 0
+
     $POPUP -w80% -h80% "tmux attach-s -t temp || \
         (tmux new-s -d -s temp && tmux move-w -s $CURR_SID:$CURR_WID -t temp)"
     exit 0
