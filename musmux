@@ -13,7 +13,7 @@ WID=6
 WIN="music"
 OPTS=""
 
-while getopts "bd" opt; do
+while getopts "bdB" opt; do
     case $opt in
         d)
             OPTS="-d"
@@ -31,7 +31,11 @@ while getopts "bd" opt; do
             fi
             ;;
 
-        ?)  echo 'Usage: musmux [-bd]'
+        B)
+            CMD="vimpc"
+            ;;
+
+        ?)  echo 'Usage: musmux [-bdB]'
             exit 1;;
     esac
 done
