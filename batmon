@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "$(cat /sys/class/power_supply/BAT0/status)" == "Charging" ]] && exit
+[[ "$(cat /sys/class/power_supply/BAT0/status)" =~ ("Full"|"Charging") ]] && exit
 
 #bat=` acpi | awk -F, '/,.*%/ {print $2}' | awk '{print $1}' | awk -F% '{print $1}'`
 bat=$(cat /sys/class/power_supply/BAT0/capacity)
@@ -8,9 +8,11 @@ bat=$(cat /sys/class/power_supply/BAT0/capacity)
 if [ "$bat" -lt 20 ]; then
     # crontab cannot get $DISPLAY correctly
     if [ ! -z $DISPLAY ]; then
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && notify-send -u critical "Battery critically low!"
+        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && \
+            notify-send -u critical "Battery critically low!"
     else
         echo "Battery is LOW ($bat%), Charge ASAP!" | wall
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && notify-send -u critical "Battery critically low!"
+        export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && \
+            notify-send -u critical "Battery critically low!"
     fi
 fi
