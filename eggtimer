@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo 'mpv ~/misc/countdown-1.wav' | at "$@"
+#echo 'DISPLAY=:0.0 zenity --info --text "TIME UP!!!"' | at "$@"
