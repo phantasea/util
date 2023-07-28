@@ -123,7 +123,7 @@ if [ $mnt -eq 0 ]; then
   [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && echo aaa-umnt && {
       sudo umount /opt/.porn/asmr
-      sudo umount /usr/local/.porn/auds
+      sudo umount /media/simone/winX/auds
   }
   [[ $sdx  == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt && {
       sudo umount /media/simone/sandisk_x1
@@ -163,9 +163,10 @@ if [ $wcp -eq 0 ]; then
   
   #mount asmr manually
   if [ $aud -eq 1 ] && [ $wca -eq 0 ]; then
+    sleep 1s
     echo +aaa+++
-    sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     sudo mount -t ecryptfs /opt/.porn/asmr       /opt/.porn/asmr       -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
  
   #mount sandisk_o manually
@@ -270,7 +271,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
     if {$aud == 1 && $wca != 0} {
       puts "\n\n-auds-"
       sleep 0.5
-      spawn sudo umount /usr/local/.porn/auds
+      spawn sudo umount /media/simone/winX/auds
       expect "password"
       send "$password\r"
 
@@ -372,7 +373,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
 
   if {$aud == 1 && $wca == 0} {
     puts "\n\n+auds+"
-    spawn sudo mount -t ecryptfs /usr/local/.porn/auds /usr/local/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
     send "$password\r"
     expect "Passphrase"

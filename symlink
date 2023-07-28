@@ -13,7 +13,7 @@ mkdir mpd imv bat i3 i3status syncthing
 
 sudo chown -R simone:simone /media/simone
 cd /media/simone
-mkdir adbfs sandisk-s sandisk-u sandisk-v sandisk-w sandisk-x1 sandisk-x2 sandiskz winD winX
+mkdir adbfs sandisk_o sandisk_s sandisk_u sandisk_v sandisk_w sandisk_x1 sandisk_x2 sandisk_z winD winX
 
 sudo chown -R simone:simone /opt
 cd /opt
