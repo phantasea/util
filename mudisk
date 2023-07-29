@@ -166,6 +166,12 @@ if [ $wcp -eq 0 ]; then
     sleep 1s
     echo +aaa+++
     sudo mount -t ecryptfs /opt/.porn/asmr       /opt/.porn/asmr       -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+
+    if [[ $wcb -eq 0 ]]; then
+      echo +winX-auds+++
+      sudo mount -o rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+      sleep 1s
+    fi
     sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
  
