@@ -80,7 +80,7 @@ case "$ext" in
 
     epub)
         if [ -z $DISPLAY ]; then
-            epr "$file" && exit 0
+            epy "$file" && exit 0
         else
             zathura "$file" && exit 0
         fi

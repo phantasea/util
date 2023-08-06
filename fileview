@@ -65,7 +65,7 @@ case "$ext" in
 
     epub)
         pandoc -t plain "${file}" && exit 0
-        epr -d "${file}" && exit 0
+        epy -d "${file}" && exit 0
         exit 1;;
 
     djvu)
