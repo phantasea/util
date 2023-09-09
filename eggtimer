@@ -1,6 +1,8 @@
 #!/bin/bash
 
-[[ "$@" =~ ^\+ ]] && NOW="now" || NOW=""
+NOW=""
+if [[ -z "$@" ]] || [[ "$@" =~ ^\+ ]]; then
+    NOW="now"
+fi
 
-echo "mpv ~/misc/countdown-1.wav; DISPLAY=:0.0 zenity --info --text 'TIME UP!!!'" \
-    | at $NOW "$@"
+echo "mpv ~/auds/00.countdown-1.wav; DISPLAY=:0.0 zenity --info --text 'TIME UP!!!'" | at $NOW "$@"
