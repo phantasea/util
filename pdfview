@@ -4,8 +4,8 @@ if [ -z "$DISPLAY" ]; then
     #CMD="jfbview --cache_size=5"
     CMD="fimgs"
 else
-    #CMD="zathura 2>/dev/null"
-    CMD="zathura.sh 2>/dev/null"
+    CMD="zathura 2>/dev/null"
+    #CMD="zathura.sh 2>/dev/null"
 fi
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
