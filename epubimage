@@ -12,7 +12,7 @@ content = [u'<html> <head></head> <body>']
 curdir = os.path.abspath(os.path.dirname("."))
 imgsrc = '<img src="' + curdir + '/{}"/>'
 
-for filename in os.listdir(curdir):
+for filename in sorted(os.listdir(curdir)):
   if filename.endswith(".jpg"):
     image_file = open(curdir + "/" + filename, 'rb').read()
     image = epub.EpubImage()
