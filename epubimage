@@ -2,24 +2,36 @@
 # -*- coding: utf-8 -*-
 
 from ebooklib import epub
-import os
+import sys, os
+
+argc = len(sys.argv) - 1
+if argc > 2 or argc < 1:
+    print("One argument is mandatory!")
+    sys.exit(1)
+
+imgdir = str(sys.argv[1])
+if not os.path.isdir(imgdir):
+    print("The argument must be a directory!")
+    sys.exit(1)
+
+#os.chdir(imgdir)
+#imgdir = os.path.abspath(os.path.dirname("."))
+imgdir = os.path.abspath(imgdir)
+srctag = '<img src="' + imgdir + '/{}"/>'
+content = [u'<html> <head></head> <body>']
 
 book = epub.EpubBook()
 book.set_title("my_comic_book")
 book.set_language('en')
 
-content = [u'<html> <head></head> <body>']
-curdir = os.path.abspath(os.path.dirname("."))
-imgsrc = '<img src="' + curdir + '/{}"/>'
-
-for filename in sorted(os.listdir(curdir)):
+for filename in sorted(os.listdir(imgdir)):
   if filename.endswith(".jpg"):
-    image_file = open(curdir + "/" + filename, 'rb').read()
+    image_file = open(imgdir + "/" + filename, 'rb').read()
     image = epub.EpubImage()
-    image.file_name = curdir[1:] + "/" + filename
+    image.file_name = imgdir[1:] + "/" + filename
     image.content = image_file
     book.add_item(image)
-    content.append(imgsrc.format(filename))
+    content.append(srctag.format(filename))
 
 content.append('</body> </html>')
 c1 = epub.EpubHtml(title='Images', file_name='images.xhtml', lang='en')
@@ -28,4 +40,5 @@ c1.content=''.join(content)
 book.add_item(c1)
 book.spine = ['nav', c1]
 
-epub.write_epub("my_comic.epub", book, {})
+output_filename = imgdir + "/my_comic.epub"
+epub.write_epub(output_filename, book, {})
