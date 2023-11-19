@@ -69,12 +69,13 @@ if [ -z "$DISPLAY" ]; then
 # xwindow
 else
     #PROG="feh -ZF"
-    PROG="feh -F"
+    PROG="feh -F -S filename"
     if [ "$ALT" = "1" ]; then
         PROG="sxiv -f"
         #PROG="sxiv -ft"
     elif [ "$ALT" = "2" ]; then
-        PROG="pqiv -f"
+        PROG="feh -F -S mtime"
+        #PROG="pqiv -f"
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
         #PROG="pho -p"
         #PROG='vimiv'
@@ -82,8 +83,8 @@ else
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
-        #PROG="feh -ZF -D 1"
-        PROG="feh -F -D 1"
+        #PROG="feh -S filename -ZF -D 1"
+        PROG="feh -S filename -F -D 1"
         if [ "$ALT" = "1" ]; then
             PROG="pqiv -fs"
         elif [ "$ALT" = "2" ]; then
