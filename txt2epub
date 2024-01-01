@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ ! -f "$1" ]; then
+    echo $1
+    echo 'is not a file!'
+    exit 1
+fi
+
+filename=$(basename -- "$1")
+fileext="${filename##*.}"
+filebase="${filename%.*}"
+#echo $filename
+
+shopt -s nocasematch
+if [[ "$fileext" != "txt" ]]; then
+    echo $1, $fileext
+    echo "Not ***.txt file!"
+    exit 2
+fi
+
+filepath=$(realpath -- "$1")
+dirname=$(dirname -- "$filepath")
+#echo $dirname
+cd -- "$dirname"
+
+ebook-convert "$filename" "$filebase".epub \
+        --no-default-epub-cover \
+        --page-breaks-before=/ --chapter=/ \
+
+#       --enable-heuristics \
+#       --dont-split-on-page-breaks \
+#       --line-height=1 \
+
+
+#~% FILE="example.tar.gz"
+#~% echo "${FILE%%.*}"
+#   example
+#~% echo "${FILE%.*}"
+#   example.tar
+#~% echo "${FILE#*.}"
+#   tar.gz
+#~% echo "${FILE##*.}"
+#   gz
