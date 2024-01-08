@@ -6,30 +6,15 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-which uchardet > /dev/null
-if [[ ! $? -eq 0 ]]; then
-    echo "sudo apt install uchardet"
-    exit 3
-fi
-
-icode=$(uchardet "$1")
-#echo "$icode"
-
-#icode=$(file -bi "$1")
-#icode="utf8"
-if [ ! -z "$2" ]; then
-    icode="$2"
-fi
-
 filename=$(basename -- "$1")
 fileext="${filename##*.}"
 filebase="${filename%.*}"
 #echo $filename
 
 shopt -s nocasematch
-if [[ "$fileext" != "txt" ]]; then
+if [[ "$fileext" != "html" ]]; then
     echo $1, $fileext
-    echo "Not ***.txt file!"
+    echo "Not ***.html file!"
     exit 2
 fi
 
@@ -39,14 +24,12 @@ dirname=$(dirname -- "$filepath")
 cd -- "$dirname"
 
 ebook-convert "$filename" "$filebase".epub \
-        --input-encoding="$icode" \
         --no-default-epub-cover \
-        --flow-size=0 \
-        --dont-split-on-page-breaks \
-        --enable-heuristics \
+        --line-height=6 \
         --page-breaks-before=/ --chapter=/  >/dev/null
 
-#       --line-height=1 \
+#       --enable-heuristics \
+#       --dont-split-on-page-breaks \
 
 
 #~% FILE="example.tar.gz"
