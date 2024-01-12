@@ -6,13 +6,16 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-which uchardet > /dev/null
-if [[ ! $? -eq 0 ]]; then
+#which uchardet > /dev/null
+#if [[ ! $? -eq 0 ]]; then
+if ! command -v uchardet > /dev/null 2>&1; then
     echo "sudo apt install uchardet"
-    exit 3
+    exit 2
 fi
 
 icode=$(uchardet "$1")
+#file -bi "$1"
+#chardet "$1"
 #echo "$icode"
 
 #icode=$(file -bi "$1")
@@ -30,7 +33,7 @@ shopt -s nocasematch
 if [[ "$fileext" != "txt" ]]; then
     echo $1, $fileext
     echo "Not ***.txt file!"
-    exit 2
+    exit 3
 fi
 
 filepath=$(realpath -- "$1")
