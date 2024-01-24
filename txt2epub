@@ -45,6 +45,7 @@ ebook-convert "$filename" "$filebase".epub \
         --input-encoding="$icode" \
         --no-default-epub-cover \
         --flow-size=0 \
+        --disable-format-scene-breaks \
         --dont-split-on-page-breaks \
         --enable-heuristics \
         --page-breaks-before=/ --chapter=/  >/dev/null
