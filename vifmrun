@@ -5,7 +5,10 @@ if [ -z "$DISPLAY" ]; then
     exit 0
 fi
 
-if [ -z "$(command -v ueberzug)" ]; then
+if [ -z "$(command -v vifm)" ]; then
+    printf "vifm isn't installed on your system!\n"
+    exit 1
+elif [ -z "$(command -v ueberzug)" ]; then
     exec vifm --server-name vifm-gui "$@"
 else
     cleanup() {
