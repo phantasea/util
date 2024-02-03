@@ -2,7 +2,7 @@
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ -z "$TMUX" ]] && SID=12  #not in tmux session
-[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
+[[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 [[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
 WID=5
 WIN="vidplay"

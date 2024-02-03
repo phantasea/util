@@ -23,7 +23,7 @@ if [[ ! "$TERM" =~ "screen" ]]; then
     fi
 fi
 
-[[ $(tmux ls | egrep "13:.*attached") ]] && SID=13
+[[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 
 while getopts "b" opt; do
     case $opt in
