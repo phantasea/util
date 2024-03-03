@@ -10,6 +10,7 @@ aud=0
 sda=0
 sdo=0
 sds=0
+sdt=0
 sdu=0
 sdv=0
 sdw=0
@@ -18,26 +19,28 @@ sdz=0
 mnt=1
 RWRO="ro"
 
-while getopts "abcdelmostuvwxzUR" opt; do
+while getopts "abcdeElmostuvwxzUR" opt; do
     case $opt in
+        b)
+           winX=1 ;;
         c)
            winC=1 ;;
         d)
            winD=1 ;;
-        b)
-           winX=1 ;;
         e)
+           txt=1 ;;
+        E)
            exp=1 ;;
         l)
            pls=1 ;;
+        m)
+           aud=1 ;;
         o)
            sdo=1 ;;
         s)
            sds=1 ;;
         t)
-           txt=1 ;;
-        m)
-           aud=1 ;;
+           sdt=1 ;;
         u)
            sdu=1 ;;
         v)
@@ -57,9 +60,10 @@ while getopts "abcdelmostuvwxzUR" opt; do
           winC=0
           winD=1
           winX=1
-           sds=1
            txt=1
            aud=1
+           sds=1
+           sdt=1
            sdu=1
            sdv=1
            sdw=1
@@ -67,7 +71,7 @@ while getopts "abcdelmostuvwxzUR" opt; do
            sdz=1
            ;;
         ?)
-           echo 'mudisk -[abcdelmostuvwxzUR]'
+           echo 'mudisk -[abcdeElmostuvwxzUR]'
            exit 1 ;;
     esac
 done
@@ -86,23 +90,25 @@ wcc=$(ls /media/simone/winC       2>/dev/null | wc -l)
 wcd=$(ls /media/simone/winD       2>/dev/null | wc -l)
 wco=$(ls /media/simone/sandisk_o  2>/dev/null | wc -l)
 wcs=$(ls /media/simone/sandisk_s  2>/dev/null | wc -l)
+wct=$(ls /media/simone/sandisk_t  2>/dev/null | wc -l)
 wcu=$(ls /media/simone/sandisk_u  2>/dev/null | wc -l)
 wcv=$(ls /media/simone/sandisk_v  2>/dev/null | wc -l)
 wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wcz=$(ls /media/simone/sandisk_z  2>/dev/null | wc -l)
-wct=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
+wce=$(ls /opt/.porn/text/000      2>/dev/null | wc -l)
 wca=$(ls /opt/.porn/asmr/asmr.mp3 2>/dev/null | wc -l)
 
 #list which process is occupying the mount point
 if [ $pls -eq 1 ]; then
-  [[ $txt  == 1 ]] && [[ $wct != 0 ]] && lsof /opt/.porn/text          && echo -e "==ttt-lsof\n"
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /opt/.porn/asmr          && echo -e "==aaa-lsof\n"
   [[ $winX == 1 ]] && [[ $wcb != 0 ]] && lsof /media/simone/winX       && echo -e "==bbb-lsof\n"
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && lsof /media/simone/winC       && echo -e "==ccc-lsof\n"
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && lsof /media/simone/winD       && echo -e "==ddd-lsof\n"
+  [[ $txt  == 1 ]] && [[ $wce != 0 ]] && lsof /opt/.porn/text          && echo -e "==eee-lsof\n"
   [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && lsof /media/simone/sandisk_o  && echo -e "==ooo-lsof\n"
   [[ $sds  == 1 ]] && [[ $wcs != 0 ]] && lsof /media/simone/sandisk_s  && echo -e "==sss-lsof\n"
+  [[ $sdt  == 1 ]] && [[ $wct != 0 ]] && lsof /media/simone/sandisk_t  && echo -e "==ttt-lsof\n"
   [[ $sdu  == 1 ]] && [[ $wcu != 0 ]] && lsof /media/simone/sandisk_u  && echo -e "==uuu-lsof\n"
   [[ $sdv  == 1 ]] && [[ $wcv != 0 ]] && lsof /media/simone/sandisk_v  && echo -e "==vvv-lsof\n"
   [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && lsof /media/simone/sandisk_w  && echo -e "==www-lsof\n"
@@ -118,9 +124,10 @@ if [ $mnt -eq 0 ]; then
   [[ $winX == 1 ]] && [[ $wcb != 0 ]] && echo bbb-umnt && sudo umount /media/simone/winX
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo ccc-umnt && sudo umount /media/simone/winC
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo ddd-umnt && sudo umount /media/simone/winD
-  [[ $txt  == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /opt/.porn/text
+  [[ $txt  == 1 ]] && [[ $wce != 0 ]] && echo eee-umnt && sudo umount /opt/.porn/text
   [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && echo ooo-umnt && sudo umount /media/simone/sandisk_o
   [[ $sds  == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
+  [[ $sdt  == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /media/simone/sandisk_t
   [[ $sdu  == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
   [[ $sdv  == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
   [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
@@ -159,8 +166,8 @@ if [ $wcp -eq 0 ]; then
   fi
   
   #mount text manually
-  if [ $txt -eq 1 ] && [ $wct -eq 0 ]; then
-    echo +ttt+++
+  if [ $txt -eq 1 ] && [ $wce -eq 0 ]; then
+    echo +eee+++
     sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
   fi
   
@@ -179,9 +186,15 @@ if [ $wcp -eq 0 ]; then
   fi
  
   #mount sandisk_o manually
-  if [ $sdo -eq 1 ] && [ $wco -eq 0 ] && [ -e /dev/disk/by-label/sandisk_o ]; then
+  if [ $sdo -eq 1 ] && [ $wco -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_O ]; then
     echo +ooo+++
-    sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_o /media/simone/sandisk_o
+    sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_O /media/simone/sandisk_o
+  fi
+
+  #mount sandisk_o manually
+  if [ $sdt -eq 1 ] && [ $wct -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_T ]; then
+    echo +ttt+++
+    sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_T /media/simone/sandisk_t
   fi
 
   #mount sandisk_s manually
@@ -197,9 +210,9 @@ if [ $wcp -eq 0 ]; then
   fi
   
   #mount sandisk_v manually
-  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ] && [ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ]; then
+  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_V ]; then
     echo +vvv+++
-    sudo mount -o $RWRO,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
+    sudo mount -o $RWRO,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_V /media/simone/sandisk_v
   fi
   
   #mount sandisk_w manually
@@ -233,13 +246,14 @@ fi
 [ ! -f /opt/.priv/password ]   && exit 1 || password="$(< /opt/.priv/password)"
 [ ! -f /opt/.priv/passphrase ] && exit 1 || passphrase="$(< /opt/.priv/passphrase)"
 
-exist_sdo_src=0; [ -e /dev/disk/by-label/sandisk_o ]                           && exist_sdo_src=1
-exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]                            && exist_sds_src=1
-exist_sdu_src=0; [ -e /dev/disk/by-uuid/3166-6338 ]                            && exist_sdu_src=1
-exist_sdv_src=0; [ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ] && exist_sdv_src=1
-exist_sdw_src=0; [ -e /dev/disk/by-uuid/3534-6562 ]                            && exist_sdw_src=1
-exist_sdx_src=0; [ -e /dev/disk/by-label/sandisk_ext ]                         && exist_sdx_src=1
-exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           && exist_sdz_src=1
+exist_sdo_src=0; [ -e /dev/disk/by-label/Sandisk_O ]      && exist_sdo_src=1
+exist_sdt_src=0; [ -e /dev/disk/by-label/Sandisk_T ]      && exist_sdt_src=1
+exist_sds_src=0; [ -e /dev/disk/by-uuid/EA1D-0944 ]       && exist_sds_src=1
+exist_sdu_src=0; [ -e /dev/disk/by-uuid/3166-6338 ]       && exist_sdu_src=1
+exist_sdv_src=0; [ -e /dev/disk/by-label/Sandisk_V ]      && exist_sdv_src=1
+exist_sdw_src=0; [ -e /dev/disk/by-uuid/3534-6562 ]       && exist_sdw_src=1
+exist_sdx_src=0; [ -e /dev/disk/by-label/sandisk_ext ]    && exist_sdx_src=1
+exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
 
 /usr/bin/expect << EOD
   set timeout 3
@@ -269,8 +283,8 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
       send "$password\r"
     }
 
-    if {$txt == 1 && $wct != 0} {
-      puts "\n\n-ttt-\n"
+    if {$txt == 1 && $wce != 0} {
+      puts "\n\n-eee-\n"
       sleep 0.5
       spawn sudo umount /opt/.porn/text
       expect "password"
@@ -294,6 +308,14 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
       puts "\n\n-ooo-"
       sleep 0.5
       spawn sudo umount /media/simone/sandisk_o
+      expect "password"
+      send "$password\r"
+    }
+
+    if {$sdt == 1 && $wct != 0 && $exist_sdt_src == 1} {
+      puts "\n\n-ttt-"
+      sleep 0.5
+      spawn sudo umount /media/simone/sandisk_t
       expect "password"
       send "$password\r"
     }
@@ -401,7 +423,15 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
   if {$sdo == 1 && $wco == 0 && $exist_sdo_src == 1} {
     puts "\n\n+ooo+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_o /media/simone/sandisk_o
+    spawn sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_O /media/simone/sandisk_o
+    expect "password"
+    send "$password\r"
+  }
+
+  if {$sdt == 1 && $wct == 0 && $exist_sdt_src == 1} {
+    puts "\n\n+ttt+"
+    sleep 0.5
+    spawn sudo mount -o $RWRO,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_T /media/simone/sandisk_t
     expect "password"
     send "$password\r"
   }
@@ -425,7 +455,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
   if {$sdv == 1 && $wcv == 0 && $exist_sdv_src == 1} {
     puts "\n\n+vvv+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_v
+    spawn sudo mount -o $RWRO,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_V /media/simone/sandisk_v
     expect "password"
     send "$password\r"
   }
@@ -468,8 +498,8 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
     send "$password\r"
   }
 
-  if {$txt == 1 && $wct == 0} {
-    puts "\n\n+ttt+"
+  if {$txt == 1 && $wce == 0} {
+    puts "\n\n+eee+"
     sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
@@ -477,8 +507,8 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]                           &
     expect "Passphrase"
     send "$passphrase\r"
   }
-  if {$txt == 1 && $wct == 0} {
-    puts "\n\n+TTT+"
+  if {$txt == 1 && $wce == 0} {
+    puts "\n\n+EEE+"
     sleep 0.5
     spawn sudo mount -t ecryptfs /opt/.porn/text /opt/.porn/text -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"

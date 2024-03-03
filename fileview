@@ -140,18 +140,21 @@ case "$ext" in
         als "$file" && exit 0
         atool --list -- "${file}" && exit 0
         zcat "$file" && exit 0
+        ouch list "$file" && exit 0
         exit 1;;
 
     rar)
         unrar v "$file" && exit 0
         als --option=use_rar_for_unpack=0 "$file" && exit 0
         unrar lt -p- -- "${file}" && exit 0
+        ouch list "$file" && exit 0
         exit 1;;
 
     7z)
         7z l -p -- "${file}" && exit 0
         als "$file" && exit 0
         atool --list -- "${file}" && exit 0
+        ouch list "$file" && exit 0
         exit 1;;
 
     iso)
