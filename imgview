@@ -69,12 +69,12 @@ if [ -z "$DISPLAY" ]; then
 # xwindow
 else
     #PROG="feh -ZF"
-    PROG="feh -F -S filename"
+    PROG="feh -F -S filename -M yudit/24"
     if [ "$ALT" = "1" ]; then
         PROG="sxiv -f"
         #PROG="sxiv -ft"
     elif [ "$ALT" = "2" ]; then
-        PROG="feh -F -S mtime"
+        PROG="feh -F -S mtime -M yudit/24"
         #PROG="pqiv -f"
         #PROG='pqiv -f --action="montage_mode_enter()" --thumbnail-size=128x128'
         #PROG="pho -p"
