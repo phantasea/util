@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+
+if [ ! -f "$1" ]; then
+    echo $1
+    echo 'is not a file!'
+    exit 1
+fi
+
+filename=$(basename -- "$1")
+fileext="${filename##*.}"
+filebase="${filename%.*}"
+#echo $filename
+
+shopt -s nocasematch
+if [[ "$fileext" != "epub" ]]; then
+    echo $1, $fileext
+    echo "Not an EPUB file!"
+    exit 3
+fi
+
+filepath=$(realpath -- "$1")
+dirname=$(dirname -- "$filepath")
+cd -- "$dirname"
+
+/opt/util/bins/epub2txt1 -r "$filename" > "$filebase".txt 
+
+#for path in "$@"; do
+#    file_name="$(basename "$path")"
+#    dir_name="$(dirname "$path")"
+#    case "$file_name" in
+#        .*)
+#            mv -v -- "$path" "$dir_name/${file_name#.}" ;;
+#        *)
+#            mv -v -- "$path" "$dir_name/.$file_name" ;;
+#    esac
+#done
