@@ -15,14 +15,18 @@ shopt -s nocasematch
 if [[ "$fileext" != "epub" ]]; then
     echo $1, $fileext
     echo "Not an EPUB file!"
-    exit 3
+    exit 2
 fi
 
 filepath=$(realpath -- "$1")
 dirname=$(dirname -- "$filepath")
 cd -- "$dirname"
 
-/opt/util/bins/epub2txt1 -r "$filename" > "$filebase".txt 
+ /opt/util/bins/epub2txt1 -r "$filename"  > "$filebase".txt
+#/opt/util/bins/epub2txt2 -f "$filename" 2> /dev/null
+#/opt/util/bins/epub2txt3    "$filename"  > /dev/null
+
+exit 0
 
 #for path in "$@"; do
 #    file_name="$(basename "$path")"
