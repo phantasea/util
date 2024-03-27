@@ -1,9 +1,29 @@
 #!/usr/bin/bash
 
-if [ ! -f "$1" ]; then
-    echo $1
-    echo 'is not a file!'
+appid=1
+while getopts "123" opt; do
+    case $opt in
+        1)
+            appid=1 ;;
+        2)
+            appid=2 ;;
+        3)
+            appid=3 ;;
+        ?)
+            echo 'Usage: epub2txt [-123] <epub_file>'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+if [ -z "$1" ]; then
+    echo 'Usage: epub2txt [-123] <epub_file>'
     exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    echo "<$1> is not a file!"
+    exit 2
 fi
 
 filename=$(basename -- "$1")
@@ -13,18 +33,19 @@ filebase="${filename%.*}"
 
 shopt -s nocasematch
 if [[ "$fileext" != "epub" ]]; then
-    echo $1, $fileext
-    echo "Not an EPUB file!"
-    exit 2
+    echo "<$1> is not an EPUB file!"
+    exit 3
 fi
 
 filepath=$(realpath -- "$1")
 dirname=$(dirname -- "$filepath")
 cd -- "$dirname"
 
- /opt/util/bins/epub2txt1 -r "$filename"  > "$filebase".txt
-#/opt/util/bins/epub2txt2 -f "$filename" 2> /dev/null
-#/opt/util/bins/epub2txt3    "$filename"  > /dev/null
+if [ $appid = "1" ]; then
+    /opt/util/bins/epub2txt1 -r "$filename"  > "$filebase".txt
+else
+    /opt/util/bins/epub2txt${appid}  "$filename"
+fi
 
 exit 0
 

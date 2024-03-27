@@ -1,39 +1,55 @@
 #!/usr/bin/python3
 
-import sys
-import html2text
-import ebooklib
-from ebooklib import epub
-from glob import glob
-from pathlib import Path
+#sudo apt-get install libxml2-dev libxslt1-dev
+#pip install lxml
 
+import shutil, os, sys, zipfile, tempfile
+from lxml import etree
 
-class epub2txt():
-    def __init__(self,epubfile=None):
-        self.epub = epubfile
+if len(sys.argv) == 1:
+    print(f"Usage: {sys.argv[0]} <src.epub> <dst.txt>")
+    exit(1)
 
-    def convert(self):
-        book = epub.read_epub(self.epub)
+srcFile = sys.argv[1]
+dstFile = os.path.splitext(srcFile)[0]+'.txt'
+if len(sys.argv) == 3:
+    dstFile = sys.argv[2]
 
-        text = ""
-        #for item in book.get_items():
-        #  if item.get_type() == ebooklib.ITEM_DOCUMENT:
-        for item in book.get_items_of_type(ebooklib.ITEM_DOCUMENT):
-            html = item.get_body_content().decode("utf-8")
-            text += html2text.html2text(html)
+#print(f"src: {srcFile}")
+#print(f"dst: {dstFile}")
 
-        #outFile = os.path.splitext(self.epub)[0]+'.txt'
-        outFile = Path(self.epub).with_suffix('.txt')
-        with open(outFile, 'w', encoding='utf-8') as fo:
-            fo.write(text)
+with tempfile.TemporaryDirectory() as tmpDir:
+    #print(f"Extracting input to temp directory '{tmpDir}'")
+    with zipfile.ZipFile(srcFile, 'r') as zip_ref:
+        zip_ref.extractall(tmpDir)
 
-def usage():
-    print("Usage: epub2txt <path-to-epub>")
+    with open(dstFile, "w") as outFile:
+        #print(f"Parsing 'container.xml' file")
+        containerFilePath = f"{tmpDir}/META-INF/container.xml"
+        tree = etree.parse(containerFilePath)
+        for rootFile in tree.xpath("//*[local-name()='container']"
+                                   "/*[local-name()='rootfiles']"
+                                   "/*[local-name()='rootfile']"
+                                   "/@full-path"):
+            #print(f"Parsing '{rootFile}' file")
+            contentFilePath = f"{tmpDir}/{rootFile}"
+            contentFileDir = os.path.dirname(contentFilePath)
 
-if __name__ == "__main__":
-    if(len(sys.argv) == 1 or sys.argv[1] == "-h" or sys.argv[1] == "--help"):
-        usage()
-    elif sys.argv[1]:
-        filenames = glob(sys.argv[1])
-        for filename in filenames:
-            epub2txt(filename).convert()
+            tree = etree.parse(contentFilePath)
+            for idref in tree.xpath("//*[local-name()='package']"
+                                    "/*[local-name()='spine']"
+                                    "/*[local-name()='itemref']"
+                                    "/@idref"):
+                for href in tree.xpath(f"//*[local-name()='package']"
+                                       f"/*[local-name()='manifest']"
+                                       f"/*[local-name()='item'][@id='{idref}']"
+                                       f"/@href"):
+                    outFile.write("\n")
+                    xhtmlFilePath = f"{contentFileDir}/{href}"
+                    subtree = etree.parse(xhtmlFilePath, etree.HTMLParser())
+                    for ptag in subtree.xpath("//html/body/*"):
+                        for text in ptag.itertext():
+                            outFile.write(f"{text}")
+                        outFile.write("\n")
+
+#print(f"Text written to '{dstFile}'")

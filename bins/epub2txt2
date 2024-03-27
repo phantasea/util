@@ -1,1 +1,39 @@
-/home/simone/.local/bin/epub2txt
+#!/usr/bin/python3
+
+import sys
+import html2text
+import ebooklib
+from ebooklib import epub
+from pathlib import Path
+from glob import glob
+
+
+class epub2txt():
+    def __init__(self,epubfile=None):
+        self.epub = epubfile
+
+    def convert(self):
+        book = epub.read_epub(self.epub)
+
+        text = ""
+        #for item in book.get_items():
+        #    if item.get_type() == ebooklib.ITEM_DOCUMENT:
+        for item in book.get_items_of_type(ebooklib.ITEM_DOCUMENT):
+            html = item.get_body_content().decode("utf-8")
+            text += html2text.html2text(html)
+
+        #outFile = os.path.splitext(self.epub)[0]+'.txt'
+        outFile = Path(self.epub).with_suffix('.txt')
+        with open(outFile, 'w', encoding='utf-8') as fo:
+            fo.write(text)
+
+def usage():
+    print("Usage: epub2txt <path-to-epub>")
+
+if __name__ == "__main__":
+    if(len(sys.argv) == 1 or sys.argv[1] == "-h" or sys.argv[1] == "--help"):
+        usage()
+    elif sys.argv[1]:
+        filenames = glob(sys.argv[1])
+        for filename in filenames:
+            epub2txt(filename).convert()
