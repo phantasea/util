@@ -1,16 +1,50 @@
 #!/bin/bash
 
+appid=1
+while getopts "12" opt; do
+    case $opt in
+        1)
+            appid=1 ;;
+        2)
+            appid=2 ;;
+        ?)
+            echo 'Usage: epub2txt [-12] <epub_file>'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
 if [ ! -f "$1" ]; then
-    echo $1
-    echo 'is not a file!'
-    exit 1
+    echo "<$1> is not a file!"
+    exit 2
+fi
+
+filename=$(basename -- "$1")
+fileext="${filename##*.}"
+filebase="${filename%.*}"
+#echo $filename
+
+shopt -s nocasematch
+if [[ "$fileext" != "txt" ]]; then
+    echo "<$1> is not an TXT file!"
+    exit 4
+fi
+
+filepath=$(realpath -- "$1")
+dirname=$(dirname -- "$filepath")
+#echo $dirname
+cd -- "$dirname"
+
+if [ $appid = "2" ]; then
+    /opt/util/bins/txt2epub -x --ignore-indent  "$filename"
+    exit 0
 fi
 
 #which uchardet > /dev/null
 #if [[ ! $? -eq 0 ]]; then
 if ! command -v uchardet > /dev/null 2>&1; then
     echo "sudo apt install uchardet"
-    exit 2
+    exit 3
 fi
 
 icode=$(uchardet "$1")
@@ -24,23 +58,7 @@ if [ ! -z "$2" ]; then
     icode="$2"
 fi
 
-filename=$(basename -- "$1")
-fileext="${filename##*.}"
-filebase="${filename%.*}"
-#echo $filename
-
-shopt -s nocasematch
-if [[ "$fileext" != "txt" ]]; then
-    echo $1, $fileext
-    echo "Not ***.txt file!"
-    exit 3
-fi
-
-filepath=$(realpath -- "$1")
-dirname=$(dirname -- "$filepath")
-#echo $dirname
-cd -- "$dirname"
-
+#sudo apt install calibre
 ebook-convert "$filename" "$filebase".epub \
         --input-encoding="$icode" \
         --no-default-epub-cover \
