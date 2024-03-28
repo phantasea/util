@@ -1,9 +1,22 @@
 #!/bin/bash
 
+appid=1
+while getopts "12" opt; do
+    case $opt in
+        1)
+            appid=1 ;;
+        2)
+            appid=2 ;;
+        ?)
+            echo 'Usage: html2txt [-12] <html_file>'
+            exit 1;;
+    esac
+done
+shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
 if [ ! -f "$1" ]; then
-    echo $1
-    echo 'is not a file!'
-    exit 1
+    echo "<$1> is not a file!"
+    exit 2
 fi
 
 filename=$(basename -- "$1")
@@ -13,9 +26,8 @@ filebase="${filename%.*}"
 
 shopt -s nocasematch
 if [[ "$fileext" != "html" ]]; then
-    echo $1, $fileext
-    echo "Not ***.html file!"
-    exit 2
+    echo "<$1> is not an HTML file!"
+    exit 3
 fi
 
 filepath=$(realpath -- "$1")
@@ -23,4 +35,9 @@ dirname=$(dirname -- "$filepath")
 #echo $dirname
 cd -- "$dirname"
 
-ebook-convert "$filename" "$filebase".txt
+if [ $appid = "1" ]; then
+    html2text --ignore-links --ignore-images --ignore-emphasis "$filename" > "$filebase".txt
+    exit 0
+fi
+
+ebook-convert "$filename" "$filebase".txt > /dev/null
