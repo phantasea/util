@@ -13,7 +13,7 @@ mkdir mpd imv bat i3 i3status syncthing
 
 sudo chown -R simone:simone /media/simone
 cd /media/simone
-mkdir adbfs sandisk_o sandisk_s sandisk_u sandisk_v sandisk_w sandisk_x1 sandisk_x2 sandisk_z winD winX
+mkdir adbfs sandisk_o sandisk_s sandisk_t sandisk_u sandisk_v sandisk_w sandisk_x1 sandisk_x2 sandisk_z winD winX
 
 sudo chown -R simone:simone /opt
 cd /opt
@@ -37,10 +37,8 @@ git clone https://github.com/phantasea/misc misc
 git clone https://github.com/phantasea/dotfiles conf
 
 cd /opt/apps
-git clone https://github.com/phantasea/adbfs
 git clone https://github.com/phantasea/autojump
 git clone https://github.com/phantasea/elinks
-git clone https://github.com/phantasea/fbv
 git clone https://github.com/phantasea/fim
 git clone https://github.com/phantasea/fim-ng
 git clone https://github.com/phantasea/fzf
@@ -48,8 +46,6 @@ git clone https://github.com/phantasea/htop
 git clone https://github.com/phantasea/jfbview
 git clone https://github.com/phantasea/moc
 git clone https://github.com/phantasea/moc-ng
-git clone https://github.com/phantasea/myst
-git clone https://github.com/phantasea/pho
 git clone https://github.com/phantasea/ranger
 git clone https://github.com/phantasea/vifm
 git clone https://github.com/phantasea/vifm.vim
