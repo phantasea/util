@@ -1,12 +1,12 @@
 #!/bin/bash
 
 cd ~
-git clone https://github.com/phantasea/auds auds
-mkdir vids docs misc pics temp vids
+mkdir auds docs misc pics temp vids
 ln -s ~/docs/note/TODO ~/TODO
+git clone https://github.com/phantasea/auds auds
 
 cd ~/docs
-mkdir book misc note webs
+mkdir book epub misc note webs
 
 cd ~/.config
 mkdir mpd imv bat i3 i3status syncthing
@@ -20,29 +20,25 @@ cd /opt
 mkdir apps conf misc util
 mkdir .certs .logs .mail .porn .priv
 
-cd /opt/misc
-mkdir apps docs dicts fonts
-
 cd /opt/.porn
 git clone https://github.com/phantasea/pr0n text
 
 cd ~/docs
 git clone https://github.com/phantasea/note note
-git clone https://github.com/phantasea/web webs
+git clone https://github.com/phantasea/web  webs
 
 cd /opt
-git clone https://github.com/phantasea/priv .priv
-git clone https://github.com/phantasea/util util
-git clone https://github.com/phantasea/misc misc
+git clone https://github.com/phantasea/priv     .priv
+git clone https://github.com/phantasea/util     util
+git clone https://github.com/phantasea/misc     misc
 git clone https://github.com/phantasea/dotfiles conf
 
 cd /opt/apps
-git clone https://github.com/phantasea/autojump
+#git clone https://github.com/phantasea/autojump
 git clone https://github.com/phantasea/elinks
 git clone https://github.com/phantasea/fim
 git clone https://github.com/phantasea/fim-ng
 git clone https://github.com/phantasea/fzf
-git clone https://github.com/phantasea/htop
 git clone https://github.com/phantasea/jfbview
 git clone https://github.com/phantasea/moc
 git clone https://github.com/phantasea/moc-ng
@@ -51,8 +47,6 @@ git clone https://github.com/phantasea/vifm
 git clone https://github.com/phantasea/vifm.vim
 git clone https://github.com/phantasea/w3m
 git clone --depth=1 https://git.sr.ht/~exec64/imv
-git clone --depth=1 https://github.com/muennich/sxiv
-git clone --depth=1 https://github.com/jbensmann/xmouseless
 
 ln -sf /opt/.mail                            ~/.mail
 ln -sf /opt/.logs                            ~/.logs
@@ -60,8 +54,8 @@ ln -sf /opt/.priv/fetchmailrc                ~/.fetchmailrc
 ln -sf /opt/.priv/msmtprc                    ~/.msmtprc
 ln -sf /opt/util                             ~/.util
 ln -sf /opt/apps/fzf                         ~/.fzf
-ln -sf /opt/misc/fonts                       ~/.fonts
-ln -sf /opt/misc/dicts                       ~/.stardict/dic
+ln -sf /opt/misc/font                        ~/.fonts
+ln -sf /opt/misc/dict                        ~/.stardict/dic
 ln -sf /opt/conf/favedirs                    ~/.favedirs
 ln -sf /opt/conf/wallpaper                   ~/.wallpaper
 ln -sf /opt/conf/wallpaper                   ~/pics/wallpaper-2
@@ -109,7 +103,6 @@ ln -sf /opt/conf/visidatarc                  ~/.visidatarc
 ln -sf /opt/conf/Xresources                  ~/.Xresources
 ln -sf /opt/conf/z.sh                        ~/.z.sh
 ln -sf /opt/conf/feh                         ~/.config/feh
-ln -sf /opt/conf/imv_config                  ~/.config/imv/config
 ln -sf /opt/conf/mpd.conf                    ~/.config/mpd/mpd.conf
 ln -sf /opt/conf/ncmpc                       ~/.config/ncmpc
 ln -sf /opt/conf/ncmpcpp                     ~/.config/ncmpcpp
