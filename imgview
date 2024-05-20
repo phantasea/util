@@ -80,6 +80,7 @@ else
         #PROG="pho -p"
         #PROG='vimiv -f'
         #PROG="imv -f"
+        #PROG="viu"  //works in Kitty
     fi
 
     if [ "$slideshow" = "TRUE" ]; then
