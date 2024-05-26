@@ -121,19 +121,25 @@ fi
 
 #umount the specific mount point
 if [ $mnt -eq 0 ]; then
-  [[ $winX == 1 ]] && [[ $wcb != 0 ]] && echo bbb-umnt && sudo umount /media/simone/winX
-  [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo ccc-umnt && sudo umount /media/simone/winC
-  [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo ddd-umnt && sudo umount /media/simone/winD
-  [[ $txt  == 1 ]] && [[ $wce != 0 ]] && echo eee-umnt && sudo umount /opt/.porn/text
-  [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && echo ooo-umnt && sudo umount /media/simone/sandisk_o
-  [[ $sds  == 1 ]] && [[ $wcs != 0 ]] && echo sss-umnt && sudo umount /media/simone/sandisk_s
-  [[ $sdt  == 1 ]] && [[ $wct != 0 ]] && echo ttt-umnt && sudo umount /media/simone/sandisk_t
-  [[ $sdu  == 1 ]] && [[ $wcu != 0 ]] && echo uuu-umnt && sudo umount /media/simone/sandisk_u
-  [[ $sdv  == 1 ]] && [[ $wcv != 0 ]] && echo vvv-umnt && sudo umount /media/simone/sandisk_v
-  [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo www-umnt && sudo umount /media/simone/sandisk_w
-  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && echo aaa-umnt && {
+  [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo winC-umnt && sudo umount /media/simone/winC
+  [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo winD-umnt && sudo umount /media/simone/winD
+  [[ $txt  == 1 ]] && [[ $wce != 0 ]] && echo text-umnt && sudo umount /opt/.porn/text
+  [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && echo sdo-umnt  && sudo umount /media/simone/sandisk_o
+  [[ $sds  == 1 ]] && [[ $wcs != 0 ]] && echo sds-umnt  && sudo umount /media/simone/sandisk_s
+  [[ $sdt  == 1 ]] && [[ $wct != 0 ]] && echo sdt-umnt  && sudo umount /media/simone/sandisk_t
+  [[ $sdu  == 1 ]] && [[ $wcu != 0 ]] && echo sdu-umnt  && sudo umount /media/simone/sandisk_u
+  [[ $sdv  == 1 ]] && [[ $wcv != 0 ]] && echo sdv-umnt  && sudo umount /media/simone/sandisk_v
+  [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo sdw-umnt  && sudo umount /media/simone/sandisk_w
+  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && echo asmr-umnt && {
       sudo umount /opt/.porn/asmr
       sudo umount /media/simone/winX/auds
+  }
+  [[ $winX == 1 ]] && [[ $wcb != 0 ]] && {
+      echo auds-umnt
+      sudo umount /media/simone/winX/auds
+      sleep 1s
+      echo winX-umnt
+      sudo umount /media/simone/winX
   }
   [[ $sdx  == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt && {
       sudo umount /media/simone/sandisk_x1
