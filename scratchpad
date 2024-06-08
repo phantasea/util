@@ -44,6 +44,10 @@ CURR_SID=$(tmux display-message -p -F '#{session_name}')
 CURR_WID=$(tmux display-message -p -F '#{window_index}')
 CURR_WIN=$(tmux display-message -p -F '#{window_name}')
 
+if [[ $CURR_WIN =~ vidplay ]]; then
+    tmux send-keys  space
+fi
+
 POPUP="tmux popup $OPTS -E -xC -yC"
 if [ $POPS -eq 1 ]; then
     if [[ "$CURR_SID" == $SID ]]; then
@@ -61,8 +65,11 @@ fi
 if [ $MOVE -eq 1 ]; then
     [[ $CURR_WIN =~ (bash|vim|vifm|ranger) ]] && exit 0
 
-    $POPUP -w80% -h80% "tmux attach-s -t temp || \
-        (tmux new-s -d -s temp && tmux move-w -s $CURR_SID:$CURR_WID -t temp)"
+    tmux has-s -t temp || tmux new-s -d -s temp
+    sleep 0.1
+    tmux move-w -s $CURR_SID:$CURR_WID -t temp
+    tmux has-s -t temp:bash 2>/dev/null && tmux kill-w -t temp:bash
+
     exit 0
 fi
 
