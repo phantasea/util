@@ -44,8 +44,8 @@ CURR_SID=$(tmux display-message -p -F '#{session_name}')
 CURR_WID=$(tmux display-message -p -F '#{window_index}')
 CURR_WIN=$(tmux display-message -p -F '#{window_name}')
 
-if [[ $CURR_WIN =~ vidplay ]]; then
-    tmux send-keys  space
+if [[ $CURR_WIN =~ vidplay && $CURR_SID != temp ]]; then
+    tmux send-keys space
 fi
 
 POPUP="tmux popup $OPTS -E -xC -yC"
@@ -65,9 +65,15 @@ fi
 if [ $MOVE -eq 1 ]; then
     [[ $CURR_WIN =~ (bash|vim|vifm|ranger) ]] && exit 0
 
+    if [[ "$CURR_SID" == "temp" ]]; then
+        tmux move-w -s $CURR_SID:$CURR_WID -t 0:$CURR_WID
+        tmux detach-client
+        exit 0
+    fi
+
     tmux has-s -t temp || tmux new-s -d -s temp
     sleep 0.1
-    tmux move-w -s $CURR_SID:$CURR_WID -t temp
+    tmux move-w -s $CURR_SID:$CURR_WID -t temp:$CURR_WID
     tmux has-s -t temp:bash 2>/dev/null && tmux kill-w -t temp:bash
 
     exit 0
@@ -76,6 +82,9 @@ fi
 if [ $TEMP -eq 1 ]; then
     tmux has-session -t temp || exit 0
     if [[ "$CURR_SID" == "temp" ]]; then
+        #if [[ $CURR_WIN =~ vidplay ]]; then
+        #    tmux send-keys space
+        #fi
         tmux detach-client
     elif [[ ! "$CURR_SID" =~ (asmr|nova|temp) ]]; then
         $POPUP -w80% -h80% "tmux attach-s -t temp"
