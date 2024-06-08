@@ -1,11 +1,20 @@
 #!/bin/bash
 # only work for file without space in the name
 
-[[ $# == 0 ]] && exit 1
+[[ $# != 1 ]] && exit 1
 
-for file in $*
-do
-    mv -i -t ~/.Trash $file
-done
+file="$*"
+if [[ $file =~ '\' ]]; then
+    file=${file// /\\\ }
+    file=${file//(/\\\(}
+    file=${file//)/\\\)}
+fi
+
+mv -i -t ~/.Trash "$file"
+
+#for file in $*
+#do
+#    mv -i -t ~/.Trash $file
+#done
 
 exit $?
