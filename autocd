@@ -29,13 +29,15 @@ sleep 0.1
 #fi
 
 if [ -z "$DISPLAY" ]; then
+    tmux select-window -t $SID:1
+
     tmux send-keys -t $SID:1 C-u
     tmux send-keys -t $SID:1 "cd "
     sleep 0.1
     tmux send-keys -t $SID:1 "$(tmux paste-buffer)"
     tmux send-keys -t $SID:1 C-m
-    if [ $background -eq 0 ]; then
-        tmux select-window -t $SID:1
+    if [ $background -eq 1 ]; then
+        tmux select-window -l
     fi
     exit 0
 fi
