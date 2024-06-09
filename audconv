@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ffmpeg -i "$1" -b:a 128k -loglevel quiet "$1.mp3"
+ffmpeg -i "$1" -b:a 96k -loglevel quiet "$1.mp3"
