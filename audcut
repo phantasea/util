@@ -6,12 +6,15 @@
 #audcut starttime stoptime input.mp3 output.mp3
 
 all=0
-while getopts "a" opt; do
+xout=0
+while getopts "ax" opt; do
     case $opt in
         a)
             all=1 ;;
+        x)
+            xout=1 ;;
 
-        ?)  echo 'Usage: audcut [-a]'
+        ?)  echo 'Usage: audcut [-ax]'
             exit 1;;
     esac
 done
@@ -20,6 +23,21 @@ shift $((OPTIND-1))
 
 if [ $all -eq 1 ]; then
     ffmpeg -i "$1" -map 0:a -loglevel quiet "$2"
+    exit 0
+fi
+
+if [ $xout -eq 1 ]; then
+    t1=$(echo $1 | sed 's/^/((/; s/:/)*60+/g' | bc)
+    t2=$(echo $2 | sed 's/^/((/; s/:/)*60+/g' | bc)
+    timediff=$(expr $t2 - $t1)
+    echo timediff=$timediff
+    #ffmpeg -i input.mp3 -af "aselect='not(between(t,t1,t2)+between(t,t3,t4))'" output.mp3
+    #ffmpeg -i input.mp3 -filter_complex "[0]atrim=duration=$timediff[a];[0]atrim=start=$t1[b];[a][b]concat=n=2:v=0:a=1" output.mp3
+    ffmpeg -i "$3" -vn -loglevel quiet \
+           -af "aselect='not(between(t,$t1,$t2))', asetpts=N/SR/TB" \
+           "$4"
+           #-vf "select='not(between(t,$t1,$t2))', setpts=N/FRAME_RATE/TB" \
+
     exit 0
 fi
 

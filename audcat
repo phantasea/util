@@ -1,12 +1,15 @@
 #!/bin/bash
 
 # Create File List
-echo file file1.mp4 >  mylist.txt
-echo file file2.mp4 >> mylist.txt
-echo file file3.mp4 >> mylist.txt
+echo "" > mylist.txt
+
+for file in "$@"
+do
+    echo file $file >> mylist.txt
+done
 
 # Concatenate Files
-ffmpeg -f concat -safe 0 -i mylist.txt -c copy output.mp4
+ffmpeg -f concat -safe 0 -i mylist.txt -c copy output.mp3
 
 exit 0
 
