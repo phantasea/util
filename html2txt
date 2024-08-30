@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ $# -ne 1 ] && echo 'Only one arg!' && exit 1
+
 appid=1
 while getopts "12" opt; do
     case $opt in

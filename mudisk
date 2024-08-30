@@ -32,12 +32,14 @@ while getopts "abcdeEilmopstuvwxzUR" opt; do
         e)
            txt=1 ;;
         i)
+           winX=1
            pic=1 ;;
         E)
            exp=1 ;;
         l)
            pls=1 ;;
         m)
+           winX=1
            aud=1 ;;
         o)
            sdo=1 ;;
