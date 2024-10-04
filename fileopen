@@ -87,6 +87,12 @@ case "$ext" in
         fi
         ;;
 
+    chm)
+        if [ ! -z $DISPLAY ]; then
+            kchmviewer "$file" 2>/dev/null && exit 0
+        fi
+        ;;
+
     djvu)
         if [ -z $DISPLAY ]; then
             fbpdf "$file" && exit 0
