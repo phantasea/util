@@ -1,3 +1,8 @@
 #!/bin/bash
 
-ffmpeg -i "$1" -b:a 96k -loglevel quiet "$1.mp3"
+[[ -z "$1" ]] && exit 1
+
+rate=${2:-96}
+[[ -z "$rate" ]] && exit 1
+
+ffmpeg -i "$1" -b:a ${rate}k -loglevel quiet "$1.mp3"
