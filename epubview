@@ -1,0 +1,67 @@
+#! /bin/bash
+
+if [ -z "$DISPLAY" ]; then
+    CMD="epy"
+else
+    CMD="zathura"
+fi
+
+[[ -z "$DISPLAY" ]] && SID=0 || SID=1
+[[ -z "$TMUX" ]] && SID=12  #not in tmux session
+[[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
+[[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
+WID=14
+WIN="epubview"
+
+#If an option should be followed by an argument, it should be followed by a ":".
+#The leading ":" suppresses error messages from getopts.
+while getopts "b" opt; do
+    case $opt in
+        b)
+            if [ ! -z "$DISPLAY" ]; then
+                CMD="ebook-viewer -f"
+            fi
+            ;;
+        ?) echo 'Usage: epubview [-b] <file>'
+           exit 1;;
+    esac
+done
+
+shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
+
+if [ $# -gt 1 ]; then
+    echo "Only one file supported!"
+    exit 1
+fi
+
+file="$1"
+if [ ! -f "$file" ]; then
+    echo "$file is not a file!"
+    exit 1
+fi
+
+maxsize=15000000
+size=$(stat -c %s -- "$1")
+if [ $size -gt $maxsize ]; then
+    echo "file size $size is large than $maxsize!"
+    exit 1
+fi
+
+if [ ! -z "$DISPLAY" ]; then
+    $CMD "$file" 2>/dev/null &
+    i3-msg workspace "misc" >/dev/null
+    exit 0
+fi
+
+tmux has-session -t $SID 2>/dev/null
+if [ $? -ne 0 ]; then
+    setterm -cursor off; "$CMD" "$file"
+    exit 0
+fi
+
+tmux select-window -t $SID:$WIN > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$file\""
+fi
+
+exit 0
