@@ -115,8 +115,8 @@ fi
 CMD="$PROG $FILES" > /dev/null 2>&1
 
 tmux has-session -t $SID 2>/dev/null
-if [ $? -ne 0 ]; then
-    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp}
+if [[ $? -ne 0 ]] || [[ $CMD =~ "feh" ]] || [[ ! -z "$DISPLAY" ]]; then
+    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp} 2>/dev/null &
     exit 0
 fi
 
