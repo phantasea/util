@@ -10,3 +10,6 @@ for path in "$@"; do
             mv -v -- "$path" "$dir_name/.$file_name" ;;
     esac
 done
+
+#printf "Press ENTER to continue"
+#read -r
