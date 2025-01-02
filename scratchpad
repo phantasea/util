@@ -21,6 +21,7 @@ shift $((OPTIND-1))
 ### }}}
 
 ### tmux in i3wm {{{
+### called by bashrc
 if [[ ! -z $DISPLAY ]]; then
     if [[ ! -z $I3_SCRATCHPAD ]]; then
         [[ "$I3_SCRATCHPAD" == "VIFM" ]] && APP=vifmrun || APP=ranger
