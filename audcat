@@ -3,13 +3,20 @@
 # Create File List
 echo "" > mylist.txt
 
+filetype="mp3"
+if [[ "$1" =~ "mp4" ]]; then
+    filetype="mp4"
+fi
+
 for file in "$@"
 do
     echo file $file >> mylist.txt
 done
 
 # Concatenate Files
-ffmpeg -f concat -safe 0 -i mylist.txt -c copy output.mp3
+ffmpeg -loglevel quiet -f concat -safe 0 -i mylist.txt -c copy output.${filetype}
+
+[ -f mylist.txt ] && rm mylist.txt
 
 exit 0
 
