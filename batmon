@@ -13,8 +13,8 @@ if [ "$bat" -lt 20 ]; then
     #else
     #    echo "Battery is LOW ($bat%), Charge ASAP!" | wall
     #fi
-    echo "mpv ~/auds/00.countdown-2.wav; DISPLAY=:0.0 zenity --info --text 'Battery LOW!!!'" | at now
-    echo "Battery is LOW ($bat%), Charge ASAP!" | wall
+    echo "mpv ~/auds/00.countdown-2.wav; DISPLAY=:0.0 zenity --info --text 'Battery LOW = ${bat}%!'" | at now
+    echo "Battery is LOW (${bat}%), Charge ASAP!" | wall
     export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$UID/bus && \
-        notify-send -u critical "Battery critically low!"
+        notify-send -u critical "Battery critically low = ${bat}%!"
 fi
