@@ -65,7 +65,7 @@ while getopts "abcdeEilmopstuvwxzUR" opt; do
            RWRO="rw" ;;
         a)
            sda=1
-          winC=0
+          winC=1
           winD=1
           winX=1
            txt=1
