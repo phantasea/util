@@ -3,8 +3,8 @@
 file=$*
 #file=${file// /\\\ }
 
-if [[ ! -f "$file" ]]; then
-    if [[ ! -f "$1" ]]; then
+if [[ ! -f "$file" ]] && [[ ! -d "$file" ]]; then
+    if [[ ! -f "$1" ]] && [[ ! -d "$1" ]]; then
         exit
     fi
 
