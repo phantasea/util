@@ -143,5 +143,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         fzf --preview "draw_preview {}" \
             --preview-window "${DEFAULT_PREVIEW_POSITION}" \
             --bind "${REDRAW_KEY}:${REDRAW_COMMAND}" \
+            --bind j:down,k:up,ctrl-j:page-down,ctrl-k:page-up,ctrl-p:toggle-preview \
             "${@}"
 fi
