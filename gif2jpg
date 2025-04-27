@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+from PIL import Image
+import sys
+import os
+
+argc = len(sys.argv) - 1
+if argc != 1:
+    print("gif2jpg <infile>")
+    sys.exit(1)
+
+infile = str(sys.argv[1])
+if not os.path.isfile(infile):
+    print("\"%s\" is not a file!" % infile)
+    sys.exit(1)
+
+if '.gif' not in infile:
+    print("\"%s\" is not a gif file!" % infile)
+    sys.exit(1)
+
+try:
+    im = Image.open(infile)
+except IOError:
+    print("gif2jpg <infile>")
+    sys.exit(1)
+
+mypalette = im.getpalette()
+
+try:
+    newfile = os.path.splitext(os.path.basename(infile))[0]
+
+    im.putpalette(mypalette)
+    new_im = Image.new("RGB", im.size)
+    new_im.paste(im)
+
+    new_im.save(newfile+'.jpg', 'JPEG', quality=100)
+except EOFError:
+    pass # end of sequence
