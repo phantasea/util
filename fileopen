@@ -70,6 +70,10 @@ case "$ext" in
         vimiv -f "$file" && exit 0
         ;;
 
+    svg)
+        vimiv -f "$file" && exit 0
+        ;;
+
     htm|html|xhtml)
         webview $OPTS "$file" && exit 0
         ;;

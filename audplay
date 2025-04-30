@@ -4,9 +4,11 @@ CMD="mpg321 -q"
 while getopts "bB" opt; do
     case $opt in
         b)
-            CMD="mplayer" ;;
+            [[ -z "$DISPLAY" ]] && CMD="mplayer" || CMD="mpv 2>/dev/null"
+            ;;
         B)
-            CMD="mpv" ;;
+            [[ -z "$DISPLAY" ]] && CMD="mpv --vo=drm 2>/dev/null" || CMD="mplayer -vo x11"
+            ;;
         ?)
             echo 'Usage: audplay [-bB] <file>'
             exit 1;;
