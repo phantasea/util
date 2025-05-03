@@ -29,7 +29,13 @@ fi
 
 #file is directory
 if [ -d "$file" ]; then
-    nautilus --no-desktop 2>/dev/null "$file" &
+    if [[ $OPTS =~ 'b' ]]; then
+        nautilus --no-desktop 2>/dev/null "$file" &
+    elif [[ $OPTS =~ 'B' ]]; then
+        firefox "$file" 2>/dev/null
+    fi
+
+    i3-msg workspace "misc" >/dev/null
     exit 0
 fi
 
