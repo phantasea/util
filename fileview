@@ -32,7 +32,7 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
-MAXSIZE=3000000
+MAXSIZE=5000000
 #size=$(wc -c < "$1")
 #size=$(stat --printf="%s" "$1")
 size=$(stat -c %s -- "$1")
@@ -80,6 +80,11 @@ case "$ext" in
     log)
         tac "$file" && exit 0
         tail -n500 "$file" && exit 0
+        exit 1;;
+
+    txt|desktop)
+        bat --color=always "$file" && exit 0
+        cat -- "$file" && exit 0
         exit 1;;
 
     md|mkd|markdown)
@@ -204,10 +209,6 @@ case "$ext" in
         exit 1;;
 
     ## Misc
-    desktop)
-        bat -- "$file" && exit 0
-        cat -- "$file" && exit 0
-        exit 1;;
 esac
 
 #mime="$(mimetype -L --output-format %m "$file")"  #some plain text file not working
@@ -221,6 +222,7 @@ case "$mime" in
     ## Shell scripts
     application/*shellscript)
         highlight -S sh -O ansi -s dante "${file}" && exit 0
+        bat --color=always "$file" && exit 0
         exit 1;;
 
     ## Text/XML
