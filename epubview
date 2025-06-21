@@ -64,4 +64,8 @@ if [ $? -ne 0 ]; then
     tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$file\""
 fi
 
+if [ -z "$DISPLAY" ]; then
+    tmux send-keys -t $SID:$WID w
+fi
+
 exit 0

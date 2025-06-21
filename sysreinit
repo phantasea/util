@@ -139,6 +139,7 @@ ln -sf /opt/conf/user-dirs.locale            ~/.config/user-dirs.locale
 ln -sf /opt/misc/apps/powerline/powerline/bindings      /opt/conf/powerline/apps
 ln -sf /opt/misc/apps/powerline/powerline/config_files  /opt/conf/powerline/conf
 ln -sf /opt/conf/powerline/conf              ~/.config/powerline
+ln -sf /opt/conf/epy_config.json             ~/.config/epy/configuration.json
 
 sudo ln -sf /opt/conf/updatedb.conf          /etc/updatedb.conf
 sudo ln -sf /opt/conf/51-android.rules       /etc/udev/rules.d/51-android.rules
