@@ -1,7 +1,15 @@
 #!/bin/bash
 
-if rfkill list bluetooth | grep "Soft blocked: no" ; then
-    rfkill block bluetooth ;
+#if rfkill list bluetooth | grep "Soft blocked: no" ; then
+#    rfkill block bluetooth ;
+#else
+#    rfkill unblock bluetooth ;
+#fi
+
+if bluetoothctl info 0C:17:73:D9:EB:09 | grep 'Connected: yes' ; then
+    bluetoothctl disconnect 0C:17:73:D9:EB:09
 else
-    rfkill unblock bluetooth ;
+    if bluetoothctl info 0C:17:73:D9:EB:09 | grep 'Blocked: no' ; then
+        bluetoothctl connect 0C:17:73:D9:EB:09
+    fi
 fi
