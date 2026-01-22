@@ -6,10 +6,11 @@
 #    rfkill unblock bluetooth ;
 #fi
 
-if bluetoothctl info 0C:17:73:D9:EB:09 | grep 'Connected: yes' ; then
-    bluetoothctl disconnect 0C:17:73:D9:EB:09
+MAC=$(bluetoothctl devices | grep BUDS | cut -d' ' -f2)
+if bluetoothctl info $MAC | grep 'Connected: yes' ; then
+    bluetoothctl disconnect $MAC
 else
-    if bluetoothctl info 0C:17:73:D9:EB:09 | grep 'Blocked: no' ; then
-        bluetoothctl connect 0C:17:73:D9:EB:09
+    if bluetoothctl info $MAC | grep 'Blocked: no' ; then
+        bluetoothctl connect $MAC
     fi
 fi
