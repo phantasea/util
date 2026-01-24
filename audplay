@@ -26,5 +26,10 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-tsp $CMD "$1" > /dev/null 2>&1
+if [[ $CMD =~ "mpg" ]]; then
+    tsp $CMD "$1" > /dev/null 2>&1
+else
+    $CMD "$1" > /dev/null 2>&1
+fi
+
 exit 0

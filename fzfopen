@@ -2,8 +2,9 @@
 #this is for fzf ctrl-o persistent file opener
 #fzf --bind 'ctrl-o:execute(fzfopen -d: {})'
 
+OPTS="-"
 search=0
-while getopts "sd:" opt; do
+while getopts "bBxsd:" opt; do
     case $opt in
         s)
             search=1
@@ -12,12 +13,23 @@ while getopts "sd:" opt; do
             delim="$OPTARG"
             ;;
 
+        b)
+            OPTS+="b" ;;
+        B)
+            OPTS+="B" ;;
+        x)
+            OPTS+="x" ;;
+
         ?)  echo 'Usage: fzfopen -d<delim> <string>'
             exit 1;;
     esac
 done
 
 shift $((OPTIND -1))  #This tells getopts to move on to the next argument.
+
+if [ $OPTS = "-" ]; then
+    OPTS=""
+fi
 
 [ -z "$*" ] && echo "fzfopen -d<delim> <string>" && exit 1
 
@@ -29,7 +41,7 @@ fi
 
 #echo "$delim" " | " "$file" " | " "$keyword"
 if [ $search -eq 0 ]; then
-    fileopen "$file"
+    fileopen $OPTS "$file"
     exit 0
 fi
 

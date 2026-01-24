@@ -12,30 +12,33 @@ while getopts "t" opt; do
 done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
-[[ $tsls -eq 1 ]] && {
-    tsp | grep running  | sed -e 's/mpg321/mpgXXX running  | mpg321/' | awk -F"mpgXXX " '{print $2}'
-    echo '--------'
-    tsp | grep queued   | sed -e 's/mpg321/mpgXXX queued   | mpg321/' | awk -F"mpgXXX " '{print $2}'
-    echo '--------'
-    tsp | grep finished | sed -e 's/mpg321/mpgXXX finished | mpg321/' | awk -F"mpgXXX " '{print $2}'
-
-    exit 0
-}
-
 MIMETYPE=$(mimetype -b -- "$1")
 case "$MIMETYPE" in
     audio/*)
+        [[ $tsls -eq 1 ]] && {
+            tsp | grep running  | sed -e 's/mpg321/mpgXXX running  | mpg321/' | awk -F"mpgXXX " '{print $2}'
+            echo '--------'
+            tsp | grep queued   | sed -e 's/mpg321/mpgXXX queued   | mpg321/' | awk -F"mpgXXX " '{print $2}'
+            echo '--------'
+            tsp | grep finished | sed -e 's/mpg321/mpgXXX finished | mpg321/' | awk -F"mpgXXX " '{print $2}'
+
+            exit 0
+        }
+
         #(exiftool "$1" |grep Bitrate |cut -d':' -f 2 |sed -e 's/[ \t]*//g' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n'
         output=$((mediainfo "$1" | grep 'Bit rate  ' | cut -d: -f2 | sed -e 's/\s//g' && mediainfo "$1"| grep Duration | head -1 | cut -d: -f2 | sed -e 's/\smin/min/' | sed -e 's/\ss/s/') | tr -d '\n')
         [[ -z $output ]] && echo "No output!" || echo $output
         exit 0;;
+
+    video/*)
+        (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n' && mediainfo "$1" | grep 'Audio #' | tail -1 | cut -d'o' -f2
+        exit 0;;
+
     image/*)
         exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//'
         #identify "$1" | cut -d' ' -f 3
         exit 0;;
-    video/*)
-        (exiftool "$1" |grep 'Image Size' |cut -d':' -f 2 |sed -e 's/^[ \t]*//' && exiftool "$1" |grep ^Duration |cut -d':' -f 2-4) |tr -d '\n' && mediainfo "$1" | grep 'Audio #' | tail -1 | cut -d'o' -f2
-        exit 0;;
+
     inode/directory | inode/mount-point)
         #df -h "$1" |egrep -iv 'Used' |sed 's/\s\+/ /g' |cut -d' ' -f 4
         df -h "$1" |sed '1d' |awk '{print $4,$2}'
@@ -43,4 +46,4 @@ case "$MIMETYPE" in
 esac
 
 echo "MIMETYPE = \"$MIMETYPE\""
-exit 1
+exit 0
