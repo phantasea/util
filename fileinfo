@@ -6,7 +6,7 @@ while getopts "t" opt; do
         t)
             tsls=1 ;;
         ?)
-            echo 'Usage: medinfo [-t]'
+            echo 'Usage: fileinfo [-t]'
             exit 1;;
     esac
 done
@@ -42,6 +42,10 @@ case "$MIMETYPE" in
     inode/directory | inode/mount-point)
         #df -h "$1" |egrep -iv 'Used' |sed 's/\s\+/ /g' |cut -d' ' -f 4
         df -h "$1" |sed '1d' |awk '{print $4,$2}'
+        exit 0;;
+
+    application/epub+zip)
+        kzgrep --entries "*.html" -efh 作者： "$1" | cut -d'>' -f2 | cut -d'<' -f1
         exit 0;;
 esac
 
