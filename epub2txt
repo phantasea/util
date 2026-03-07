@@ -1,7 +1,8 @@
 #!/usr/bin/bash
 
+opts=""
 appid=1
-while getopts "123" opt; do
+while getopts "123r" opt; do
     case $opt in
         1)
             appid=1 ;;
@@ -9,8 +10,10 @@ while getopts "123" opt; do
             appid=2 ;;
         3)
             appid=3 ;;
+        r)
+            opts+=" -r" ;;
         ?)
-            echo 'Usage: epub2txt [-123] <epub_file>'
+            echo 'Usage: epub2txt [-123r] <epub_file>'
             exit 1;;
     esac
 done
@@ -42,7 +45,7 @@ dirname=$(dirname -- "$filepath")
 cd -- "$dirname"
 
 if [ $appid = "1" ]; then
-    /opt/util/bins/epub2txt1 -r "$filename"  > "$filebase".txt
+    /opt/util/bins/epub2txt1 $opts "$filename"  > "$filebase".txt
 else
     /opt/util/bins/epub2txt${appid}  "$filename"
 fi
