@@ -42,8 +42,10 @@ while getopts "bB" opt; do
 
         B)
             WID=15
-            CMD='yazi ~/temp /opt/.porn 2>/dev/null'
-            WIN='yazi'
+            #WIN='yazi'
+            #CMD='yazi ~/temp /opt/.porn 2>/dev/null'
+            WIN='clifm'
+            CMD='clifm --trash-dir=/var/tmp/Trash'
             ;;
 
         ?)  echo 'Usage: fmopen [-bB]'

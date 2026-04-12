@@ -31,7 +31,7 @@ while getopts "bBx" opt; do
             fi
             ;;
         ?)
-            echo 'Usage: vidmux [-bBx] <file>'
+            echo 'Usage: vidplay [-bBx] <file>'
             exit 1;;
     esac
 done
