@@ -25,7 +25,7 @@ fi
 
 [[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 
-while getopts "bB" opt; do
+while getopts "bBz" opt; do
     case $opt in
         b)
             WID=0
@@ -41,14 +41,18 @@ while getopts "bB" opt; do
             ;;
 
         B)
-            WID=15
-            #WIN='yazi'
-            #CMD='yazi ~/temp /opt/.porn 2>/dev/null'
+            WID=2
             WIN='clifm'
-            CMD='clifm --trash-dir=/var/tmp/Trash'
+            CMD='clifm --no-history --trash-dir=/var/tmp/Trash'
             ;;
 
-        ?)  echo 'Usage: fmopen [-bB]'
+        z)
+            WID=15
+            WIN='yazi'
+            CMD='yazi ~/temp /opt/.porn 2>/dev/null'
+            ;;
+
+        ?)  echo 'Usage: fmopen [-bBz]'
             exit 1;;
     esac
 done
