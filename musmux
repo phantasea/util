@@ -59,7 +59,7 @@ if [ $? -ne 0 ]; then
                 sleep 1s
                 tmux send-keys -t 13:13 w
                 sleep 1s
-                tmux send-keys -t 13:13 "=/opt/.porn/asmr" C-m
+                tmux send-keys -t 13:13 "=/opt/.porn/auds" C-m
                 exit 0
         fi
     fi

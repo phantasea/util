@@ -5,14 +5,10 @@
 
 FFFM_FAV0="/home/$USER"
 FFFM_FAV1="/opt"
-FFFM_FAV2="/opt/.porn/text"
+FFFM_FAV2="/opt/.porn/eros"
 FFFM_FAV3="/opt/.porn/pics"
-FFFM_FAV4="/opt/.porn/asmr"
-FFFM_FAV5="/home/$USER/vids/.porn"
-FFFM_FAV6="/home/$USER/vids/.pr0n"
-FFFM_FAV7="/home/$USER/vids/.vids"
-FFFM_FAV8="/home/$USER/vids/.xxxx"
-FFFM_FAV9="/home/$USER/vids/.zzzz"
+FFFM_FAV4="/opt/.porn/auds"
+FFFM_FAV5="/opt/.porn/vids"
 
 get_os() {
     # Figure out the current operating system to set some specific variables.
