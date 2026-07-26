@@ -1,8 +1,48 @@
 #!/bin/bash
 
-[[ -z "$1" ]] && exit 1
+arg=""
+while getopts "a:" opt; do
+    case $opt in
+        a) arg="$OPTARG";;
 
-ratio=${2:-60}
-[[ -z "$ratio" ]] && exit 1
+        ?) echo 'Usage: imgconv [-a arg] <file>'
+           exit 1;;
+    esac
+done
 
-mogrify -resize ${ratio}% "$1"
+shift $((OPTIND-1))  #move on to the next argument
+
+if [ ! -f "$1" ]; then
+    echo "[$1] is not a file!"
+    exit 1
+fi
+
+file="$1"
+
+filename=$(basename -- "$file")
+fileext="${filename##*.}"
+#filebase="${filename%.*}"
+#echo $filename, $fileext, $arg
+
+shopt -s nocasematch
+if [[ "$fileext" == "png" ]]; then
+    #pngquant "$file"
+    #pngcrush -brute "$file" $file.png
+    #optipng -o5 "$file"
+    #convert "$file" -quality ${arg:-80} $file.webp
+    cwebp -q ${arg:-80} "$file" -o $file.webp > /dev/null 2>&1
+    exit 0
+fi
+
+if [ "$fileext" == "jpeg" -o "$fileext" == "jpg" ]; then
+    if [[ -z "$arg" ]]; then
+        jpegoptim --max=85 --strip-all "$file" > /dev/null 2>&1
+    else
+        jpegoptim --size=${arg:-160}k "$file" > /dev/null 2>&1
+    fi
+    exit 0
+fi
+
+convert "$file" -quality ${arg:-80} $file.jpg
+#mogrify -resize ${arg:-80}% "$file"
+#convert -resize ${arg:-80}% "$file" $file.jpg

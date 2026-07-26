@@ -45,7 +45,7 @@ case "$MIMETYPE" in
         exit 0;;
 
     application/epub+zip)
-        kzgrep --entries "*.html" -efh 作者： "$1" | cut -d'>' -f2 | cut -d'<' -f1
+        kzgrep --max-size 20000000 --entries "*.html" -efh 作者： "$1" | cut -d'>' -f2 | cut -d'<' -f1
         exit 0;;
 esac
 
