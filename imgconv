@@ -43,6 +43,11 @@ if [ "$fileext" == "jpeg" -o "$fileext" == "jpg" ]; then
     exit 0
 fi
 
+if [[ "$fileext" == "webp" ]]; then
+    pio "$file" --quality ${arg:-80} --output $file.webp > /dev/null 2>&1
+    exit 0
+fi
+
 convert "$file" -quality ${arg:-80} $file.jpg
 #mogrify -resize ${arg:-80}% "$file"
 #convert -resize ${arg:-80}% "$file" $file.jpg

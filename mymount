@@ -113,7 +113,7 @@ wcw=$(ls /media/simone/sandisk_w  2>/dev/null | wc -l)
 wcx=$(ls /media/simone/sandisk_x1 2>/dev/null | wc -l)
 wcy=$(ls /media/simone/sandisk_y  2>/dev/null | wc -l)
 wcz=$(ls /media/simone/sandisk_z  2>/dev/null | wc -l)
-wce=$(ls /opt/.porn/eros/000      2>/dev/null | wc -l)
+wce=$(ls /opt/.porn/eros/temp     2>/dev/null | wc -l)
 wca=$(ls /opt/.porn/auds/asmr.mp3 2>/dev/null | wc -l)
 wci=$(ls /media/simone/winX/pics/PIX  2>/dev/null | wc -l)
 
@@ -125,6 +125,8 @@ if [ $pls -eq 1 ]; then
   [[ $pic  == 1 ]] && [[ $wci != 0 ]] && lsof /media/simone/winX/pics  && echo -e "==winX/pics-lsof\n"
   [[ $pic  == 1 ]] && [[ $wci != 0 ]] && lsof /media/simone/winC/pics  && echo -e "==winC/pics-lsof\n"
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /media/simone/winX/auds  && echo -e "==winX/auds-lsof\n"
+  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /media/simone/winD/auds  && echo -e "==winD/auds-lsof\n"
+  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /home/simone/auds/.porn  && echo -e "==home/auds-lsof\n"
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /opt/.porn/auds          && echo -e "==porn/auds-lsof\n"
   [[ $txt  == 1 ]] && [[ $wce != 0 ]] && lsof /opt/.porn/eros          && echo -e "==eros-lsof\n"
   [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && lsof /media/simone/sandisk_o  && echo -e "==ooo-lsof\n"
@@ -159,7 +161,9 @@ if [ $mnt -eq 0 ]; then
   [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo sdw-umnt       && sudo umount /media/simone/sandisk_w
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && echo auds-umnt      && {
       sudo umount /opt/.porn/auds
+      sudo umount /home/simone/auds/.porn
       sudo umount /media/simone/winX/auds
+      sudo umount /media/simone/winD/auds
   }
   [[ $pic  == 1 ]] && [[ $wci != 0 ]] && echo pics-umnt && {
       sudo umount /media/simone/winC/pics
@@ -220,6 +224,10 @@ if [ $wcpriv -eq 0 ]; then
     sleep 1s
     echo +porn/auds+++
     sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+
+    sleep 1s
+    echo +home/auds+++
+    sudo mount -t ecryptfs /home/simone/auds/.porn /home/simone/auds/.porn -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
 
     if [[ $wcb -eq 0 ]]; then
       echo +winX-auds+++
@@ -380,8 +388,19 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
       expect "password"
       send "$password\r"
 
+      puts "\n\n-winD/auds-"
+      sleep 0.5
+      spawn sudo umount /media/simone/winD/auds
+      expect "password"
+      send "$password\r"
+
       puts "\n\n-porn/auds-"
       spawn sudo umount /opt/.porn/auds
+      expect "password"
+      send "$password\r"
+
+      puts "\n\n-home/auds-"
+      spawn sudo umount /home/simone/auds/.porn
       expect "password"
       send "$password\r"
     }
@@ -511,6 +530,14 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
 
     puts "\n\n+porn/auds+"
     spawn sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    expect "password"
+    send "$password\r"
+    expect "Passphrase"
+    sleep 0.5
+    send "$passphrase\r"
+
+    puts "\n\n+home/auds+"
+    spawn sudo mount -t ecryptfs /home/simone/auds/.porn /home/simone/auds/.porn -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
     expect "password"
     send "$password\r"
     expect "Passphrase"
