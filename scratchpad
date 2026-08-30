@@ -24,8 +24,12 @@ shift $((OPTIND-1))
 ### called by bashrc
 if [[ ! -z $DISPLAY ]]; then
     if [[ ! -z $I3_SCRATCHPAD ]]; then
+        SERV_NAME=$(tmux display-message -p '#{socket_path}')
+        SERV_NAME=${SERV_NAME##*/}
+
         [[ "$I3_SCRATCHPAD" == "VIFM" ]] && APP=vifmrun || APP=ranger
-        tmux -L x-serv new-session -A -s nova -n nova $APP
+
+        tmux -L $SERV_NAME new-session -A -s nova -n nova $APP
     fi
 
     exit 0

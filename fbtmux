@@ -5,8 +5,23 @@
 # echo -ne "\e[?25l"
 # setterm -cursor off
 
-[[ -z "$DISPLAY" ]] && SID=0  || SID=1
-[[ -z "$DISPLAY" ]] && SRV="" || SRV="-L x-serv"
+SID=0
+SRV=""
+if [ ! -z "$DISPLAY" ]; then
+    SID=1
+    SRV="-L myst"
+
+    #after tmux is spawned, $WEZTERM_PANE and $XTERM_VERSION lost
+    if [ ! -z "$WEZTERM_PANE" ]; then
+        SID=2
+        SRV="-L wezterm"
+    fi
+    if [ ! -z "$XTERM_VERSION" ]; then
+        SID=3
+        SRV="-L xterm"
+    fi
+fi
+
 CMD="tmux $SRV new-session -s $SID"
 
 tmux $SRV has-session -t $SID 2>/dev/null

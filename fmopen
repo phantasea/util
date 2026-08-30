@@ -7,8 +7,8 @@ if [ -z "$DISPLAY" ]; then
     CMD='vifm --server-name vifm-tty'
     WIN='vifm'
 else
-    SID=1
-    #CMD="cd $(< $HOME/.cache/ranger/rangerdir); ranger --choosedir=$HOME/.cache/ranger/rangerdir"
+    SID=$(tmux display-message -p '#S')
+    [[ -z $SID ]] && SID=1
     CMD='ranger'
     WIN='ranger'
 fi
@@ -60,8 +60,14 @@ done
 shift $((OPTIND-1))
 
 if [ $# -ne 0 ]; then
-    echo 'Usage1: fmopen [-b]'
+    echo 'Usage1: fmopen [-bBz]'
     exit 1
+fi
+
+if [ $SID -eq 2 ]; then
+    WID=9
+    WIN='yazi'
+    CMD='yazi ~/temp /opt/.porn 2>/dev/null'
 fi
 
 tmux has-session -t $SID 2>/dev/null
