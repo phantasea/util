@@ -48,6 +48,7 @@ if [ $size -gt $maxsize ]; then
 fi
 
 if [ ! -z "$DISPLAY" ]; then
+    #mupdf-gl "$file" & sleep 0.2 && xdotool key --window $(xdotool search --pid $!) f Shift+w
     $CMD "$file" 2>/dev/null &
     i3-msg workspace "misc" >/dev/null
     exit 0

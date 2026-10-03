@@ -10,10 +10,12 @@ mkdir book epub misc note webs
 
 cd ~/.config
 mkdir mpd imv bat i3 i3status syncthing
+mkdir -p ~/.cache/mpd
 
 sudo chown -R simone:simone /media/simone
 cd /media/simone
-mkdir adbfs sandisk_o sandisk_s sandisk_t sandisk_u sandisk_v sandisk_w sandisk_x1 sandisk_x2 sandisk_z winD winX
+mkdir adbfs sandisk_o sandisk_s sandisk_t sandisk_u sandisk_v sandisk_w
+mkdir sandisk_x1 sandisk_x2 sandisk_y sandisk_z winC winD winX
 
 sudo chown -R simone:simone /opt
 cd /opt
@@ -113,6 +115,7 @@ ln -sf /opt/conf/ranger                      ~/.config/ranger
 ln -sf /opt/conf/vim/init.vim                ~/.config/nvim/init.vim
 ln -sf /opt/conf/greenclip.toml              ~/.config/greenclip.toml
 ln -sf /opt/conf/rofi                        ~/.config/rofi
+ln -sf /opt/conf/gomi_config.yaml            ~/.config/gomi/config.yaml
 ln -sf /opt/conf/vimb                        ~/.config/vimb
 ln -sf /opt/conf/vimiv                       ~/.config/vimiv
 ln -sf /opt/conf/zathura                     ~/.config/zathura
