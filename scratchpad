@@ -53,7 +53,7 @@ if [[ $CURR_WIN =~ vidplay && $CURR_SID != temp ]]; then
     tmux send-keys space
 fi
 
-POPUP="tmux popup $OPTS -E -xC -yC"
+POPUP="tmux popup $OPTS -xC -yC"
 if [ $POPS -eq 1 ]; then
     if [[ "$CURR_SID" == $SID ]]; then
         tmux detach-client

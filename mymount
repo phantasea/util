@@ -21,6 +21,7 @@ sdy=0
 sdz=0
 mnt=1
 RWRO="ro"
+OPTS="key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743"
 
 while getopts "abcdeEilmopstuvwxyzUR" opt; do
     case $opt in
@@ -33,7 +34,6 @@ while getopts "abcdeEilmopstuvwxyzUR" opt; do
         e)
            txt=1 ;;
         i)
-           winX=1
            pic=1 ;;
         E)
            exp=1 ;;
@@ -94,7 +94,7 @@ done
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 #export /media/simone tree files
-if [ $exp -eq 1 ] && [ $sda -eq 1 ]; then
+if [[ $exp -eq 1 ]] && [[ $sda -eq 1 ]];  then
     tree -f -L 2 /media/simone > /opt/misc/docs/files-sandisks
     echo "tree to files-sandisks!"
     exit 0
@@ -115,18 +115,16 @@ wcy=$(ls /media/simone/sandisk_y  2>/dev/null | wc -l)
 wcz=$(ls /media/simone/sandisk_z  2>/dev/null | wc -l)
 wce=$(ls /opt/.porn/eros/temp     2>/dev/null | wc -l)
 wca=$(ls /opt/.porn/auds/asmr.mp3 2>/dev/null | wc -l)
-wci=$(ls /media/simone/winX/pics/PIX  2>/dev/null | wc -l)
+wci=$(ls /media/simone/winC/pics/ENG  2>/dev/null | wc -l)
 
 #list which process is occupying the mount point
-if [ $pls -eq 1 ]; then
+if [[ $pls -eq 1 ]];  then
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && lsof /media/simone/winC       && echo -e "==winC-lsof\n"
+  [[ $pic  == 1 ]] && [[ $wci != 0 ]] && lsof /media/simone/winC/pics  && echo -e "==winC/pics-lsof\n"
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && lsof /media/simone/winD       && echo -e "==winD-lsof\n"
   [[ $winX == 1 ]] && [[ $wcb != 0 ]] && lsof /media/simone/winX       && echo -e "==winX-lsof\n"
-  [[ $pic  == 1 ]] && [[ $wci != 0 ]] && lsof /media/simone/winX/pics  && echo -e "==winX/pics-lsof\n"
-  [[ $pic  == 1 ]] && [[ $wci != 0 ]] && lsof /media/simone/winC/pics  && echo -e "==winC/pics-lsof\n"
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /media/simone/winX/auds  && echo -e "==winX/auds-lsof\n"
-  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /media/simone/winD/auds  && echo -e "==winD/auds-lsof\n"
-  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /home/simone/auds/.porn  && echo -e "==home/auds-lsof\n"
+  [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /home/simone/.porn/auds  && echo -e "==home/auds-lsof\n"
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && lsof /opt/.porn/auds          && echo -e "==porn/auds-lsof\n"
   [[ $txt  == 1 ]] && [[ $wce != 0 ]] && lsof /opt/.porn/eros          && echo -e "==eros-lsof\n"
   [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && lsof /media/simone/sandisk_o  && echo -e "==ooo-lsof\n"
@@ -145,11 +143,10 @@ if [ $pls -eq 1 ]; then
 fi
 
 #umount the specific mount point
-if [ $mnt -eq 0 ]; then
+if [[ $mnt -eq 0 ]];  then
   [[ $winC == 1 ]] && [[ $wcc != 0 ]] && echo winC/pics-umnt && sudo umount /media/simone/winC/pics
   [[ $winD == 1 ]] && [[ $wcd != 0 ]] && echo winD-umnt      && sudo umount /media/simone/winD
   [[ $winX == 1 ]] && [[ $wcb != 0 ]] && echo winX/auds-umnt && sudo umount /media/simone/winX/auds
-  [[ $winX == 1 ]] && [[ $wcb != 0 ]] && echo winX/pics-umnt && sudo umount /media/simone/winX/pics
   [[ $txt  == 1 ]] && [[ $wce != 0 ]] && echo eros-umnt      && sudo umount /opt/.porn/eros
   [[ $sdo  == 1 ]] && [[ $wco != 0 ]] && echo sdo-umnt       && sudo umount /media/simone/sandisk_o
   [[ $sdp  == 1 ]] && [[ $wcp != 0 ]] && echo sdp-umnt       && sudo umount /media/simone/sandisk_p
@@ -161,13 +158,11 @@ if [ $mnt -eq 0 ]; then
   [[ $sdw  == 1 ]] && [[ $wcw != 0 ]] && echo sdw-umnt       && sudo umount /media/simone/sandisk_w
   [[ $aud  == 1 ]] && [[ $wca != 0 ]] && echo auds-umnt      && {
       sudo umount /opt/.porn/auds
-      sudo umount /home/simone/auds/.porn
+      sudo umount /home/simone/.porn/auds
       sudo umount /media/simone/winX/auds
-      sudo umount /media/simone/winD/auds
   }
   [[ $pic  == 1 ]] && [[ $wci != 0 ]] && echo pics-umnt && {
       sudo umount /media/simone/winC/pics
-      sudo umount /media/simone/winX/pics
   }
   [[ $sdx  == 1 ]] && [[ $wcx != 0 ]] && echo xxx-umnt  && {
       sudo umount /media/simone/sandisk_x1
@@ -180,116 +175,106 @@ fi
 
 #mount the specific point when the .priv is not available
 wcpriv=$(ls /opt/.priv/priv 2>/dev/null | wc -l)
-if [ $wcpriv -eq 0 ]; then
+if [[ $wcpriv -eq 0 ]];  then
   #mount winX manually
   if [[ $winX -eq 1 ]] && [[ $wcb -eq 0 ]]; then
     echo +winX+++
-    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinX /media/simone/winX
   fi
 
   #mount winC manually
   if [[ $winC -eq 1 ]] && [[ $wcc -eq 0 ]]; then
     echo +winC+++
-    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p3 /media/simone/winC
+    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinC /media/simone/winC
   fi
 
   #mount winD manually
   if [[ $winD -eq 1 ]] && [[ $wcd -eq 0 ]]; then
     echo +winD+++
-    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p5 /media/simone/winD
+    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinD /media/simone/winD
   fi
 
   #mount eros manually
-  if [ $txt -eq 1 ] && [ $wce -eq 0 ]; then
+  if [[ $txt -eq 1 ]] && [[ $wce -eq 0 ]]; then
     echo +eros+++
-    sudo mount -t ecryptfs /opt/.porn/eros /opt/.porn/eros -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /opt/.porn/eros /opt/.porn/eros -o $OPTS
   fi
 
   #mount pics manually
-  if [ $pic -eq 1 ] && [ $wci -eq 0 ]; then
-    echo +winX/pics+++
-    sudo mount -t ecryptfs /media/simone/winX/pics /media/simone/winX/pics -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
-
+  if [[ $pic -eq 1 ]] && [[ $wci -eq 0 ]]; then
     if [[ $wcc -eq 0 ]]; then
       echo +winC/pics+++
-      sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p3 /media/simone/winC
+      sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinC /media/simone/winC
       sleep 1s
     fi
 
-    sudo mount -t ecryptfs /media/simone/winC/pics /media/simone/winC/pics -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /media/simone/winC/pics /media/simone/winC/pics -o $OPTS
   fi
 
   #mount auds manually
-  if [ $aud -eq 1 ] && [ $wca -eq 0 ]; then
+  if [[ $aud -eq 1 ]] && [[ $wca -eq 0 ]]; then
     sleep 1s
     echo +porn/auds+++
-    sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o $OPTS
 
     sleep 1s
     echo +home/auds+++
-    sudo mount -t ecryptfs /home/simone/auds/.porn /home/simone/auds/.porn -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /home/simone/.porn/auds /home/simone/.porn/auds -o $OPTS
 
     if [[ $wcb -eq 0 ]]; then
       echo +winX-auds+++
-      sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+      sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinX /media/simone/winX
       sleep 1s
     fi
-    sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
-
-    if [[ $wcd -eq 0 ]]; then
-      echo +winD-auds+++
-      sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p5 /media/simone/winD
-      sleep 1s
-    fi
-    sudo mount -t ecryptfs /media/simone/winD/auds /media/simone/winD/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o $OPTS
   fi
 
   #mount sandisk_o manually
-  if [ $sdo -eq 1 ] && [ $wco -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_O ]; then
+  if [[ $sdo -eq 1 ]] && [[ $wco -eq 0 ]] && [[ -e /dev/disk/by-label/Sandisk_O ]]; then
     echo +ooo+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_O /media/simone/sandisk_o
   fi
 
   #mount sandisk_p manually
-  if [ $sdp -eq 1 ] && [ $wcp -eq 0 ] && [ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ]; then
+  if [[ $sdp -eq 1 ]] && [[ $wcp -eq 0 ]] && [[ -e /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 ]]; then
     echo +ppp+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/d042e951-6889-412c-8b0d-c792593f7b20 /media/simone/sandisk_p
   fi
 
   #mount sandisk_t manually
-  if [ $sdt -eq 1 ] && [ $wct -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_T ]; then
+  if [[ $sdt -eq 1 ]] && [[ $wct -eq 0 ]] && [[ -e /dev/disk/by-label/Sandisk_T ]]; then
     echo +ttt+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_T /media/simone/sandisk_t
   fi
 
   #mount sandisk_s manually
-  if [ $sds -eq 1 ] && [ $wcs -eq 0 ] && [ -e /dev/disk/by-uuid/EA1D-0944 ]; then
+  if [[ $sds -eq 1 ]] && [[ $wcs -eq 0 ]] && [[ -e /dev/disk/by-uuid/EA1D-0944 ]]; then
     echo +sss+++
     sudo mount -t exfat -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/EA1D-0944 /media/simone/sandisk_s
   fi
 
   #mount sandisk_u manually
-  if [ $sdu -eq 1 ] && [ $wcu -eq 0 ] && [ -e /dev/disk/by-uuid/3166-6338 ]; then
+  if [[ $sdu -eq 1 ]] && [[ $wcu -eq 0 ]] && [[ -e /dev/disk/by-uuid/3166-6338 ]];  then
     echo +uuu+++
     sudo mount -t vfat -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-uuid/3166-6338 /media/simone/sandisk_u
   fi
 
   #mount sandisk_v manually
-  if [ $sdv -eq 1 ] && [ $wcv -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_V ]; then
+  if [[ $sdv -eq 1 ]] && [[ $wcv -eq 0 ]] && [[ -e /dev/disk/by-label/Sandisk_V ]];  then
     echo +vvv+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_V /media/simone/sandisk_v
   fi
 
   #mount sandisk_w manually
-  if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-uuid/3534-6562 ]; then
-  #if [ $sdw -eq 1 ] && [ $wcw -eq 0 ] && [ -e /dev/disk/by-label/udisk_hama ]; then
+  if [[ $sdw -eq 1 ]] && [[ $wcw -eq 0 ]] && [[ -e /dev/disk/by-uuid/3534-6562 ]];  then
+  #if [[ $sdw -eq 1 ]] && [[ $wcw -eq 0 ]] && [[ -e /dev/disk/by-label/udisk_hama ]];  then
     echo +www+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-uuid/3534-6562 /media/simone/sandisk_w
     #sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/udisk_hama /media/simone/sandisk_w
   fi
 
   #mount sandisk_x manually
-  if [ $sdx -eq 1 ] && [ $wcx -eq 0 ] && [ -e /dev/disk/by-label/sandisk_ext ]; then
+  if [[ $sdx -eq 1 ]] && [[ $wcx -eq 0 ]] && [[ -e /dev/disk/by-label/sandisk_ext ]];  then
     echo +xxx1+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_ext /media/simone/sandisk_x1
 
@@ -299,16 +284,17 @@ if [ $wcpriv -eq 0 ]; then
   fi
 
   #mount sandisk_y manually
-  if [ $sdy -eq 1 ] && [ $wcy -eq 0 ] && [ -e /dev/disk/by-label/Sandisk_Y ]; then
+  if [[ $sdy -eq 1 ]] && [[ $wcy -eq 0 ]] && [[ -e /dev/disk/by-label/SANDISK_Y ]];  then
     echo +yyy+++
-    sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_Y /media/simone/sandisk_y
+    #sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/SANDISK_Y /media/simone/sandisk_y
+    sudo mount -t vfat -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-label/SANDISK_Y /media/simone/sandisk_y
 
-    sleep 1s
-    sudo mount -t ecryptfs /media/simone/sandisk_y/priv /media/simone/sandisk_y/priv -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    #sleep 1s
+    #sudo mount -t ecryptfs /media/simone/sandisk_y/priv /media/simone/sandisk_y/priv -o $OPTS
   fi
 
   #mount sandisk_z manually
-  if [ $sdz -eq 1 ] && [ $wcz -eq 0 ] && [ -e /dev/disk/by-label/sandisk_z ]; then
+  if [[ $sdz -eq 1 ]] && [[ $wcz -eq 0 ]] && [[ -e /dev/disk/by-label/sandisk_z ]];  then
     echo +zzz+++
     sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/sandisk_z /media/simone/sandisk_z
   fi
@@ -328,7 +314,7 @@ exist_sdu_src=0; [ -e /dev/disk/by-uuid/3166-6338 ]       && exist_sdu_src=1
 exist_sdv_src=0; [ -e /dev/disk/by-label/Sandisk_V ]      && exist_sdv_src=1
 exist_sdw_src=0; [ -e /dev/disk/by-uuid/3534-6562 ]       && exist_sdw_src=1
 exist_sdx_src=0; [ -e /dev/disk/by-label/sandisk_ext ]    && exist_sdx_src=1
-exist_sdy_src=0; [ -e /dev/disk/by-label/Sandisk_Y ]      && exist_sdy_src=1
+exist_sdy_src=0; [ -e /dev/disk/by-label/SANDISK_Y ]      && exist_sdy_src=1
 exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
 
 /usr/bin/expect << EOD
@@ -373,12 +359,6 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
       spawn sudo umount /media/simone/winC/pics
       expect "password"
       send "$password\r"
-
-      puts "\n\n-winX/pics-\n"
-      sleep 0.5
-      spawn sudo umount /media/simone/winX/pics
-      expect "password"
-      send "$password\r"
     }
 
     if {$aud == 1 && $wca != 0} {
@@ -388,19 +368,13 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
       expect "password"
       send "$password\r"
 
-      puts "\n\n-winD/auds-"
-      sleep 0.5
-      spawn sudo umount /media/simone/winD/auds
-      expect "password"
-      send "$password\r"
-
       puts "\n\n-porn/auds-"
       spawn sudo umount /opt/.porn/auds
       expect "password"
       send "$password\r"
 
       puts "\n\n-home/auds-"
-      spawn sudo umount /home/simone/auds/.porn
+      spawn sudo umount /home/simone/.porn/auds
       expect "password"
       send "$password\r"
     }
@@ -498,7 +472,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$winX == 1 && $wcx == 0} {
     puts "+winX+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p4 /media/simone/winX
+    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinX /media/simone/winX
     expect "password"
     send "$password\r"
   }
@@ -506,7 +480,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$winC == 1 && $wcc == 0} {
     puts "\n\n+winC+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p3 /media/simone/winC
+    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinC /media/simone/winC
     expect "password"
     send "$password\r"
   }
@@ -514,14 +488,14 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$winD == 1 && $wcd == 0} {
     puts "\n\n+winD+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/nvme0n1p5 /media/simone/winD
+    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,uid=1000,gid=1000 /dev/disk/by-label/WinD /media/simone/winD
     expect "password"
     send "$password\r"
   }
 
   if {$aud == 1 && $wca == 0} {
     puts "\n\n+winX/auds+"
-    spawn sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /media/simone/winX/auds /media/simone/winX/auds -o $OPTS
     expect "password"
     send "$password\r"
     expect "Passphrase"
@@ -529,7 +503,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
     send "$passphrase\r"
 
     puts "\n\n+porn/auds+"
-    spawn sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /opt/.porn/auds /opt/.porn/auds -o $OPTS
     expect "password"
     send "$password\r"
     expect "Passphrase"
@@ -537,15 +511,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
     send "$passphrase\r"
 
     puts "\n\n+home/auds+"
-    spawn sudo mount -t ecryptfs /home/simone/auds/.porn /home/simone/auds/.porn -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
-    expect "password"
-    send "$password\r"
-    expect "Passphrase"
-    sleep 0.5
-    send "$passphrase\r"
-
-    puts "\n\n+winD/auds+"
-    spawn sudo mount -t ecryptfs /media/simone/winD/auds /media/simone/winD/auds -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /home/simone/.porn/auds /home/simone/.porn/auds -o $OPTS
     expect "password"
     send "$password\r"
     expect "Passphrase"
@@ -627,7 +593,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$sdy == 1 && $wcy == 0 && $exist_sdy_src == 1} {
     puts "\n\n+yyy+"
     sleep 0.5
-    spawn sudo mount -o $RWRO,noexec,noatime,nosuid,nodev,relatime,stripe=32696,data=ordered,uhelper=udisks2 /dev/disk/by-label/Sandisk_Y /media/simone/sandisk_y
+    spawn sudo mount -t vfat -o $RWRO,noexec,noatime,nosuid,nodev,relatime,fmask=0333,dmask=0022,codepage=437,iocharset=utf8,showexec,uid=1000,gid=1000 /dev/disk/by-label/SANDISK_Y /media/simone/sandisk_y
     expect "password"
     send "$password\r"
   }
@@ -643,7 +609,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$txt == 1 && $wce == 0} {
     puts "\n\n+eros+"
     sleep 1
-    spawn sudo mount -t ecryptfs /opt/.porn/eros /opt/.porn/eros -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /opt/.porn/eros /opt/.porn/eros -o $OPTS
     expect "password"
     send "$password\r"
     expect "Passphrase"
@@ -653,15 +619,7 @@ exist_sdz_src=0; [ -e /dev/disk/by-label/sandisk_z ]      && exist_sdz_src=1
   if {$pic == 1 && $wci == 0} {
     puts "\n\n+winC/pics+"
     sleep 0.5
-    spawn sudo mount -t ecryptfs /media/simone/winC/pics /media/simone/winC/pics -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
-    expect "password"
-    send "$password\r"
-    expect "Passphrase"
-    send "$passphrase\r"
-
-    puts "\n\n+winX/pics+"
-    sleep 0.5
-    spawn sudo mount -t ecryptfs /media/simone/winX/pics /media/simone/winX/pics -o ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743
+    spawn sudo mount -t ecryptfs /media/simone/winC/pics /media/simone/winC/pics -o $OPTS
     expect "password"
     send "$password\r"
     expect "Passphrase"
