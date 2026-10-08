@@ -12,7 +12,7 @@ fi
 [[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 [[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
 WID=8
-WIN="webview"
+WIN="webopen"
 
 bplan=0
 while getopts "bBx" opt; do
@@ -41,7 +41,7 @@ while getopts "bBx" opt; do
                 CMD="elinks"
             fi
             ;;
-        ?)  echo 'Usage: webview [-bBx] URI'
+        ?)  echo 'Usage: webopen [-bBx] URI'
             exit 1;;
     esac
 done

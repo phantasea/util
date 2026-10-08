@@ -13,7 +13,7 @@ slideshow="FALSE"
 [[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 [[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
 WID=11
-WIN="imgview"
+WIN="imgopen"
 CMD=""
 PROG=""
 
@@ -34,7 +34,7 @@ while getopts "bBrsd:" opt; do
                exit 1
            fi
            ;;
-        ?) echo 'Usage: imgview [-b] [-r] [-s] [-d dir] <file>'
+        ?) echo 'Usage: imgopen [-b] [-r] [-s] [-d dir] <file>'
            exit 1;;
     esac
 done
@@ -97,10 +97,15 @@ else
     fi
 fi
 
+if [ ! -z "$DISPLAY" ]; then
+    $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp} 2>/dev/null &
+    i3-msg workspace "misc" >/dev/null
+    exit 0
+fi
+
 # jfbview can only input one file to view
 if [[ $PROG =~ "jfbview" ]]; then
-    CMD="$PROG $file"
-    setterm -cursor off; $CMD
+    setterm -cursor off; "$PROG" "$file"
     exit 0
 fi
 
@@ -115,7 +120,7 @@ fi
 CMD="$PROG $FILES" > /dev/null 2>&1
 
 tmux has-session -t $SID 2>/dev/null
-if [[ $? -ne 0 ]] || [[ $CMD =~ "feh" ]] || [[ ! -z "$DISPLAY" ]]; then
+if [ $? -ne 0 ]; then
     $PROG "$file" *.{jpg,jpeg,png,bmp,gif,ppm,xpm,webp} 2>/dev/null &
     exit 0
 fi
@@ -133,11 +138,6 @@ exit 0
 
 ## https://github.com/ranger/ranger/blob/master/examples/rifle_sxiv.sh
 ## https://q2a.vifm.info/431/sxiv-scroll-through-all-images
-if [[ ! -f $1 ]]; then
-    echo "$0: first argument is not a file!" >&2
-    exit 1
-fi
-
 file=$(basename -- "$1")
 dir=$(dirname -- "$1")
 arr=()

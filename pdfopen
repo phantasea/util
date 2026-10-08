@@ -1,28 +1,38 @@
 #! /bin/bash
 
 if [ -z "$DISPLAY" ]; then
-    CMD="epy"
+    CMD="fimgs"
 else
     CMD="zathura"
+    #CMD="zathura.sh"
 fi
 
 [[ -z "$DISPLAY" ]] && SID=0 || SID=1
 [[ -z "$TMUX" ]] && SID=12  #not in tmux session
 [[ $(tmux ls | egrep "^13:.*attached") ]] && SID=13
 [[ "$(tmux display-message -p -F '#{session_name}')" == "nova" ]] && SID="nova"
-WID=14
-WIN="epubview"
+WID=11
+WIN="pdfview"
 
 #If an option should be followed by an argument, it should be followed by a ":".
 #The leading ":" suppresses error messages from getopts.
-while getopts "b" opt; do
+while getopts "bB" opt; do
     case $opt in
         b)
-            if [ ! -z "$DISPLAY" ]; then
-                CMD="ebook-viewer -f"
+            if [ -z "$DISPLAY" ]; then
+                CMD="jfbview --cache_size=5"
+            else
+                CMD="mupdf"
             fi
             ;;
-        ?) echo 'Usage: epubview [-b] <file>'
+        B)
+            if [ -z "$DISPLAY" ]; then
+                CMD="fbpdf"
+            else
+                CMD="apvlv"  #slow
+            fi
+            ;;
+        ?) echo 'Usage: pdfview [-bB] <file>'
            exit 1;;
     esac
 done
@@ -47,26 +57,22 @@ if [ $size -gt $maxsize ]; then
     exit 1
 fi
 
+#if [[ "$CMD" =~ "zathura" ]]; then
 if [ ! -z "$DISPLAY" ]; then
-    #mupdf-gl "$file" & sleep 0.2 && xdotool key --window $(xdotool search --pid $!) f Shift+w
-    $CMD "$file" 2>/dev/null &
+    $CMD "$file" 2>/dev/null
     i3-msg workspace "misc" >/dev/null
     exit 0
 fi
 
 tmux has-session -t $SID 2>/dev/null
 if [ $? -ne 0 ]; then
-    setterm -cursor off; "$CMD" "$file"
+    setterm -cursor off; "$CMD" "$file" 2>/dev/null
     exit 0
 fi
 
 tmux select-window -t $SID:$WIN > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$file\""
-fi
-
-if [ -z "$DISPLAY" ]; then
-    tmux send-keys -t $SID:$WID w
+    tmux new-window -n $WIN -t $SID:$WID "setterm -cursor off; $CMD \"$file\" 2>/dev/null"
 fi
 
 exit 0
