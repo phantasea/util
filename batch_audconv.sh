@@ -27,7 +27,12 @@ while getopts "r:" opt; do
 done
 
 for filename in ./*.mp3; do
-    echo $filename
+    bitrate=$(mediainfo "$filename" | grep 'Bit rate  ' | cut -d: -f2 | sed -e 's/\s//g')
+    if [[ $bitrate =~ ^(64|96)\.[0-9]kb/s ]]; then
+        echo $bitrate [skip]
+        continue
+    fi
+    echo $filename [$bitrate]
     audconv -r${rate} "$filename"
-    sleep 25s
+    sleep 30s
 done

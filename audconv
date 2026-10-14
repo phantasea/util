@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z "$1" ]] && exit 1
+
 rate=96
 while getopts "r:" opt; do
     case $opt in
@@ -11,9 +13,12 @@ while getopts "r:" opt; do
            exit 1;;
     esac
 done
-
-[[ -z "$1" ]] && exit 1
-
 shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
+
+#bitrate=$(mediainfo "$1" | grep 'Bit rate  ' | cut -d: -f2 | sed -e 's/\s//g')
+#if [[ $bitrate =~ ^(64|96)\.[0-9]kb/s ]]; then
+#    echo $bitrate [skip]
+#    exit 0
+#fi
 
 ffmpeg -i "$1" -b:a ${rate}k -loglevel quiet "$1.mp3"
