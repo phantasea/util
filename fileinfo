@@ -41,7 +41,9 @@ case "$MIMETYPE" in
 
     inode/directory | inode/mount-point)
         #df -h "$1" |egrep -iv 'Used' |sed 's/\s\+/ /g' |cut -d' ' -f 4
-        df -h "$1" |sed '1d' |awk '{print $4 "/" $2}'
+        output1=$(df -h "$1" |sed '1d' |awk '{print $4 "/" $2}')
+        output2=$(lsattr -d "$1")
+        echo "$output1" "$output2"
         exit 0;;
 
     application/epub+zip)

@@ -107,6 +107,11 @@ case "$ext" in
         bat --color=always "${file}" && exit 0
         exit 1;;
 
+    js)
+        highlight -S js -O ansi -s dante "${file}" && exit 0
+        bat --color=always "${file}" && exit 0
+        exit 1;;
+
     xml)
         highlight -S xml -O ansi -s dante "${file}" && exit 0
         bat --color=always "${file}" && exit 0

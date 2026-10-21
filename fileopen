@@ -116,7 +116,7 @@ case "$ext" in
         tpp "$file" && exit 0
         ;;
 
-    url)
+    url|js)
         vimux "$file" && exit 0
 esac
 
