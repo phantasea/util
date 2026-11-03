@@ -6,7 +6,7 @@
 #    rfkill unblock bluetooth ;
 #fi
 
-MAC=$(bluetoothctl devices | grep BUDS | cut -d' ' -f2)
+MAC=$(bluetoothctl devices | grep FreeBuds | cut -d' ' -f2)
 if bluetoothctl info $MAC | grep 'Connected: yes' ; then
     bluetoothctl disconnect $MAC
 else

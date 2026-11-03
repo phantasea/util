@@ -22,7 +22,7 @@ sdz=0
 mnt=1
 RWRO="ro"
 CRYPTOPTS="key=passphrase,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_passthrough=n,ecryptfs_enable_filename_crypto=y,ecryptfs_fnek_sig=85e5a0a7dcf6b743"
-FATXXOPTS="noexec,noatime,nosuid,nodev,relatime,showexec,fmask=0377,dmask=0077,iocharset=utf8,uid=1000,gid=1000"
+FATXXOPTS="noexec,noatime,nosuid,nodev,relatime,showexec,fmask=0177,dmask=0077,iocharset=utf8,uid=1000,gid=1000"
 WINFSOPTS="noexec,noatime,nosuid,nodev,relatime,fmask=0377,dmask=0077,uid=1000,gid=1000"
 EXTFSOPTS="noexec,noatime,nosuid,nodev,relatime,data=ordered,uhelper=udisks2"
 EXTFSOPTX="noexec,noatime,nosuid,nodev,relatime,data=ordered,uhelper=udisks2,stripe=32696"
